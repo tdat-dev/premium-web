@@ -1,0 +1,19 @@
+{
+  "name": "premium-web",
+  "owner": {
+    "name": "tvmar"
+  },
+  "description": "Premium website design and production workflow skills.",
+  "plugins": [
+    {
+      "name": "build-premium-website",
+      "source": "./plugins/build-premium-website",
+      "description": "Build, redesign, and review distinctive production websites with rigorous creative and production gates.",
+      "version": "1.0.0",
+      "author": {
+        "name": "tvmar"
+      },
+      "category": "development"
+    }
+  ]
+}
