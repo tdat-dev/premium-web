@@ -4,6 +4,16 @@
 
 Public repository: https://github.com/tdat-dev/premium-web
 
+## Design scope
+
+The skill routes each request to the contract that matches the work:
+
+- **Landing and brand websites:** conversion journeys, portfolios, editorial sites, campaigns, real media, animation, GSAP, and Three.js/WebGL when the concept earns it.
+- **Dashboards and product UI:** applications, admin and operational interfaces, tables, forms, charts, navigation, permissions, data semantics, and loading, empty, error, partial, stale, and success states.
+- **Hybrid journeys:** websites that move from acquisition or storytelling into signup, onboarding, authenticated product work, account, or billing without letting visual spectacle damage product clarity.
+
+All three routes retain the same anti-template, accessibility, responsive, browser-evidence, performance, and independent creative-review gates.
+
 ## Repository layout
 
 - `skills/build-premium-website/` is the canonical source of truth.

@@ -8,9 +8,10 @@
 - AI role:
 - Highest status the AI may issue: `CREATIVE REVIEW READY`
 
-## Scope route
+## Surface route and work mode
 
-- Base scope: `BRAND | PRODUCT | HYBRID | AUDIT`
+- Surface route: `LANDING_BRAND | DASHBOARD_PRODUCT | HYBRID`
+- Work mode: `BUILD | REDESIGN | AUDIT | POLISH`
 - Modifiers:
 - Classification evidence:
 - Primary audience:

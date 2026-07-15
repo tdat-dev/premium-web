@@ -1,15 +1,24 @@
 ---
 name: build-premium-website
-description: Build, redesign, audit, or polish distinctive production websites with evidence-led art direction. Use for premium landing pages, product and brand sites, portfolios, media-rich experiences, animation, GSAP, Three.js/WebGL, editorial interfaces, responsive UI, and any frontend request where originality, real assets, browser verification, accessibility, performance, and anti-template enforcement matter.
+description: Build, redesign, audit, or polish premium landing and brand sites, dashboard and product UI, or hybrid marketing-to-product experiences. Use for landing pages, campaigns, portfolios, editorial sites, SaaS dashboards, admin panels, analytics, navigation, tables, forms, charts, onboarding, settings, commerce, media-rich storytelling, animation, GSAP, Three.js/WebGL, responsive UI, UI/UX, accessibility, and anti-template review. Routes every task through LANDING_BRAND, DASHBOARD_PRODUCT, or HYBRID with route-specific evidence and production gates.
 ---
 
 # Build Premium Website
 
 Treat `100k-quality` as an aspirational level of care, not a valuation, award, revenue, conversion, or originality guarantee. Never promise that a site is worth $100,000 or will win Awwwards.
 
-## Load the enforcement contract
+## Load the enforcement and routing contracts
 
-For **every** build, redesign, audit, or polish task, read and apply [references/anti-slop-enforcement.md](references/anti-slop-enforcement.md) before choosing a direction or editing UI. It is the authoritative contract for scope, evidence, severity, statuses, exceptions, critique, and production gates.
+For **every** build, redesign, audit, or polish task, read and apply both:
+
+- [references/anti-slop-enforcement.md](references/anti-slop-enforcement.md), the authority for evidence, severity, statuses, exceptions, critique, and overall production gates;
+- [references/route-dispatch.md](references/route-dispatch.md), the authority for choosing the surface route, work mode, route contract, and route-specific gate.
+
+After dispatch, load the mandatory route contract:
+
+- `LANDING_BRAND`: [references/landing-brand-contract.md](references/landing-brand-contract.md)
+- `DASHBOARD_PRODUCT`: [references/dashboard-product-contract.md](references/dashboard-product-contract.md)
+- `HYBRID`: both contracts above plus [references/hybrid-contract.md](references/hybrid-contract.md)
 
 For greenfield work, creative art direction, or any task with substantial visual freedom, also read [references/reflex-registry-2026.md](references/reflex-registry-2026.md). Treat its dated patterns as review signals, never eternal bans.
 
@@ -22,13 +31,20 @@ Read the remaining references only when relevant:
 
 ## Execute evidence-first
 
-### 1. Classify and ground the task
+### 1. Classify the surface and work independently
 
-Classify the work as `BRAND`, `PRODUCT`, `HYBRID`, or `AUDIT`, then record relevant modifiers such as `GREENFIELD`, `CONSTRAINED`, `MEDIA_LED`, `NO_MEDIA`, `MOTION_LED`, `THREE_D`, `COMMERCE`, or `CONTENT_HEAVY`.
+Record two independent fields before discovery or design:
+
+```yaml
+surface_route: LANDING_BRAND | DASHBOARD_PRODUCT | HYBRID
+work_mode: BUILD | REDESIGN | AUDIT | POLISH
+```
+
+Do not use `AUDIT` as a surface route. A repository containing both a marketing site and an application is not automatically `HYBRID`; choose it only when the scoped user journey materially crosses both. Record relevant modifiers such as `GREENFIELD`, `CONSTRAINED`, `HIGH_UNCERTAINTY`, `MEDIA_LED`, `NO_MEDIA`, `MOTION_LED`, `THREE_D`, `COMMERCE`, `CONTENT_HEAVY`, `APPLICATION`, or `LOCAL_CHANGE`.
 
 Build a fact/claim/source map from the user, repository, existing product, supplied assets, and verified URLs. Label assumptions. Never invent proof, customers, metrics, testimonials, capabilities, rights, or research.
 
-Use [assets/decision-record.template.md](assets/decision-record.template.md) to record the scope route, constraints, alternatives, chosen direction, rejected defaults, risks, and exceptions.
+Use [assets/decision-record.template.md](assets/decision-record.template.md) to record the route, work mode, constraints, alternatives, chosen direction, rejected defaults, risks, and exceptions. Also complete the route evidence template required by [references/route-dispatch.md](references/route-dispatch.md).
 
 ### 2. Research without copying
 
@@ -86,7 +102,7 @@ Resolve severity using the enforcement contract:
 
 Report:
 
-1. scope classification, fact/claim/source map, assumptions, and decision record;
+1. surface route, work mode, fact/claim/source map, assumptions, and decision record;
 2. reference evidence and originality boundaries;
 3. completed routes, sections, states, and primary journey;
 4. media manifest with rights, actual placement, loading, and fallbacks;
@@ -94,8 +110,9 @@ Report:
 6. coverage matrix, rendered evidence, and critique ledger;
 7. P0/P1/P2 defects, accepted exceptions, owners, and next actions;
 8. accessibility, responsive, performance, and runtime-failure evidence;
-9. the advisory Awwwards-style review, clearly separated from production gates;
-10. exact status from the enforcement contract.
+9. each applicable route-specific gate and the cross-surface gate for `HYBRID`;
+10. the advisory Awwwards-style review, clearly separated from production gates;
+11. exact overall status from the enforcement contract.
 
 State what was measured, what remains subjective, and what was not verifiable.
 

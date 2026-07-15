@@ -9,7 +9,7 @@ Keep `SKILL.md` frontmatter limited to:
 ```yaml
 ---
 name: build-premium-website
-description: ...
+description: Build premium websites using the complete operational contract.
 ---
 ```
 

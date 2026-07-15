@@ -10,16 +10,22 @@ Use this contract for every website build, redesign, audit, or polish task. It r
 - Do not claim certainty where judgment is required. Record evidence, uncertainty, reviewer, and next decision.
 - An AI may prepare a site for creative review. It may not approve its own creative work for release.
 
-## 2. Scope classification
+## 2. Surface route and work mode
 
-Choose one base scope and all relevant modifiers before proposing a visual direction.
+Choose one surface route, one independent work mode, and all relevant modifiers before proposing a direction.
 
-| Base scope | Use when | Required route |
+| Surface route | Use when | Required grounding |
 | --- | --- | --- |
-| `BRAND` | Identity, campaign, portfolio, cultural, editorial, or story is the primary value | Ground the brand voice and recognizable design devices before layout |
-| `PRODUCT` | A task, workflow, product capability, commerce action, or utility is primary | Ground the primary journey, states, data, and interaction outcomes before styling |
-| `HYBRID` | Brand expression and product comprehension are both material | Keep separate brand and product evidence, then resolve conflicts explicitly |
-| `AUDIT` | The request is to inspect or polish an existing experience | Preserve working intent; change direction only when rendered evidence justifies it |
+| `LANDING_BRAND` | Public comprehension, trust, conversion, campaign participation, purchase intent, or brand recall is primary | Ground audience, offer, message, proof, CTA, art direction, and media before layout |
+| `DASHBOARD_PRODUCT` | A repeatable task, workflow, data decision, configuration, commerce operation, or application utility is primary | Ground journeys, navigation, roles, permissions, states, data, and interaction outcomes before styling |
+| `HYBRID` | The scoped journey materially crosses public narrative and product workflow | Keep separate landing/brand and dashboard/product evidence, then resolve cross-surface conflicts explicitly |
+
+| Work mode | Required behavior |
+| --- | --- |
+| `BUILD` | Establish the missing route evidence and implement a new surface. |
+| `REDESIGN` | Preserve verified product/content constraints while changing the rendered system. |
+| `AUDIT` | Diagnose rendered outcomes first; do not implement unless separately authorized. |
+| `POLISH` | Preserve the established direction and fix bounded observable defects. |
 
 Modifiers:
 
@@ -31,12 +37,12 @@ Modifiers:
 - `CONTENT_HEAVY`, `COMMERCE`, `APPLICATION`, or `EXPERIMENTAL`;
 - `LOCAL_CHANGE`: a bounded component or section change rather than a site-wide direction.
 
-Record evidence for the classification. Do not label work `CONSTRAINED`, `AUDIT`, or `LOCAL_CHANGE` merely to skip discovery or divergence.
+Record evidence for both fields. A repository containing both a public site and an application is not automatically `HYBRID`; use it only when the scoped journey crosses both. Public charts used as story proof remain `LANDING_BRAND`; interactive analytics used for decisions are `DASHBOARD_PRODUCT`. Do not label work `CONSTRAINED`, `AUDIT`, `POLISH`, or `LOCAL_CHANGE` merely to skip discovery or divergence.
 
 ## 3. Evidence-first state machine
 
 ```text
-SCOPE_CLASSIFICATION
+SURFACE_ROUTE_AND_WORK_MODE
   -> CONTEXT_EVIDENCE
   -> RESEARCH_BOUNDARY
   -> GREENFIELD_DIVERGENCE | CONSTRAINED_AUDIT
@@ -58,7 +64,7 @@ Transition evidence:
 
 | Transition | Minimum evidence |
 | --- | --- |
-| `CONTEXT_EVIDENCE` | scope classification, fact/claim/source map, primary journey or message, constraints, assumptions |
+| `CONTEXT_EVIDENCE` | surface route, work mode, fact/claim/source map, primary journey or message, constraints, assumptions |
 | `RESEARCH_BOUNDARY` | direct references or a declared evidence gap; transferable principles and do-not-copy boundaries |
 | `DIRECTION_LOCK` | direction comparison appropriate to scope, rejected alternatives, originality risks, feasibility |
 | `ASSET_RIGHTS_LOCK` | asset states, provenance/rights, placement, delivery, fallback, unresolved blockers |
@@ -299,5 +305,6 @@ Creative scores never compensate for these gates:
 6. **Runtime resilience:** essential content/actions survive missing media and animation/runtime failure; error/loading/empty states remain understandable where applicable.
 7. **Performance fitness:** the approved budget and delivery strategy are measured in a labeled environment; lab data is not presented as field data.
 8. **Defect authority:** no P0 or P1-N remains; every retained P1-P has a valid external exception.
+9. **Route contract:** every applicable `LANDING_BRAND`, `DASHBOARD_PRODUCT`, and `HYBRID` sub-gate has evidence and is met.
 
-When all objective gates are met, report `PRODUCTION GATE MET`. Prepare rendered artifacts for an independent creative review. Only after that package is complete may the AI report `CREATIVE REVIEW READY`.
+When all objective and applicable route-specific gates are met, report `PRODUCTION GATE MET`. Prepare rendered artifacts for an independent creative review. Only after that package is complete may the AI report `CREATIVE REVIEW READY`.

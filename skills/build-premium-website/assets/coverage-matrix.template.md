@@ -39,6 +39,11 @@ Mark applicable items with a coverage row or an explicit reason for `N/A`.
 | Animation/runtime failure |  |
 | Missing/slow media and poster fallback |  |
 | Loading, empty, error, and success states |  |
+| Navigation, deep links, reload, and back/forward |  |
+| Role, permission, authentication expiry, and re-entry |  |
+| Table sort/filter/selection/pagination and narrow layout |  |
+| Form validation/submission/unsaved/destructive states |  |
+| Chart units/freshness/extremes/accessible alternative |  |
 | Slow network/CPU |  |
 | 3D low capability/context loss |  |
 | Supported theme/locale/orientation |  |

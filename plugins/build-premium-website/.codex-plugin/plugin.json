@@ -1,20 +1,20 @@
 {
   "name": "build-premium-website",
-  "version": "1.0.0",
-  "description": "Build, redesign, and review distinctive production websites with rigorous creative and production gates.",
+  "version": "1.1.0+codex.20260715090017",
+  "description": "Build and review premium landing sites, dashboards, product UI, and hybrid journeys with rigorous creative and production gates.",
   "author": {
     "name": "tvmar"
   },
   "skills": "./skills/",
   "interface": {
     "displayName": "Build Premium Website",
-    "shortDescription": "Build premium production-ready websites.",
-    "longDescription": "A cross-agent workflow for art direction, real media, motion and 3D decisions, browser-based iteration, accessibility, performance, and evidence-backed release gates.",
+    "shortDescription": "Build premium landing sites and product UI.",
+    "longDescription": "A cross-agent workflow for landing and brand sites, dashboards and product UI, hybrid journeys, real media, motion and 3D decisions, browser-based iteration, accessibility, performance, and evidence-backed release gates.",
     "developerName": "tvmar",
     "category": "Developer Tools",
     "capabilities": [
       "Write"
     ],
-    "defaultPrompt": "Use $build-premium-website to build a distinctive production-ready website."
+    "defaultPrompt": "Use $build-premium-website to route and build this landing site, dashboard, product UI, or hybrid journey with the matching design and production contracts."
   }
 }
