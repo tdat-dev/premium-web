@@ -23,6 +23,8 @@ After dispatch, load the mandatory route contract:
 
 Before designing or critiquing any visual surface, also load [references/craft-rules.md](references/craft-rules.md) — the measurable floors and structural bans that make critique concrete. Its violations are severity-graded defects under the enforcement contract, not taste notes.
 
+For every `LANDING_BRAND` or `HYBRID` build/redesign with visual freedom, also load [references/ambition-gates.md](references/ambition-gates.md) — the demand side. Floors delete failures; the five gates (media, composition risk, type bravery, motion, signature interaction) demand the excellence that floors alone never produce. A page that passes every floor but fails an unwaived gate is capped at `CLEAN BASELINE` and must be reported as such.
+
 For greenfield work, creative art direction, or any task with substantial visual freedom, also read [references/reflex-registry-2026.md](references/reflex-registry-2026.md), [references/structure-catalog.md](references/structure-catalog.md), and [references/run-log.md](references/run-log.md). Treat the registry's dated patterns as review signals, never eternal bans; treat the catalog's macrostructure pick and the run-log diversification protocol as required steps.
 
 Read the remaining references only when relevant:
@@ -117,7 +119,9 @@ Report:
 8. accessibility, responsive, performance, and runtime-failure evidence;
 9. each applicable route-specific gate and the cross-surface gate for `HYBRID`;
 10. the advisory Awwwards-style review, clearly separated from production gates;
-11. exact overall status from the enforcement contract.
+11. ambition-gate results (A-E: satisfied / waived-with-reason / failed) and the resulting creative cap, when the gates applied;
+12. exact overall status from the enforcement contract;
+13. confirmation that the run-log entry was appended (or why not) — an unmentioned run-log is an incomplete package.
 
 State what was measured, what remains subjective, and what was not verifiable.
 
