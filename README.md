@@ -109,6 +109,8 @@ powershell -NoProfile -File .\scripts\verify-package-parity.ps1
 
 Grok is not listed by the current `skills` CLI discovery command in this package's validation environment. Use Grok's native user skill directory (`~/.grok/skills/build-premium-website/`) or manually provide `skills/build-premium-website/SKILL.md` and its bundled resources. For any unverified agent, use the native skill directory or a manual prompt adapter instead of claiming universal auto-discovery.
 
-## License boundary
+## License and attribution
 
-No license has been selected or granted for this repository. Public visibility does not grant permission to copy, modify, or redistribute its contents.
+Copyright (c) 2026 tdat-dev. Licensed under the Apache License, Version 2.0 — see [LICENSE](LICENSE) and [NOTICE](NOTICE).
+
+You may install, use, modify, and redistribute this skill, including commercially, under the license terms. What the license does **not** permit: removing or altering the copyright notices, the NOTICE file, or presenting this work (or a trivially modified copy) as your own original creation. Forks and derivative skills must retain LICENSE, NOTICE, and the in-file copyright headers, and must state the changes they made. The canonical source is https://github.com/tdat-dev/premium-web — treat anything else as a fork.

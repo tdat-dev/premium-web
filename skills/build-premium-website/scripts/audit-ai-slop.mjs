@@ -1,4 +1,7 @@
 #!/usr/bin/env node
+// Copyright (c) 2026 tdat-dev. Licensed under Apache-2.0.
+// Part of build-premium-website — https://github.com/tdat-dev/premium-web
+// Redistribution must retain this notice, LICENSE, and NOTICE.
 
 import { readFile, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';

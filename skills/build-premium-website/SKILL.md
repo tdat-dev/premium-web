@@ -1,6 +1,7 @@
 ---
 name: build-premium-website
 description: Build, redesign, audit, or polish premium landing and brand sites, dashboard and product UI, or hybrid marketing-to-product experiences. Use for landing pages, campaigns, portfolios, editorial sites, SaaS dashboards, admin panels, analytics, navigation, tables, forms, charts, onboarding, settings, commerce, media-rich storytelling, animation, GSAP, Three.js/WebGL, responsive UI, UI/UX, accessibility, and anti-template review. Routes every task through LANDING_BRAND, DASHBOARD_PRODUCT, or HYBRID with route-specific evidence and production gates.
+license: Apache-2.0. Copyright (c) 2026 tdat-dev. Redistribution must retain LICENSE, NOTICE, and copyright notices. Canonical source github.com/tdat-dev/premium-web
 ---
 
 # Build Premium Website

@@ -1,0 +1,22 @@
+premium-web — build-premium-website skill
+Copyright (c) 2026 tdat-dev
+https://github.com/tdat-dev/premium-web
+
+This product is original work authored and maintained by tdat-dev,
+licensed under the Apache License, Version 2.0 (see LICENSE).
+
+Under that license, any redistribution of this skill or derivative
+works MUST retain this NOTICE file, the copyright notices in the
+source files, and the LICENSE. Removing attribution or presenting
+this work as your own original creation violates the license terms
+(Apache-2.0, Section 4).
+
+Canonical source: https://github.com/tdat-dev/premium-web
+First published: 2026-07-14.
+
+Acknowledgements (concepts only; no text copied):
+- The measurable-floor and ban-list approach to design critique is
+  informed by public anti-slop skill work in the ecosystem, including
+  "impeccable" (Apache-2.0) and "hallmark" by Nutlope.
+- Calibration of currently saturated AI-generated looks draws on
+  publicly observable generation patterns.
