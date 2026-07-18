@@ -1,6 +1,7 @@
 ---
 name: build-premium-website
 description: Build, redesign, audit, or polish premium landing and brand sites, dashboard and product UI, or hybrid marketing-to-product experiences. Use for landing pages, campaigns, portfolios, editorial sites, SaaS dashboards, admin panels, analytics, navigation, tables, forms, charts, onboarding, settings, commerce, media-rich storytelling, animation, GSAP, Three.js/WebGL, responsive UI, UI/UX, accessibility, and anti-template review. Routes every task through LANDING_BRAND, DASHBOARD_PRODUCT, or HYBRID with route-specific evidence and production gates.
+license: Apache-2.0. Copyright (c) 2026 tdat-dev. Redistribution must retain LICENSE, NOTICE, and copyright notices. Canonical source github.com/tdat-dev/premium-web
 ---
 
 # Build Premium Website
@@ -20,7 +21,9 @@ After dispatch, load the mandatory route contract:
 - `DASHBOARD_PRODUCT`: [references/dashboard-product-contract.md](references/dashboard-product-contract.md)
 - `HYBRID`: both contracts above plus [references/hybrid-contract.md](references/hybrid-contract.md)
 
-For greenfield work, creative art direction, or any task with substantial visual freedom, also read [references/reflex-registry-2026.md](references/reflex-registry-2026.md). Treat its dated patterns as review signals, never eternal bans.
+Before designing or critiquing any visual surface, also load [references/craft-rules.md](references/craft-rules.md) — the measurable floors and structural bans that make critique concrete. Its violations are severity-graded defects under the enforcement contract, not taste notes.
+
+For greenfield work, creative art direction, or any task with substantial visual freedom, also read [references/reflex-registry-2026.md](references/reflex-registry-2026.md), [references/structure-catalog.md](references/structure-catalog.md), and [references/run-log.md](references/run-log.md). Treat the registry's dated patterns as review signals, never eternal bans; treat the catalog's macrostructure pick and the run-log diversification protocol as required steps.
 
 Read the remaining references only when relevant:
 
@@ -42,6 +45,8 @@ work_mode: BUILD | REDESIGN | AUDIT | POLISH
 
 Do not use `AUDIT` as a surface route. A repository containing both a marketing site and an application is not automatically `HYBRID`; choose it only when the scoped user journey materially crosses both. Record relevant modifiers such as `GREENFIELD`, `CONSTRAINED`, `HIGH_UNCERTAINTY`, `MEDIA_LED`, `NO_MEDIA`, `MOTION_LED`, `THREE_D`, `COMMERCE`, `CONTENT_HEAVY`, `APPLICATION`, or `LOCAL_CHANGE`.
 
+**`LOCAL_CHANGE` fast path.** When the scope is a single component, section, or small visual fix, skip the full decision record, reference research, structure catalog, and coverage matrix. Still required: the route contract's relevant gates, [references/craft-rules.md](references/craft-rules.md), rendered evidence of the changed surface in its surrounding page at the affected breakpoints, and the severity rules. The fast path changes the paperwork, never the quality bar; if the "small" change turns out to alter page structure or journey, exit the fast path and classify again.
+
 Build a fact/claim/source map from the user, repository, existing product, supplied assets, and verified URLs. Label assumptions. Never invent proof, customers, metrics, testimonials, capabilities, rights, or research.
 
 Use [assets/decision-record.template.md](assets/decision-record.template.md) to record the route, work mode, constraints, alternatives, chosen direction, rejected defaults, risks, and exceptions. Also complete the route evidence template required by [references/route-dispatch.md](references/route-dispatch.md).
@@ -54,7 +59,7 @@ When browsing is unavailable, request links or screenshots and mark the evidence
 
 ### 3. Diverge in proportion to uncertainty
 
-- For greenfield or high-uncertainty work, compare 2-3 structurally different directions. They must differ in composition, content rhythm, media behavior, or interaction model rather than only color and font.
+- For greenfield or high-uncertainty work, compare 2-3 structurally different directions. They must differ in composition, content rhythm, media behavior, or interaction model rather than only color and font. Anchor each direction to a named macrostructure from [references/structure-catalog.md](references/structure-catalog.md), and check the pick against `.premium-web/log.json` per [references/run-log.md](references/run-log.md) before locking.
 - For constrained redesign or polish, audit the rendered system, develop one direction, and log the meaningful alternatives rejected.
 - For an audit, preserve the existing direction unless evidence supports changing it.
 
@@ -115,6 +120,12 @@ Report:
 11. exact overall status from the enforcement contract.
 
 State what was measured, what remains subjective, and what was not verifiable.
+
+After delivering a build or redesign that locked a creative direction, append the run entry to `.premium-web/log.json` per [references/run-log.md](references/run-log.md).
+
+## Compose with richer local tooling
+
+When the host harness has a dedicated interactive design skill installed (palette generators, slop detectors, live browser iteration, focused single-verb commands), prefer its tools for *execution* of small refine tasks and palette seeding — it is usually faster and better instrumented. Two hard boundaries: this skill's enforcement contract, route gates, and [references/craft-rules.md](references/craft-rules.md) remain the acceptance authority over any tool's output; and on harnesses without such tooling (cross-AI installs), the references here must be applied directly — never skip a gate because a helper script was unavailable.
 
 ## Use across AI tools
 
