@@ -19,7 +19,7 @@ When the host agent has a richer interactive design skill available (for example
 ### Typography
 
 - Body line length 65–75ch.
-- Display/hero size ceiling: `clamp()` max ≤ 6rem. Letter-spacing floor on display type: ≥ -0.04em.
+- Section-heading size ceiling: `clamp()` max ≤ 6rem — a page of shouting headings designs nothing. Exception, one per page: the hero display moment on `LANDING_BRAND`/`HYBRID` is sized as composition under Gate C of [ambition-gates.md](ambition-gates.md) (viewport-scale, overflow tested); the ceiling returns for everything after it. Letter-spacing floor on display type: ≥ -0.04em.
 - Pair typefaces on a contrast axis (serif + sans, geometric + humanist) or use one family in multiple weights. Never pair two similar-but-not-identical faces.
 - `text-wrap: balance` on h1–h3; `text-wrap: pretty` on long prose.
 - Display and heading type is roman (`font-style: normal`). Italic display headers are a generation tell.
