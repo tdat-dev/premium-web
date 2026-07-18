@@ -1,6 +1,6 @@
 # Run log: cross-run memory against self-repetition
 
-Copyright (c) 2026 tdat-dev. Part of the `build-premium-website` skill. See LICENSE and NOTICE at the repository root.
+Copyright (c) 2026 ByteWaker. Part of the `build-premium-website` skill. See LICENSE and NOTICE at the repository root.
 
 AI design repeats itself across sessions because each session starts blind. The run log gives the skill memory: a small JSON file recording what was shipped before, read before diverging and written after delivering. It powers the diversification rule in [structure-catalog.md](structure-catalog.md).
 

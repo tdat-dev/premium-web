@@ -1,6 +1,6 @@
 # Structure catalog: named macrostructures and the diversification rule
 
-Copyright (c) 2026 tdat-dev. Part of the `build-premium-website` skill. See LICENSE and NOTICE at the repository root.
+Copyright (c) 2026 ByteWaker. Part of the `build-premium-website` skill. See LICENSE and NOTICE at the repository root.
 
 A macrostructure is the page's skeleton — the hero form, section rhythm, and density profile — chosen **before** color or type. Load this file for every `LANDING_BRAND` or `HYBRID` build/redesign with visual freedom. Pick one named macrostructure (or record a deliberate custom hybrid of two), write it into the decision record, and obey the diversification rule below via [run-log.md](run-log.md).
 

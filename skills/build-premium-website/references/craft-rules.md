@@ -1,6 +1,6 @@
 # Craft rules: measurable floors and structural bans
 
-Copyright (c) 2026 tdat-dev. Part of the `build-premium-website` skill. See LICENSE and NOTICE at the repository root.
+Copyright (c) 2026 ByteWaker. Part of the `build-premium-website` skill. See LICENSE and NOTICE at the repository root.
 
 This file is the visual-craft authority for `LANDING_BRAND` and `HYBRID`, and the typography/color/motion authority for `DASHBOARD_PRODUCT`. Load it in full before designing or critiquing any surface. Rules here are floors and bans, not taste suggestions; a violation is at least a `P1` defect under the enforcement contract unless a recorded exception in the decision record justifies it.
 

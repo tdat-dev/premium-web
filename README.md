@@ -111,6 +111,6 @@ Grok is not listed by the current `skills` CLI discovery command in this package
 
 ## License and attribution
 
-Copyright (c) 2026 tdat-dev. Licensed under the Apache License, Version 2.0 — see [LICENSE](LICENSE) and [NOTICE](NOTICE).
+Copyright (c) 2026 ByteWaker. Licensed under the Apache License, Version 2.0 — see [LICENSE](LICENSE) and [NOTICE](NOTICE).
 
 You may install, use, modify, and redistribute this skill, including commercially, under the license terms. What the license does **not** permit: removing or altering the copyright notices, the NOTICE file, or presenting this work (or a trivially modified copy) as your own original creation. Forks and derivative skills must retain LICENSE, NOTICE, and the in-file copyright headers, and must state the changes they made. The canonical source is https://github.com/tdat-dev/premium-web — treat anything else as a fork.
