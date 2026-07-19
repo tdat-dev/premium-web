@@ -152,6 +152,7 @@ Product-specific rules that differ from landing/brand work:
 - predictable navigation outranks expressive wayfinding;
 - stable control placement outranks editorial asymmetry;
 - UI and data typography prioritize scan, language coverage, and tabular alignment over display personality;
+- microcopy (labels, buttons, empty/error/success states, tooltips) follows [copy-voice.md](copy-voice.md): plain human words the user controls and recognizes, no AI filler ("seamless", "powerful", "giải pháp toàn diện"), no marketing tone on operational surfaces;
 - media is not mandatory and may not displace tasks or data merely to create atmosphere;
 - repeated component anatomy is correct when it supports genuinely comparable controls or records;
 - dense information is acceptable when hierarchy, grouping, and responsive access remain legible.

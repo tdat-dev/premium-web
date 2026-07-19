@@ -27,6 +27,8 @@ Every CTA must:
 
 Metrics, testimonials, customer logos, awards, comparisons, guarantees, and superiority claims require fact/source IDs. Visual prominence cannot exceed source confidence.
 
+All copy obeys [copy-voice.md](copy-voice.md): human words in the audience's own vocabulary, no AI word/structure tells, no cadence loop across headings and CTAs. Hero and primary-CTA copy that trips those bans is a `P1-P` defect.
+
 ## Direction divergence and art direction
 
 For `BUILD`, `REDESIGN` with high uncertainty, or `GREENFIELD`, compare two or three directions that differ in all of these dimensions:

@@ -121,6 +121,28 @@ function auditFile(source, file, root, findings) {
     message: 'Generic transformation language detected. Apply the fact/source and competitor-swap review before retaining it.',
   });
 
+  addRegexFindings(findings, {
+    source, file, root,
+    level: 'ADVISORY',
+    id: 'AI_TONE_COPY',
+    pattern: /\b(?:robust|cutting[- ]edge|world[- ]class|best[- ]in[- ]class|game[- ]?changer|effortless|holistic|comprehensive solution|peace of mind|at your fingertips|in today['’]s (?:fast[- ]paced )?world|look no further|say goodbye to|whether you['’]re|it['’]s not just|giải pháp toàn diện|trải nghiệm đỉnh cao|nâng tầm|khẳng định vị thế|đồng hành cùng|bứt phá|kiến tạo)\b/gi,
+    message: 'AI-tone word or phrase (see copy-voice.md ban lists). Rewrite in the audience\'s own words or cut.',
+  });
+
+  // Em-dash used as the signature AI connector: flag when it recurs.
+  const emDashes = (source.match(/—/g) ?? []).length;
+  if (emDashes >= 3) {
+    findings.push({
+      level: 'ADVISORY',
+      id: 'EM_DASH_OVERUSE',
+      file: path.relative(root, file).replaceAll('\\', '/'),
+      line: null,
+      evidence: `${emDashes} em-dashes (—)`,
+      message: 'Em-dash is the loudest AI punctuation tell. Prefer commas, periods, or colons; keep at most one per page (copy-voice.md).',
+      manual_review_required: true,
+    });
+  }
+
   const fadeMatches = source.match(/(?:fade[-_ ]?up|data-aos\s*=\s*["']fade-up["']|\by\s*:\s*[-+]?\d+[^\n]{0,80}\bopacity\s*:\s*0)/gi) ?? [];
   if (fadeMatches.length >= 3) {
     findings.push({
