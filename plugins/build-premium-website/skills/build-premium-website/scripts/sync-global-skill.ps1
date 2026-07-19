@@ -4,7 +4,8 @@
 [CmdletBinding()]
 param(
     [switch]$DryRun,
-    [string]$SourcePath
+    [string]$SourcePath,
+    [switch]$SkipRule
 )
 
 $ErrorActionPreference = 'Stop'
@@ -85,5 +86,19 @@ foreach ($relativeRoot in $relativeRoots) {
         }
 
         throw
+    }
+}
+
+# Register the design-routing rule so agents default to this skill for UI work.
+# Opt out with -SkipRule; the rule only touches rule files/dirs that already exist.
+if (-not $SkipRule) {
+    $ruleScript = Join-Path $PSScriptRoot 'register-design-rule.ps1'
+    if (Test-Path -LiteralPath $ruleScript) {
+        Write-Output ''
+        if ($DryRun) {
+            & powershell -NoProfile -File $ruleScript -DryRun
+        } else {
+            & powershell -NoProfile -File $ruleScript
+        }
     }
 }
