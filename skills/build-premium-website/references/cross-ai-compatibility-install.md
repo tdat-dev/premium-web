@@ -53,6 +53,15 @@ rtk powershell -NoProfile -File "$HOME\.agents\skills\build-premium-website\scri
 
 The script validates the canonical folder name and `SKILL.md`, stages a full copy inside each target root, and replaces only the named `build-premium-website` destination.
 
+## Auto-registered routing rule
+
+After copying the skill, `sync-global-skill.ps1` also runs `register-design-rule.ps1`, which writes a design-routing rule into each installed agent's rule file so the agent defaults to `build-premium-website` for website/UI work (composing with `frontend-design` / `impeccable` / `ui-ux-pro-max` for execution). It is idempotent and only touches rule surfaces that already exist:
+
+- single-file rules get a managed marker block (`<!-- premium-web:auto-rule ... -->`) that is replaced, not duplicated, on re-install: `~/.claude/CLAUDE.md`, `~/.codex/AGENTS.md`, `~/.gemini/GEMINI.md`, `~/.grok/GROK.md`, `~/.config/opencode/AGENTS.md`;
+- rule directories get a standalone `build-premium-website.md`: `~/.cline/rules`, `~/.roo/rules`.
+
+Skip it with `-SkipRule`, run it alone with `register-design-rule.ps1`, and uninstall the rule everywhere with `register-design-rule.ps1 -Remove`. The rule is a fallback default: user instructions and project rules outrank it. Restart or reload each agent for a rule change to take effect.
+
 ## Discovery limits
 
 Copying a skill into a root does not guarantee that every version of every AI product automatically discovers it. Product conventions and feature support change. Restart or reload the relevant agent, then verify discovery with a harmless prompt that explicitly names the skill.
