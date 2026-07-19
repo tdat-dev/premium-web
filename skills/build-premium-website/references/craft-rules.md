@@ -15,6 +15,20 @@ When the host agent has a richer interactive design skill available (for example
 - Express colors in OKLCH (or another perceptual space) in tokens. Tinted neutrals take 0.005–0.015 chroma toward the brand's own hue — never a generic warm or cool tint "because the brand feels warm."
 - Choose a color strategy before choosing colors, and record it: `RESTRAINED` (neutrals + one accent ≤ 10% of surface), `COMMITTED` (one saturated color carries 30–60%), `FULL_PALETTE` (3–4 named roles used deliberately), or `DRENCHED` (the surface is the color). Product surfaces default to `RESTRAINED`; identity-led landing surfaces should justify staying below `COMMITTED`.
 - Dark vs light is never a default. Write one sentence describing the physical scene of use (who, where, ambient light, mood) and let it force the answer; if it doesn't force the answer, the sentence is not concrete enough yet.
+- **The category's own color is a reflex, not a palette.** Tea → green, coffee → brown, finance → navy, eco → leaf, luxury → black-gold: if the dominant surface family OR the accent equals the color anyone would guess from the category, that choice needs a recorded justification tied to a *specific* project fact — and the category color may never take both roles at once. Prefer provenance one step sideways: the brand's material world (ceramic glaze, dye, packaging paper, machinery, place) rather than the product's literal color.
+
+### Type casting (before any typography rule below)
+
+Fonts are the strongest single AI fingerprint. The model's "tasteful" reflex picks rotate within one small set; cycling inside it is still slop.
+
+**Reflex-reject list — never cast these on greenfield work** (they are training-data defaults, not choices): Fraunces, Newsreader, Lora, Crimson (all variants), Playfair Display, Cormorant (all variants), Syne, IBM Plex (all), Space Mono, Space Grotesk, Inter, DM Sans, DM Serif (all), Outfit, Plus Jakarta Sans, Instrument Sans, Instrument Serif. An existing brand that already ships one keeps it (identity preservation); everything else looks further.
+
+**Casting procedure (record it in the decision record):**
+1. Write three concrete brand-voice words — physical-object words ("mộc, chậm, đằm"), never "modern/elegant".
+2. Name the fonts you'd reach for by reflex; if any is on the list above, discard it explicitly.
+3. Cast for the brand as a *physical object* (a tea-wrapper label, a 1970s manual, a shop receipt), browsing a real catalog when web access exists.
+4. Cross-check: if the final pick equals the initial reflex, restart. "Elegant" is not automatically serif; "technical" is not automatically mono.
+5. **Language coverage is a casting gate**: verify the chosen faces actually cover the content language (e.g. full Vietnamese diacritics at display weights, rendered, not assumed) before locking.
 
 ### Typography
 
