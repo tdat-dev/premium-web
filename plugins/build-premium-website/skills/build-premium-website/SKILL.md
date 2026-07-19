@@ -23,6 +23,8 @@ After dispatch, load the mandatory route contract:
 
 Before designing or critiquing any visual surface, also load [references/craft-rules.md](references/craft-rules.md) — the measurable floors and structural bans that make critique concrete. Its violations are severity-graded defects under the enforcement contract, not taste notes.
 
+Before writing or reviewing any copy — headlines, body, CTAs, labels, empty/error states, alt text — on any route, load [references/copy-voice.md](references/copy-voice.md). It is the authority for human-sounding words (Vietnamese and English): the AI word/structure ban lists, punctuation rules, and the cadence-loop rule that stops every heading and CTA from sharing one template. Hero-level or looping AI-tone copy is a defect, not a style preference.
+
 For every `LANDING_BRAND` or `HYBRID` build/redesign with visual freedom, also load [references/ambition-gates.md](references/ambition-gates.md) — the demand side. Floors delete failures; the five gates (media, composition risk, type bravery, motion, signature interaction) demand the excellence that floors alone never produce. A page that passes every floor but fails an unwaived gate is capped at `CLEAN BASELINE` and must be reported as such.
 
 For greenfield work, creative art direction, or any task with substantial visual freedom, also read [references/reflex-registry-2026.md](references/reflex-registry-2026.md), [references/structure-catalog.md](references/structure-catalog.md), and [references/run-log.md](references/run-log.md). Treat the registry's dated patterns as review signals, never eternal bans; treat the catalog's macrostructure pick and the run-log diversification protocol as required steps.
