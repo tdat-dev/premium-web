@@ -11,7 +11,8 @@ This file is the demand side. Load it for every `LANDING_BRAND` or `HYBRID` buil
 A brand landing page without real art direction material is a wireframe wearing colors.
 
 - If real assets exist, use them (media contract rules apply).
-- If a generation tool is available in the harness, generating the key assets is **part of the build**, not optional polish: at minimum the hero's anchor visual and one supporting texture/detail per major section group.
+- **Probe before concluding no tool exists.** Check the harness for an image-generation capability: an MCP image tool (e.g. WakerMCP's `generate_image` — search deferred tools for "image" / "wakermcp"), a bundled script, or an API the user has configured. "I didn't notice a tool" never justifies the media-free path; record what was probed in the decision record.
+- If a generation tool is available in the harness, generating the key assets is **part of the build**, not optional polish: at minimum the hero's anchor visual and one supporting texture/detail per major section group. Write prompts like an art director (subject, materials, lighting, composition, brand colors by name) and obey the tool's economy conventions — default quality for supporting art, high only for the hero.
 - If no assets exist and no generation tool is available, choose one honestly:
   1. `BLOCKED ON ASSETS` — deliver exact production prompts/specs per media-contract-prompts.md; or
   2. a **deliberately media-free direction** — type-as-image, custom drawn SVG composition, generative CSS texture — executed as the *subject* of the design, and record the ceiling: "media-free by constraint, art direction carried by X".
