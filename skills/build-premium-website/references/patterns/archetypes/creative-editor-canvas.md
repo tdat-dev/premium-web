@@ -7,9 +7,9 @@ Copyright (c) 2026 ByteWaker. Part of the `build-premium-website` skill. See LIC
 Jobs: create and arrange objects on a spatial surface by direct manipulation, then export or hand off the result. Covers design tools, whiteboards, diagram editors, photo/video editors, slide and site builders. Actors: makers (long sessions, heavy shortcut use), reviewers (view and comment), viewers, library admins. Sessions run from minutes to hours (convention). Signals: "canvas", "drag and drop editor", "layers", "inspector", "zoom", "snap", "frames/artboards", "export", "whiteboard", "timeline", "builder".
 
 Neighbors:
-- **Docs / knowledge / CMS** — a block editor flows content in one column; free 2D position with overlap is canvas.
-- **Work management** — a kanban board snaps items to status columns; that is a collection, not a canvas.
-- **Analytics** — a dashboard builder on a fixed widget grid stays analytics; free placement and layering make it canvas.
+- **Docs / knowledge / CMS**: a block editor flows content in one column; free 2D position with overlap is canvas.
+- **Work management**: a kanban board snaps items to status columns; that is a collection, not a canvas.
+- **Analytics**: a dashboard builder on a fixed widget grid stays analytics; free placement and layering make it canvas.
 
 ## Shell and topology
 
@@ -66,23 +66,23 @@ File browser, teams, account: [cross/app-shell-navigation.md](../cross/app-shell
 
 ## Study pointers
 
-- **Figma** — every canvas gesture has a numeric equivalent, so speed and precision never compete.
-- **tldraw** — screen-pixel snap thresholds and batched history transactions keep feel consistent at any zoom.
-- **Excalidraw** — a small tool set with single-key shortcuts stays approachable without hiding power.
-- **Adobe Spectrum** — dense desktop controls can meet accessibility when tokens scale targets by platform.
-- **Webflow** — a layers tree that mirrors real output structure keeps visual editing honest.
+- **Figma**: every canvas gesture has a numeric equivalent, so speed and precision never compete.
+- **tldraw**: screen-pixel snap thresholds and batched history transactions keep feel consistent at any zoom.
+- **Excalidraw**: a small tool set with single-key shortcuts stays approachable without hiding power.
+- **Adobe Spectrum**: dense desktop controls can meet accessibility when tokens scale targets by platform.
+- **Webflow**: a layers tree that mirrors real output structure keeps visual editing honest.
 
 ## Archetype anti-patterns
 
-- **Drag without a numeric twin** — no exact size or position; pro users leave — P1.
-- **Pointer-only object access** — layers panel not keyboard navigable, selection not announced — P1.
-- **Undo that splits one gesture or reverts a collaborator's work** — breaks trust in editing — P1.
-- **Chrome that scrolls or reflows with the canvas** — tools move while working — P1.
-- **Single-key shortcuts firing in text or IME composition** — typing corrupts the document — P1.
-- **Silent save** — no Saved/Offline state; users cannot tell if work is safe — P1.
-- **Snap threshold in canvas units** — sticky zoomed out, useless zoomed in — P2.
-- **Accent equal to a default fill** — selection vanishes on user content — P2.
-- **Blocking modal export** — long renders freeze the editor with no cancel — P2.
+- **Drag without a numeric twin**: no exact size or position; pro users leave. P1.
+- **Pointer-only object access**: layers panel not keyboard navigable, selection not announced. P1.
+- **Undo that splits one gesture or reverts a collaborator's work**: breaks trust in editing. P1.
+- **Chrome that scrolls or reflows with the canvas**: tools move while working. P1.
+- **Single-key shortcuts firing in text or IME composition**: typing corrupts the document. P1.
+- **Silent save**: no Saved/Offline state; users cannot tell if work is safe. P1.
+- **Snap threshold in canvas units**: sticky zoomed out, useless zoomed in. P2.
+- **Accent equal to a default fill**: selection vanishes on user content. P2.
+- **Blocking modal export**: long renders freeze the editor with no cancel. P2.
 
 ## Coverage additions
 
@@ -100,10 +100,10 @@ File browser, teams, account: [cross/app-shell-navigation.md](../cross/app-shell
 
 ## Sources
 
-- https://help.figma.com/hc/en-us/articles/360039956914-Adjust-alignment-rotation-position-and-dimensions — accessed 2026-09-28
-- https://help.figma.com/hc/en-us/articles/360039831974-View-layers-in-the-Layers-panel — accessed 2026-09-28
-- https://help.figma.com/hc/en-us/articles/360039959014-Select-layers-and-objects — accessed 2026-09-28
-- https://tldraw.dev/docs/editor — accessed 2026-09-28
-- https://tldraw.dev/sdk-features/snapping — accessed 2026-09-28
-- https://tldraw.dev/docs/collaboration — accessed 2026-09-28
+- https://help.figma.com/hc/en-us/articles/360039956914-Adjust-alignment-rotation-position-and-dimensions (accessed 2026-09-28)
+- https://help.figma.com/hc/en-us/articles/360039831974-View-layers-in-the-Layers-panel (accessed 2026-09-28)
+- https://help.figma.com/hc/en-us/articles/360039959014-Select-layers-and-objects (accessed 2026-09-28)
+- https://tldraw.dev/docs/editor (accessed 2026-09-28)
+- https://tldraw.dev/sdk-features/snapping (accessed 2026-09-28)
+- https://tldraw.dev/docs/collaboration (accessed 2026-09-28)
 - Selection gestures, Excalidraw, Spectrum, Webflow, IME conflicts, density values: practitioner knowledge.

@@ -4,9 +4,9 @@ Copyright (c) 2026 ByteWaker. Part of the `build-premium-website` skill. See LIC
 
 The route contracts say *what must be proven*. This library says *what a good product of this kind is made of*: the shell, the screen set, the signature patterns a generic "dashboard" build misses, the density and data conventions, and the archetype-specific failure modes. It is plain text and self-contained; no external reference tool is required to use it.
 
-Authority order is unchanged: [anti-slop-enforcement.md](../anti-slop-enforcement.md) and the route contracts decide status and gates; [craft-rules.md](../craft-rules.md) decides type, color, and motion floors. Pattern files supply defaults and checks — a pattern default never overrides a verified product fact, and a deviation from a default is a recorded decision, not a defect by itself.
+Authority order is unchanged: [anti-slop-enforcement.md](../anti-slop-enforcement.md) and the route contracts decide status and gates; [craft-rules.md](../craft-rules.md) decides type, color, and motion floors. Pattern files supply defaults and checks: a pattern default never overrides a verified product fact, and a deviation from a default is a recorded decision, not a defect by itself.
 
-## Step 1 — Classify the archetype (DASHBOARD_PRODUCT and the product side of HYBRID)
+## Step 1: Classify the archetype (DASHBOARD_PRODUCT and the product side of HYBRID)
 
 Record one primary archetype and at most two secondary archetypes in the decision record. Pick by the user's **primary repeated job**, not by the industry.
 
@@ -32,10 +32,10 @@ Classification rules:
 
 - **Industry is not an archetype.** A logistics dispatcher panel is admin/back-office (queues + exceptions); it takes scheduling as a secondary only if dispatchers book time slots. A clinic reception tool is scheduling primary. Add a secondary only when a screen in scope performs that archetype's job.
 - **Most real products are one primary plus secondaries.** A helpdesk with an order sidebar is support-inbox primary, commerce secondary. Load the primary file in full. From each secondary, read only `Core screen set`, `Signature patterns`, and `Archetype anti-patterns`, and apply only the rows for screens in scope; do not read further archetype files to be thorough.
-- **No row fits** — pick the nearest archetype by shell and job, record `archetype: CUSTOM (nearest: <name>)`, and state which signature patterns transfer and which are replaced.
+- **No row fits**: pick the nearest archetype by shell and job, record `archetype: CUSTOM (nearest: <name>)`, and state which signature patterns transfer and which are replaced.
 - **Admin is the fallback, not the default.** Choose it because the job is record/queue work, not because the brief says "panel".
 
-## Step 2 — Load the cross-cutting files the scope touches
+## Step 2: Load the cross-cutting files the scope touches
 
 Every archetype file links to these; load the ones whose surfaces are changed.
 
@@ -51,7 +51,7 @@ Every archetype file links to these; load the ones whose surfaces are changed.
 | Roles, sharing, permission-denied rendering, impersonation, audit log, approvals | [cross/permissions-roles-audit.md](cross/permissions-roles-audit.md) |
 | Presence, comments, mentions, activity, version history, conflicts | [cross/collaboration-realtime.md](cross/collaboration-realtime.md) |
 
-## Step 3 — Landing-side page types (LANDING_BRAND and the public side of HYBRID)
+## Step 3: Landing-side page types (LANDING_BRAND and the public side of HYBRID)
 
 The macrostructure and ambition choice stay in [structure-catalog.md](../structure-catalog.md) and [ambition-gates.md](../ambition-gates.md). These files define what each *page type* must contain and how it behaves, not its look.
 
@@ -60,7 +60,7 @@ The macrostructure and ambition choice stay in [structure-catalog.md](../structu
 | Pricing, feature, solutions, customers, integrations, changelog, about/careers, contact/demo, blog, legal/trust, status, 404, site nav and footer | [landing/marketing-site-pages.md](landing/marketing-site-pages.md) |
 | Docs sites, API reference, developer portals, quickstarts | [landing/docs-developer-portal.md](landing/docs-developer-portal.md) |
 
-## Step 4 — Turn the files into commitments
+## Step 4: Turn the files into commitments
 
 In the decision record, fill the `Archetype and pattern defaults` section:
 

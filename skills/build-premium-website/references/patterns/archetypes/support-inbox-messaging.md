@@ -79,14 +79,14 @@ Alternatives:
 
 ## Archetype anti-patterns
 
-- **No collision guard** — two agents reply, the customer gets conflicting answers — P1.
-- **Note and reply look alike** — internal text sent to the customer — P1.
-- **SLA as elapsed time** — agents compute deadlines themselves and pick the wrong ticket — P1.
-- **Send fails after the channel window closed** — typed reply lost, customer waits — P1.
-- **Assignment hides the item from the team** — nobody covers when the owner is away — P1.
-- **Enter sends during IME composition** — broken Vietnamese messages — P1.
-- **Auto-scroll to bottom on new message** — agent loses reading position — P2.
-- **One badge for all unread** — mentions drown in channel noise — P2.
+- **No collision guard**: two agents reply, the customer gets conflicting answers. P1.
+- **Note and reply look alike**: internal text sent to the customer. P1.
+- **SLA as elapsed time**: agents compute deadlines themselves and pick the wrong ticket. P1.
+- **Send fails after the channel window closed**: typed reply lost, customer waits. P1.
+- **Assignment hides the item from the team**: nobody covers when the owner is away. P1.
+- **Enter sends during IME composition**: broken Vietnamese messages. P1.
+- **Auto-scroll to bottom on new message**: agent loses reading position. P2.
+- **One badge for all unread**: mentions drown in channel noise. P2.
 
 ## Coverage additions
 

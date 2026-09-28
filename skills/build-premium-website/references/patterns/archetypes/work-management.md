@@ -77,13 +77,13 @@ Alternatives:
 
 ## Archetype anti-patterns
 
-- **Views that drop items silently** — undated or unstatused work vanishes from Timeline/Board — P1.
-- **Drag-only reordering and status change** — no keyboard or touch path — P1.
-- **Free-form statuses with no categories** — progress and reports become meaningless — P1.
-- **Shortcuts firing while typing** — Vietnamese input corrupts item properties — P1.
-- **Silent rank snap-back on sorted views** — users think drag is broken — P2.
-- **Gantt overlap without conflict marker** — schedules look feasible when they are not — P2.
-- **Bulk edit without scope or undo** — hundreds of items changed by accident — P1.
+- **Views that drop items silently**: undated or unstatused work vanishes from Timeline/Board. P1.
+- **Drag-only reordering and status change**: no keyboard or touch path. P1.
+- **Free-form statuses with no categories**: progress and reports become meaningless. P1.
+- **Shortcuts firing while typing**: Vietnamese input corrupts item properties. P1.
+- **Silent rank snap-back on sorted views**: users think drag is broken. P2.
+- **Gantt overlap without conflict marker**: schedules look feasible when they are not. P2.
+- **Bulk edit without scope or undo**: hundreds of items changed by accident. P1.
 
 ## Coverage additions
 

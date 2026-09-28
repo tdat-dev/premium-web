@@ -81,14 +81,14 @@ This lists what each page type owes the visitor, not a layout. Flagship pages (p
 
 ## Anti-patterns
 
-- **"Contact us" as the only price when prices exist** — buyers compare elsewhere (NN/g) — P1.
-- **Per-month yearly price without billed total** — misleads on the charge — P1.
-- **Hover-only or widget-stuffed mega menu** — unreachable by keyboard/touch — P1-N.
-- **Solutions pages with swapped nouns** — fails competitor-swap — P2.
-- **Borrowed or unsourced logos, quotes, certifications** — fabricated proof — P0.
-- **CTA label that lies about its destination** ("Start free" → sales form) — P1.
-- **Status page hard-coded green or hosted with the product it monitors** — fails during the outage — P1.
-- **Dead-end or joke-only 404; undated legal pages** — no recovery, no verification — P2.
+- **"Contact us" as the only price when prices exist**: buyers compare elsewhere (NN/g). P1.
+- **Per-month yearly price without billed total**: misleads on the charge. P1.
+- **Hover-only or widget-stuffed mega menu**: unreachable by keyboard/touch. P1-N.
+- **Solutions pages with swapped nouns**: fails competitor-swap. P2.
+- **Borrowed or unsourced logos, quotes, certifications**: fabricated proof. P0.
+- **CTA label that lies about its destination** ("Start free" → sales form). P1.
+- **Status page hard-coded green or hosted with the product it monitors**: fails during the outage. P1.
+- **Dead-end or joke-only 404; undated legal pages**: no recovery, no verification. P2.
 
 ## Coverage additions
 

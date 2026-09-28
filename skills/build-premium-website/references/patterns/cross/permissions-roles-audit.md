@@ -85,16 +85,16 @@ Elsewhere: members table, invites, and ownership transfer → [auth-onboarding-a
 
 ## Anti-patterns
 
-- **Disabled button with no reason** — users cannot tell whether it is broken, pending, or forbidden — P1.
-- **Hiding a control users know exists** — reads as a bug — P2.
-- **Read-only screens made of greyed disabled inputs** — low contrast, unfocusable, uncopyable — P2.
-- **Ungrouped permission matrix without dependency hints** — P2.
-- **Impersonation without persistent banner or logged reason** — accidental actions, no accountability — P1.
-- **Editable audit entries, or entries missing actor type (user, token, system, impersonator)** — P1.
-- **Audit log with relative timestamps only** — unusable for incident timelines — P1.
-- **Link-access change without impact preview** — accidental exposure — P1.
-- **Approver cannot see the exact diff** — rubber-stamping — P1.
-- **Denied page that confirms existence of a private resource by name** — information leak — P1.
+- **Disabled button with no reason**: users cannot tell whether it is broken, pending, or forbidden. P1.
+- **Hiding a control users know exists**: reads as a bug. P2.
+- **Read-only screens made of greyed disabled inputs**: low contrast, unfocusable, uncopyable. P2.
+- **Ungrouped permission matrix without dependency hints**. P2.
+- **Impersonation without persistent banner or logged reason**: accidental actions, no accountability. P1.
+- **Editable audit entries, or entries missing actor type (user, token, system, impersonator)**. P1.
+- **Audit log with relative timestamps only**: unusable for incident timelines. P1.
+- **Link-access change without impact preview**: accidental exposure. P1.
+- **Approver cannot see the exact diff**: rubber-stamping. P1.
+- **Denied page that confirms existence of a private resource by name**: information leak. P1.
 
 ## Coverage additions
 

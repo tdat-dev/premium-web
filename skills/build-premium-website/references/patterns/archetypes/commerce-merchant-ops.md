@@ -83,15 +83,15 @@ Tables, filters, overlays: follow [../cross/data-tables-collections.md](../cross
 
 ## Archetype anti-patterns
 
-- **Single status column** — payment and fulfillment mixed, every role misfilters — P1.
-- **Revenue hero home** — a big number does not tell staff what to do; lead with to-do counts — P2.
-- **Stock as one integer** — oversells when committed/unavailable are hidden — P1.
-- **Free-text refund amount** — invites over-refunding — P1.
-- **Silent batch failure** — one bad address kills or vanishes from a label batch — P1.
-- **Fees revealed at the last step** — hidden-cost dark pattern — P1.
-- **POS that assumes network** — no queue, no countdown, cashier stuck — P1.
-- **Unbacked scarcity** ("chỉ còn 2") — fake urgency on the storefront — P1.
-- **Channel orders editable as local** — the marketplace overwrites or rejects — P2.
+- **Single status column**: payment and fulfillment mixed, every role misfilters. P1.
+- **Revenue hero home**: a big number does not tell staff what to do; lead with to-do counts. P2.
+- **Stock as one integer**: oversells when committed/unavailable are hidden. P1.
+- **Free-text refund amount**: invites over-refunding. P1.
+- **Silent batch failure**: one bad address kills or vanishes from a label batch. P1.
+- **Fees revealed at the last step**: hidden-cost dark pattern. P1.
+- **POS that assumes network**: no queue, no countdown, cashier stuck. P1.
+- **Unbacked scarcity** ("chỉ còn 2"): fake urgency on the storefront. P1.
+- **Channel orders editable as local**: the marketplace overwrites or rejects. P2.
 
 ## Coverage additions
 
@@ -108,12 +108,12 @@ Tables, filters, overlays: follow [../cross/data-tables-collections.md](../cross
 
 ## Sources
 
-- https://shopify.dev/docs/apps/design/layout — accessed 2026-09-28
-- https://shopify.dev/docs/api/app-home/patterns/templates/details — accessed 2026-09-28
-- https://help.shopify.com/en/manual/fulfillment/managing-orders/order-status — accessed 2026-09-28
-- https://help.shopify.com/en/manual/fulfillment/managing-orders/returns — accessed 2026-09-28
-- https://help.shopify.com/en/manual/products/inventory/fundamentals/inventory-states (search summary) — accessed 2026-09-28
-- https://squareup.com/help/us/en/article/7777-process-card-payments-with-offline-mode — accessed 2026-09-28
-- https://baymard.com/blog/checkout-flow-average-form-fields — accessed 2026-09-28
-- https://napas.com.vn/dich-vu-chuyen-tien-nhanh-napas-247 (search summary) — accessed 2026-09-28
+- https://shopify.dev/docs/apps/design/layout (accessed 2026-09-28)
+- https://shopify.dev/docs/api/app-home/patterns/templates/details (accessed 2026-09-28)
+- https://help.shopify.com/en/manual/fulfillment/managing-orders/order-status (accessed 2026-09-28)
+- https://help.shopify.com/en/manual/fulfillment/managing-orders/returns (accessed 2026-09-28)
+- https://help.shopify.com/en/manual/products/inventory/fundamentals/inventory-states (search summary) (accessed 2026-09-28)
+- https://squareup.com/help/us/en/article/7777-process-card-payments-with-offline-mode (accessed 2026-09-28)
+- https://baymard.com/blog/checkout-flow-average-form-fields (accessed 2026-09-28)
+- https://napas.com.vn/dich-vu-chuyen-tien-nhanh-napas-247 (search summary) (accessed 2026-09-28)
 - Practitioner knowledge: VN carriers (GHN, GHTK, Viettel Post), COD reconciliation, marketplace sync, VN retail POS, 2025 administrative-unit merger.

@@ -34,11 +34,11 @@ After dispatch, load the mandatory route contract:
 
 For every `DASHBOARD_PRODUCT` task and the product side of every `HYBRID` task, load [references/patterns/index.md](references/patterns/index.md), classify the product archetype there, and load the primary archetype file plus the cross-cutting pattern files for the surfaces in scope. For `LANDING_BRAND` work that includes pricing, feature, customers, changelog, contact, blog, legal, status, or docs pages, load the matching `references/patterns/landing/` file. Pattern files are the default anatomy, screen set, signature patterns, and archetype anti-patterns; deviations are recorded decisions, and adopted signature patterns need rendered evidence like any other gate item.
 
-Before designing or critiquing any visual surface, also load [references/craft-rules.md](references/craft-rules.md) — the measurable floors and structural bans that make critique concrete. Its violations are severity-graded defects under the enforcement contract, not taste notes.
+Before designing or critiquing any visual surface, also load [references/craft-rules.md](references/craft-rules.md): the measurable floors and structural bans that make critique concrete. Its violations are severity-graded defects under the enforcement contract, not taste notes.
 
-Before writing or reviewing any copy — headlines, body, CTAs, labels, empty/error states, alt text — on any route, load [references/copy-voice.md](references/copy-voice.md). It is the authority for human-sounding words (Vietnamese and English): the AI word/structure ban lists, punctuation rules, and the cadence-loop rule that stops every heading and CTA from sharing one template. Hero-level or looping AI-tone copy is a defect, not a style preference.
+Before writing or reviewing any copy (headlines, body, CTAs, labels, empty/error states, alt text) on any route, load [references/copy-voice.md](references/copy-voice.md). It is the authority for human-sounding words (Vietnamese and English): the AI word/structure ban lists, punctuation rules, and the cadence-loop rule that stops every heading and CTA from sharing one template. Hero-level or looping AI-tone copy is a defect, not a style preference.
 
-For every `LANDING_BRAND` or `HYBRID` build/redesign with visual freedom, also load [references/ambition-gates.md](references/ambition-gates.md) — the demand side. Floors delete failures; the five gates (media, composition risk, type bravery, motion, signature interaction) demand the excellence that floors alone never produce. A page that passes every floor but fails an unwaived gate is capped at `CLEAN BASELINE` and must be reported as such.
+For every `LANDING_BRAND` or `HYBRID` build/redesign with visual freedom, also load [references/ambition-gates.md](references/ambition-gates.md): the demand side. Floors delete failures; the five gates (media, composition risk, type bravery, motion, signature interaction) demand the excellence that floors alone never produce. A page that passes every floor but fails an unwaived gate is capped at `CLEAN BASELINE` and must be reported as such.
 
 For greenfield work, creative art direction, or any task with substantial visual freedom, also read [references/reflex-registry-2026.md](references/reflex-registry-2026.md), [references/structure-catalog.md](references/structure-catalog.md), and [references/run-log.md](references/run-log.md). Treat the registry's dated patterns as review signals, never eternal bans; treat the catalog's macrostructure pick and the run-log diversification protocol as required steps.
 
@@ -64,7 +64,7 @@ For `DASHBOARD_PRODUCT` and the product side of `HYBRID`, also record `archetype
 
 Do not use `AUDIT` as a surface route. A repository containing both a marketing site and an application is not automatically `HYBRID`; choose it only when the scoped user journey materially crosses both. Record relevant modifiers such as `GREENFIELD`, `CONSTRAINED`, `HIGH_UNCERTAINTY`, `MEDIA_LED`, `NO_MEDIA`, `MOTION_LED`, `THREE_D`, `COMMERCE`, `CONTENT_HEAVY`, `APPLICATION`, or `LOCAL_CHANGE`.
 
-**`LOCAL_CHANGE` fast path.** When the scope is a single component, section, or small visual fix, skip the full decision record, reference research, structure catalog, and coverage matrix. Still required: the route contract's relevant gates, [references/craft-rules.md](references/craft-rules.md), rendered evidence of the changed surface in its surrounding page at the affected breakpoints, and the severity rules. The fast path changes the paperwork, never the quality bar. A change stops being local — exit the fast path and classify again — when it adds, removes, or reorders sections; changes the page grid, hero form, or navigation; or alters a step in a user journey. Adjusting values inside an existing element (spacing, color, type size, copy, one component's internal layout) stays local.
+**`LOCAL_CHANGE` fast path.** When the scope is a single component, section, or small visual fix, skip the full decision record, reference research, structure catalog, and coverage matrix. Still required: the route contract's relevant gates, [references/craft-rules.md](references/craft-rules.md), rendered evidence of the changed surface in its surrounding page at the affected breakpoints, and the severity rules. The fast path changes the paperwork, never the quality bar. A change stops being local (exit the fast path and classify again) when it adds, removes, or reorders sections; changes the page grid, hero form, or navigation; or alters a step in a user journey. Adjusting values inside an existing element (spacing, color, type size, copy, one component's internal layout) stays local.
 
 Build a fact/claim/source map from the user, repository, existing product, supplied assets, and verified URLs. Label assumptions. Never invent proof, customers, metrics, testimonials, capabilities, rights, or research.
 
@@ -140,7 +140,7 @@ Report:
 10. the advisory Awwwards-style review, clearly separated from production gates;
 11. ambition-gate results (A-E: satisfied / waived-with-reason / failed) and the resulting creative cap, when the gates applied;
 12. exact overall status from the enforcement contract;
-13. confirmation that the run-log entry was appended (or why not) — an unmentioned run-log is an incomplete package;
+13. confirmation that the run-log entry was appended (or why not). An unmentioned run-log is an incomplete package;
 14. the quoted `RENDER-CHECK` and audit summary lines, the Slop sweep, and the fresh-eyes verdict.
 
 State what was measured, what remains subjective, and what was not verifiable.
@@ -149,7 +149,7 @@ After delivering a build or redesign that locked a creative direction, append th
 
 ## Compose with richer local tooling
 
-When the host harness has a dedicated interactive design skill installed (palette generators, slop detectors, live browser iteration, focused single-verb commands), prefer its tools for *execution* of small refine tasks and palette seeding — it is usually faster and better instrumented. Two hard boundaries: this skill's enforcement contract, route gates, and [references/craft-rules.md](references/craft-rules.md) remain the acceptance authority over any tool's output; and on harnesses without such tooling (cross-AI installs), the references here must be applied directly — never skip a gate because a helper script was unavailable.
+When the host harness has a dedicated interactive design skill installed (palette generators, slop detectors, live browser iteration, focused single-verb commands), prefer its tools for *execution* of small refine tasks and palette seeding. It is usually faster and better instrumented. Two hard boundaries: this skill's enforcement contract, route gates, and [references/craft-rules.md](references/craft-rules.md) remain the acceptance authority over any tool's output; and on harnesses without such tooling (cross-AI installs), the references here must be applied directly. Never skip a gate because a helper script was unavailable.
 
 ## Use across AI tools
 

@@ -78,14 +78,14 @@ Alternatives:
 
 ## Archetype anti-patterns
 
-- **Board without totals** — managers export to a spreadsheet to size a stage — P1.
-- **Drag that skips stage rules** — required fields bypassed, reports wrong — P1.
-- **Timeline mixes future and past** — overdue tasks buried under yesterday's email — P1.
-- **Raw phone storage** — one customer exists three times, channel matching fails — P1.
-- **One-click merge** — irreversible loss of owner, fields, history — P1.
-- **Submitted and live forecast blended** — numbers shift after sign-off — P1.
-- **KPI hero as rep home** — quota cards push today's calls below the fold — P2.
-- **Rainbow stages** — color spent on position, none left for risk — P2.
+- **Board without totals**: managers export to a spreadsheet to size a stage. P1.
+- **Drag that skips stage rules**: required fields bypassed, reports wrong. P1.
+- **Timeline mixes future and past**: overdue tasks buried under yesterday's email. P1.
+- **Raw phone storage**: one customer exists three times, channel matching fails. P1.
+- **One-click merge**: irreversible loss of owner, fields, history. P1.
+- **Submitted and live forecast blended**: numbers shift after sign-off. P1.
+- **KPI hero as rep home**: quota cards push today's calls below the fold. P2.
+- **Rainbow stages**: color spent on position, none left for risk. P2.
 
 ## Coverage additions
 

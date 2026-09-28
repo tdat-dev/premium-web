@@ -94,17 +94,17 @@ Elsewhere: field anatomy, validation, save semantics → [forms-wizards-settings
 
 ## Anti-patterns
 
-- **Marketing hero on the sign-in page** — pushes the form down for returning users — P2.
-- **Sign-in and sign-up tabs on one card** — wrong-tab "account exists" loops — P2.
-- **Confirm-password field** — raises abandonment; use show-password — P2.
-- **Split one-box-per-digit OTP** — breaks paste, autofill, and screen readers — P1.
-- **Hidden password rules revealed only on error** — P2.
-- **Account enumeration in errors** — security defect — P1.
-- **Session expiry that discards unsaved input** — data loss — P1.
-- **Mandatory product tour at first launch** — skipped, nothing retained — P2.
-- **Unlabeled sample data among real records** — fake data gets exported or reported — P1.
-- **API token visible again after creation, or listed in full** — P1.
-- **One-click account deletion without consequences or ownership transfer** — P1.
+- **Marketing hero on the sign-in page**: pushes the form down for returning users. P2.
+- **Sign-in and sign-up tabs on one card**: wrong-tab "account exists" loops. P2.
+- **Confirm-password field**: raises abandonment; use show-password. P2.
+- **Split one-box-per-digit OTP**: breaks paste, autofill, and screen readers. P1.
+- **Hidden password rules revealed only on error**. P2.
+- **Account enumeration in errors**: security defect. P1.
+- **Session expiry that discards unsaved input**: data loss. P1.
+- **Mandatory product tour at first launch**: skipped, nothing retained. P2.
+- **Unlabeled sample data among real records**: fake data gets exported or reported. P1.
+- **API token visible again after creation, or listed in full**. P1.
+- **One-click account deletion without consequences or ownership transfer**. P1.
 
 ## Coverage additions
 

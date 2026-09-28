@@ -83,15 +83,15 @@ Collections and filters: follow [../cross/data-tables-collections.md](../cross/d
 
 ## Archetype anti-patterns
 
-- **Infinite scroll on search results** — users cannot refind or compare; back loses position — P1.
-- **Scroll position lost on back** — punishes every detail visit — P1.
-- **Price without fees** — hidden-cost pattern; trust breaks at checkout — P1.
-- **Star rating without count** — 5.0 from one review reads as proof — P2.
-- **Push permission on first visit** — denied forever, channel lost — P2.
-- **Confirmshaming or hard cancel** — deceptive pattern, legal and trust risk — P1.
-- **Full-width map on phone results** — scroll trapped by pan — P2.
-- **Unlabeled sponsored items** — disguised ads — P1.
-- **Autoplay without off switch** — data and attention cost users did not choose — P2.
+- **Infinite scroll on search results**: users cannot refind or compare; back loses position. P1.
+- **Scroll position lost on back**: punishes every detail visit. P1.
+- **Price without fees**: hidden-cost pattern; trust breaks at checkout. P1.
+- **Star rating without count**: 5.0 from one review reads as proof. P2.
+- **Push permission on first visit**: denied forever, channel lost. P2.
+- **Confirmshaming or hard cancel**: deceptive pattern, legal and trust risk. P1.
+- **Full-width map on phone results**: scroll trapped by pan. P2.
+- **Unlabeled sponsored items**: disguised ads. P1.
+- **Autoplay without off switch**: data and attention cost users did not choose. P2.
 
 ## Coverage additions
 
@@ -106,11 +106,11 @@ Collections and filters: follow [../cross/data-tables-collections.md](../cross/d
 
 ## Sources
 
-- https://www.deceptive.design/types — accessed 2026-09-28
-- https://www.nngroup.com/articles/infinite-scrolling-tips/ — accessed 2026-09-28
-- https://www.nngroup.com/articles/push-notification/ — accessed 2026-09-28
-- https://www.nngroup.com/articles/mobile-maps-locations/ — accessed 2026-09-28
-- https://www.nngroup.com/articles/ecommerce-product-pages/ — accessed 2026-09-28
-- https://www.w3.org/WAI/media/av/transcripts/ — accessed 2026-09-28
-- https://www.w3.org/WAI/ARIA/apg/patterns/slider/ — accessed 2026-09-28
+- https://www.deceptive.design/types (accessed 2026-09-28)
+- https://www.nngroup.com/articles/infinite-scrolling-tips/ (accessed 2026-09-28)
+- https://www.nngroup.com/articles/push-notification/ (accessed 2026-09-28)
+- https://www.nngroup.com/articles/mobile-maps-locations/ (accessed 2026-09-28)
+- https://www.nngroup.com/articles/ecommerce-product-pages/ (accessed 2026-09-28)
+- https://www.w3.org/WAI/media/av/transcripts/ (accessed 2026-09-28)
+- https://www.w3.org/WAI/ARIA/apg/patterns/slider/ (accessed 2026-09-28)
 - Practitioner knowledge: marketplace messaging, listing cards, feed insertion, VN phone/Zalo identity, Material navigation bar.

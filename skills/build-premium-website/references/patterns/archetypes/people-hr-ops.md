@@ -86,14 +86,14 @@ Tables: [cross/data-tables-collections.md](../cross/data-tables-collections.md).
 
 ## Archetype anti-patterns
 
-- **One view for all roles** — employees see admin clutter, managers lack approvals — P1.
-- **Sensitive fields blurred instead of absent** — data still ships to the client — P1.
-- **Leave form without balance impact** — people guess and get denied — P1.
-- **Approving without coverage context** — the whole team ends up out together — P2.
-- **Editable submitted payroll** — silent changes to paid amounts break reconciliation — P1.
-- **Color-only leave or shift types** — fails color-blind users — P2.
-- **Progress bar as onboarding** — hides which task is blocked and who owns it — P2.
-- **Hardcoded tax or insurance rates** — wrong the day rules change — P1.
+- **One view for all roles**: employees see admin clutter, managers lack approvals. P1.
+- **Sensitive fields blurred instead of absent**: data still ships to the client. P1.
+- **Leave form without balance impact**: people guess and get denied. P1.
+- **Approving without coverage context**: the whole team ends up out together. P2.
+- **Editable submitted payroll**: silent changes to paid amounts break reconciliation. P1.
+- **Color-only leave or shift types**: fails color-blind users. P2.
+- **Progress bar as onboarding**: hides which task is blocked and who owns it. P2.
+- **Hardcoded tax or insurance rates**: wrong the day rules change. P1.
 
 ## Coverage additions
 

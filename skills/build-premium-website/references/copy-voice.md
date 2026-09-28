@@ -8,7 +8,7 @@ Copy that trips a ban below is a defect under the enforcement contract: **P1-P**
 
 ## The principle
 
-Write as the real person who runs this business would speak to the customer standing in front of them, not as a model completing a landing page. Every line comes from two sources only: **what the product actually is** (the fact/claim/source map) and **the words the audience uses for their own problem**. If a sentence could be pasted onto a competitor in the same category without changing meaning, it says nothing — cut or rewrite it.
+Write as the real person who runs this business would speak to the customer standing in front of them, not as a model completing a landing page. Every line comes from two sources only: **what the product actually is** (the fact/claim/source map) and **the words the audience uses for their own problem**. If a sentence could be pasted onto a competitor in the same category without changing meaning, it says nothing: cut or rewrite it.
 
 Match the register to the product and audience, not to "premium website." A gạch-đá supplier, a preschool, a law firm, and a bún-bò shop do not share a voice. Read the fact map, name the speaker and the listener, then write in that voice.
 

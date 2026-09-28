@@ -143,7 +143,7 @@ function auditFile(source, file, root, findings) {
     : '';
 
   // Em-dash is the loudest AI punctuation tell. copy-voice.md allows at most one per page.
-  // Count only connector dashes between words; a lone "—" in a table cell is the standard empty-value glyph.
+  // Count only connector dashes between words; a lone dash in a table cell is an empty-value glyph (copy-voice prefers the en dash there).
   const visibleDashes = isMarkup ? (visible.match(/[\p{L}\p{N},.)]\s*—\s*[\p{L}\p{N}(]/gu) ?? []).length : 0;
   const sourceDashes = (source.match(/—/g) ?? []).length;
   if (isMarkup && visibleDashes >= 1) {

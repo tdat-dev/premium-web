@@ -85,15 +85,15 @@ Tables, forms, and filters: follow [../cross/data-tables-collections.md](../cros
 
 ## Archetype anti-patterns
 
-- **Checkmark without rule** — learners cannot tell why an item is incomplete — P1.
-- **Silent lock** — locked lesson without naming the prerequisite — P1.
-- **Answers lost on reload** — quiz without autosave or attempt recovery — P1.
-- **Timer only in color** — red countdown without text or announcement — P1.
-- **Grades visible before posting** — breaks teacher's release control — P1.
-- **Gamified leaderboard by default** — public ranking shames low performers; opt-in only — P2.
-- **Progress bar with no fraction** — no sense of remaining work — P2.
-- **Due date without timezone** — missed deadlines for remote learners — P2.
-- **Hero-stat course dashboard for teachers** — lead with "needs grading" and "at risk", not totals — P2.
+- **Checkmark without rule**: learners cannot tell why an item is incomplete. P1.
+- **Silent lock**: locked lesson without naming the prerequisite. P1.
+- **Answers lost on reload**: quiz without autosave or attempt recovery. P1.
+- **Timer only in color**: red countdown without text or announcement. P1.
+- **Grades visible before posting**: breaks teacher's release control. P1.
+- **Gamified leaderboard by default**: public ranking shames low performers; opt-in only. P2.
+- **Progress bar with no fraction**: no sense of remaining work. P2.
+- **Due date without timezone**: missed deadlines for remote learners. P2.
+- **Hero-stat course dashboard for teachers**: lead with "needs grading" and "at risk", not totals. P2.
 
 ## Coverage additions
 
@@ -109,10 +109,10 @@ Tables, forms, and filters: follow [../cross/data-tables-collections.md](../cros
 
 ## Sources
 
-- https://docs.moodle.org/en/Quiz_settings — accessed 2026-09-28
-- https://docs.moodle.org/en/Activity_completion — accessed 2026-09-28
-- https://teachwell.auckland.ac.nz/canvas/speedgrader/ — accessed 2026-09-28
-- https://community.canvaslms.com/t5/Instructor-Guide/How-do-I-hide-or-post-assignment-grades-in-SpeedGrader/ta-p/1000 (search summary) — accessed 2026-09-28
-- https://www.w3.org/WAI/media/av/transcripts/ — accessed 2026-09-28
-- https://www.w3.org/WAI/ARIA/apg/patterns/slider/ — accessed 2026-09-28
+- https://docs.moodle.org/en/Quiz_settings (accessed 2026-09-28)
+- https://docs.moodle.org/en/Activity_completion (accessed 2026-09-28)
+- https://teachwell.auckland.ac.nz/canvas/speedgrader/ (accessed 2026-09-28)
+- https://community.canvaslms.com/t5/Instructor-Guide/How-do-I-hide-or-post-assignment-grades-in-SpeedGrader/ta-p/1000 (search summary) (accessed 2026-09-28)
+- https://www.w3.org/WAI/media/av/transcripts/ (accessed 2026-09-28)
+- https://www.w3.org/WAI/ARIA/apg/patterns/slider/ (accessed 2026-09-28)
 - Practitioner knowledge: VN 10-point grading, roster sorting, parent notification via Zalo, gradebook conventions, APG grid pattern.

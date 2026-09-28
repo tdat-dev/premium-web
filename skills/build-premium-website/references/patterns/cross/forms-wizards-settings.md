@@ -93,14 +93,14 @@ Not restated: labels, required status, validation states, unsaved changes, focus
 
 ## Anti-patterns
 
-- **Placeholder as label or hint** — vanishes on typing, hides format during error recovery (NN/g) — P1.
-- **Mixed autosave and explicit save in one form** — users cannot tell what persisted — P1.
-- **Calendar-only date input** — blocks keyboard and assistive tech — P1.
-- **Wizard for a 6-field form, or a modal wizard over 3 steps** — P2.
-- **Multi-column layout for unrelated fields** — breaks scan order and zoom — P2.
-- **Dropdown for 2–3 options or birth year** — hides choices, slows entry — P2.
-- **Danger zone as a red side-stripe card** — craft ban — P2.
-- **Validating on first load, or a generic "Fix all errors" summary** — P2.
+- **Placeholder as label or hint**: vanishes on typing, hides format during error recovery (NN/g). P1.
+- **Mixed autosave and explicit save in one form**: users cannot tell what persisted. P1.
+- **Calendar-only date input**: blocks keyboard and assistive tech. P1.
+- **Wizard for a 6-field form, or a modal wizard over 3 steps**. P2.
+- **Multi-column layout for unrelated fields**: breaks scan order and zoom. P2.
+- **Dropdown for 2–3 options or birth year**: hides choices, slows entry. P2.
+- **Danger zone as a red side-stripe card**: craft ban. P2.
+- **Validating on first load, or a generic "Fix all errors" summary**. P2.
 
 ## Coverage additions
 

@@ -36,9 +36,9 @@ Keep the newest 20 runs; drop older entries when appending.
 
 ## Protocol
 
-**Read — during step 3 (diverge).** Before locking any direction on a `LANDING_BRAND` or `HYBRID` build/redesign with visual freedom, read the log and apply the diversification rule. A missing file means no constraint (first run); create it at write time. Never fabricate log history.
+**Read: during step 3 (diverge).** Before locking any direction on a `LANDING_BRAND` or `HYBRID` build/redesign with visual freedom, read the log and apply the diversification rule. A missing file means no constraint (first run); create it at write time. Never fabricate log history.
 
-**Write — during delivery.** After the readiness package is produced for a build/redesign that locked a direction, append one entry. Audits, polish passes, and `LOCAL_CHANGE` work do not write entries.
+**Write: during delivery.** After the readiness package is produced for a build/redesign that locked a direction, append one entry. Audits, polish passes, and `LOCAL_CHANGE` work do not write entries.
 
 **Cross-AI fallback.** In a harness without file access, ask the user what the last shipped directions were, apply the rule against their answer, and note the manual step in the readiness package. Do not silently skip diversification.
 

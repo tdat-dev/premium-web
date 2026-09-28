@@ -87,14 +87,14 @@ Tables for bookings and customers: [cross/data-tables-collections.md](../cross/d
 
 ## Archetype anti-patterns
 
-- **Showing slots that are not bookable** — the booker fails at submit and leaves — P1.
-- **Implicit time zone** — remote bookers show up an hour off — P1.
-- **Stacked overlapping events** — hidden bookings get double-booked — P1.
-- **Drag-only rescheduling** — no keyboard or touch path — P1.
-- **Month view as the provider default** — cannot see durations or gaps — P2.
-- **Series edit without scope choice** — one change silently rewrites every occurrence — P1.
-- **Confirmation without change/cancel link** — bookers phone the front desk or no-show — P2.
-- **Availability editor without preview** — providers cannot tell why nothing is bookable — P2.
+- **Showing slots that are not bookable**: the booker fails at submit and leaves. P1.
+- **Implicit time zone**: remote bookers show up an hour off. P1.
+- **Stacked overlapping events**: hidden bookings get double-booked. P1.
+- **Drag-only rescheduling**: no keyboard or touch path. P1.
+- **Month view as the provider default**: cannot see durations or gaps. P2.
+- **Series edit without scope choice**: one change silently rewrites every occurrence. P1.
+- **Confirmation without change/cancel link**: bookers phone the front desk or no-show. P2.
+- **Availability editor without preview**: providers cannot tell why nothing is bookable. P2.
 
 ## Coverage additions
 
