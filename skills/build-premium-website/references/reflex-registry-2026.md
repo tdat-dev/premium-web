@@ -37,6 +37,7 @@ The two/three-signal thresholds are intervention triggers, not originality score
 | `RR-15` | Repeated fade-up | Nearly every heading, paragraph, card, and image enters with the same fade/slide/stagger | Which content relationship requires entrance motion, and what remains when entrances are removed? |
 | `RR-16` | Eyebrow and `01` numbering | Pill eyebrows, tiny uppercase labels, and `01/02/03` prefixes manufacture hierarchy without content semantics | Does the label help orientation or encode a real sequence/category? |
 | `RR-17` | Uncanny AI imagery | Polished images show unstable anatomy, text, reflections, logos, material continuity, or culturally generic subjects | Can the asset survive full-resolution inspection, intended crops, truth/rights review, and brand-specific art direction? |
+| `RR-18` | Terracotta accent on neutral | One rust, clay, or burnt-orange accent on a grey, stone, or cream body, justified by soil, brick, clay, or pottery | Would the same accent be chosen for a different brand in a different category? If yes, it is the reflex. |
 
 ## Evidence-based exception
 

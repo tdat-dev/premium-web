@@ -44,6 +44,7 @@ Word choice is half of it; sentence *shapes* give it away just as fast.
 
 ## Punctuation
 
+- **Say each fact once.** A fact (altitude, founding year, "no middlemen") appears where it earns its place, not in the hero, a stat row, a story section, and the footer. A lede that restates the brief or the page's own metadata ("Tổng quan doanh thu của cửa hàng trên các kênh") is filler; replace it with the first thing the reader needs to know today.
 - **Em-dash (—):** the single loudest AI tell. Do not use it as the default connector. A comma, a full stop, or a colon almost always reads more human. At most one em-dash on a page, for a genuine interruption.
 - **No emoji** in headings or body unless the brand's real voice uses them (a Gen-Z shop might; a law firm never). Never as bullet markers or to signal tone.
 - **Sentence case** for headings and buttons, not Title Case On Every Word. Vietnamese never uses title case — copy that Capitalises Mỗi Từ is a translation tell.

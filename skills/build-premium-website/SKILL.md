@@ -92,17 +92,19 @@ For each implementation slice:
 1. Define its job, content, focal order, assets, states, responsive risks, motion, and failure behavior.
 2. Build the smallest complete slice with semantic structure and progressive enhancement.
 3. Run the real experience and capture the states required by the coverage matrix.
-4. Critique observable outcomes in the order defined by the enforcement contract.
+4. Critique observable outcomes in the order defined by the enforcement contract, run [scripts/audit-ai-slop.mjs](scripts/audit-ai-slop.mjs) on the build, and fill the **Slop sweep** in the critique ledger from the screenshots.
 5. Record defects and before/after evidence in [assets/critique-ledger.template.md](assets/critique-ledger.template.md).
 6. Repeat until no unhandled P0 or P1 defect remains.
 
 Do not approve work from source code or a single beauty screenshot.
 
+**Fresh-eyes review before any status above `IMPLEMENTATION INCOMPLETE`.** The builder's own sweep is not enough: builders consistently mark their own tells absent. When the host can start a subagent, give a fresh one only the brief, the screenshots, the audit output, and the Slop sweep table with results blanked, and ask it to fill the sweep and list P0/P1 defects. Its `PRESENT` rows become defects even if the builder disagrees; a disagreement is resolved by changing the build or recording an exception, not by overruling the reviewer. When no subagent or second person is available, record `fresh-eyes: unavailable` and cap the status at `NOT PRODUCTION READY`.
+
 ### 6. Verify production before creative review
 
 Test the primary journey, keyboard operation, focus, labels, contrast, zoom/reflow, reduced motion, loading/error/empty states, slow network, missing media, animation failure, and responsive behavior where applicable. Measure performance with the environment labeled. Treat Lighthouse and Core Web Vitals as diagnostics, not proof of field performance or visual quality.
 
-Run [scripts/audit-ai-slop.mjs](scripts/audit-ai-slop.mjs) when the project contains supported text-based frontend sources. Its findings are candidates for human review, not authority on originality or release.
+Run [scripts/audit-ai-slop.mjs](scripts/audit-ai-slop.mjs) on every build that contains supported text-based frontend sources, on every render pass. Its findings are candidates, not authority on originality or release, but every `BLOCKER_CANDIDATE` must be dispositioned in the critique ledger (fixed, or false positive with reason); an undispositioned one is an open `P1`.
 
 Resolve severity using the enforcement contract:
 

@@ -84,6 +84,12 @@ STATUS: BLOCKED ON ASSETS until delivered and rendered.
 - Request only deliverables the implementation can serve efficiently.
 - Never imply that an AI-generated result carries a license automatically; record the tool and applicable terms.
 
+## Generated media honesty
+
+- Generated images may depict materials, place, process, weather, tools, or abstract context. They may not depict what reads as the client's own finished work, products in use, premises, staff, or customers unless the client supplied that subject as reference.
+- Caption or frame generated media so a visitor cannot mistake it for documentation.
+- Use each generated image once. Reuse only a deliberate identity element (a texture, a mark), never the same photo in two content roles.
+
 ## Media acceptance check
 
 Accept an asset only when its content fits the brief, rights are known, resolution survives the intended crop, responsive variants exist or can be derived, accessibility text is ready, loading does not break the page, and the rendered result was checked. Otherwise keep it blocked.

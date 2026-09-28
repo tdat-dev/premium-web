@@ -15,6 +15,8 @@ Record:
 - data source, freshness, units, formatting, aggregation, uncertainty, and missing-data meaning;
 - loading, empty, zero-result, partial, stale, error, offline, permission, success, and destructive states.
 
+Fixtures must read as one real, internally consistent situation: counts in headers equal rows, dates and attempt histories run forward, statuses agree across list and detail, totals sum, names and places are plausible for the market, and nothing reads as a placeholder (Acme, John Doe, Nguyễn Văn A, Lorem, round numbers everywhere). Generate fixtures from a seeded, rule-based generator or hand-write them; then read ten rows as a user would and fix every contradiction.
+
 Do not style fabricated data into credibility. Product metrics, chart values, customer data, permissions, and capabilities must trace to a repository, product, user, or approved fixture source.
 
 ## Information architecture and navigation
