@@ -78,6 +78,8 @@ STATUS: BLOCKED ON ASSETS until delivered and rendered.
 
 ## Prompt quality rules
 
+- Reject category stock clichés before prompting: sunrise over the farm, burlap sack of beans, hands cupping produce, steam curling from a cup, laptop-on-desk with coffee, handshake, glowing brain or circuit for AI, gavel for legal, blueprint with pencil for architecture. Prompt for a specific, observable detail of this client's world instead (a tool, a surface, a routine, a place at a specific time).
+
 - Write prompts for the approved brand and placement, not for a generic mood board.
 - Describe composition, camera, light, color, material, motion, and safe areas precisely.
 - Include negatives that prevent text artifacts, watermarks, deformed subjects, unstable frames, and visual cliches.

@@ -84,6 +84,7 @@ States and background jobs: [cross/feedback-states-notifications.md](../cross/fe
 - **Approval on every trivial step** — fatigue produces blind approval — P2.
 - **Autoscroll to the end of streaming answers** — start of the answer lost — P2.
 - **Prompt-card grid as home screen** — buries the composer — P2.
+- **Sparkle glyph as the AI marker** — the ✨/four-point star is the category reflex for "AI"; mark assistant content with the product's own name, avatar, or a neutral label — P1.
 - **Anthropomorphic copy** ("I'm so happy to help!") — inflates capability, breaks copy-voice — P2.
 
 ## Coverage additions

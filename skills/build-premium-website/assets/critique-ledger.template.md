@@ -42,11 +42,13 @@ Fill every row from the rendered screenshots at each tested width, not from inte
 | SW-01 | Number row: 2+ big numerals with small labels side by side (craft ban 4) |  |  |
 | SW-02 | Uppercase eyebrow/kicker above most sections; decorative 01/02/03 (bans 6-7) |  |  |
 | SW-03 | Identical card grid, card stack, or nested cards (bans 5, 11) |  |  |
-| SW-04 | Section order a generator would produce regardless of content (structure-catalog default) |  |  |
+| SW-04 | Section order: list each section's job in order. PRESENT if it reads hero → benefits/features → steps → pricing → FAQ → CTA band (or a subset in that order) without a content-driven merge or reorder, or if the product's real output never appears |  |  |
 | SW-05 | Connector em-dashes in visible copy (max 1 per page), count: |  |  |
-| SW-06 | AI-tone words, three-beat lines, repeated fact or phrase, brief-echo lede (copy-voice) |  |  |
+| SW-06 | Copy: list every heading in order. PRESENT if more than two share one grammatical template, or any AI-tone word, three-beat line, repeated fact, or brief-echo lede appears |  |  |
+| SW-13 | Claims beyond the facts: derived claims not literally true, invented exact prices/terms/specs where the brief gave a range |  |  |
+| SW-14 | Parallel-column filler, decorative diagrams, scroll-reveal on most blocks, stub navigation, sparkle AI glyph (bans 5, 13, 14) |  |  |
 | SW-07 | Unsourced proof: popularity badge, stat, quote, logo, "trusted by" (ban 10) |  |  |
-| SW-08 | Placeholder or self-contradicting fixture data (names, counts, dates, totals) |  |  |
+| SW-08 | Fixtures: read ten records end to end. PRESENT if any field contradicts another (note vs reason, dates out of order, person changes mid-history, totals do not sum) or anything reads as placeholder |  |  |
 | SW-09 | Palette equals category reflex or saturated look (a)-(d); reject-list or reflex font |  |  |
 | SW-10 | Generated image posing as client work, reused, or uncanny (ban 12) |  |  |
 | SW-11 | Content hidden or covered when JS/animation fails; text under scrims or overlays |  |  |

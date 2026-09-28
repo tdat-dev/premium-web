@@ -244,6 +244,19 @@ function auditFile(source, file, root, findings) {
     }
   }
 
+  const revealTargets = (source.match(/(?:class(?:Name)?\s*=\s*["'][^"']*\b(?:reveal|fade-?in|fade-?up|animate-?in|js-reveal|scroll-reveal|appear)\b|\bdata-(?:reveal|aos|animate|sal)\b)/gi) ?? []).length;
+  if (revealTargets >= 5 && /IntersectionObserver|ScrollTrigger|data-aos|sal\(/.test(source)) {
+    findings.push({
+      level: 'BLOCKER_CANDIDATE',
+      id: 'SCROLL_REVEAL_EVERYWHERE',
+      file: path.relative(root, file).replaceAll('\\', '/'),
+      line: null,
+      evidence: `${revealTargets} scroll-reveal targets`,
+      message: 'Most blocks share one entrance animation (craft-rules ban 14, RR-15). Keep at most one entrance choreography tied to a content relationship; this is not a false positive because the opacity is "decorative".',
+      manual_review_required: true,
+    });
+  }
+
   const fadeMatches = source.match(/(?:fade[-_ ]?up|data-aos\s*=\s*["']fade-up["']|\by\s*:\s*[-+]?\d+[^\n]{0,80}\bopacity\s*:\s*0)/gi) ?? [];
   if (fadeMatches.length >= 3) {
     findings.push({
