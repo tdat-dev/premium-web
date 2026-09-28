@@ -46,13 +46,13 @@ Fill every row from the rendered screenshots at each tested width, not from inte
 | SW-05 | Connector em-dashes in visible copy (max 1 per page), count: |  |  |
 | SW-06 | Copy: list every heading in order. PRESENT if more than two share one grammatical template, or any AI-tone word, three-beat line, repeated fact, or brief-echo lede appears |  |  |
 | SW-13 | Claims beyond the facts: derived claims not literally true, invented exact prices/terms/specs where the brief gave a range |  |  |
-| SW-14 | Parallel-column filler, decorative diagrams, scroll-reveal on most blocks, stub navigation, sparkle AI glyph (bans 5, 13, 14) |  |  |
+| SW-14 | Parallel-column filler, decorative diagrams, scroll-reveal on most blocks, stub navigation, sparkle AI glyph, zigzag rows + closing CTA band (bans 5, 13, 14, 15) |  |  |
 | SW-07 | Unsourced proof: popularity badge, stat, quote, logo, "trusted by" (ban 10) |  |  |
-| SW-08 | Fixtures: read ten records end to end. PRESENT if any field contradicts another (note vs reason, dates out of order, person changes mid-history, totals do not sum) or anything reads as placeholder |  |  |
+| SW-08 | Fixtures (and derived statuses computed from them): read ten records end to end. PRESENT if any field contradicts another (note vs reason, dates out of order, person changes mid-history, totals do not sum) or anything reads as placeholder |  |  |
 | SW-09 | Palette equals category reflex or saturated look (a)-(d); reject-list or reflex font |  |  |
 | SW-10 | Generated image posing as client work, reused, or uncanny (ban 12) |  |  |
 | SW-11 | Content hidden or covered when JS/animation fails; text under scrims or overlays |  |  |
-| SW-12 | Narrowest width: every primary action reachable, charts/tables legible; `render-check` overflow, contrast, word-stacking, hidden-without-JS counts all 0 or dispositioned |  |  |
+| SW-12 | Narrowest width: every primary action reachable, charts/tables legible; `render-check` counts all 0 or dispositioned, including the slop signals (scroll_animated, nested_boxes, emoji_icons, warm_neutral_body) |  |  |
 | SW-15 | Default state: the first load shows the state the brief asks for (a selected record in a split pane, real data in every panel), not an empty pane waiting for a click |  |  |
 
 - `render-check.mjs` summary line (quoted verbatim):

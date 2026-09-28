@@ -12,7 +12,7 @@ Treat `100k-quality` as an aspirational level of care, not a valuation, award, r
 
 A status report is invalid unless it quotes, from the final build:
 
-1. the `RENDER-CHECK` summary line of [scripts/render-check.mjs](scripts/render-check.mjs) with every non-zero count fixed or dispositioned (text over media and intentionally closed menus are the only accepted dispositions), or `render-check: unavailable (reason)` with status capped at `NOT PRODUCTION READY`;
+1. the `RENDER-CHECK` summary line of [scripts/render-check.mjs](scripts/render-check.mjs) with every non-zero count fixed or dispositioned (for craft counts, text over media and intentionally closed menus are the only accepted dispositions; slop signals need a project fact from the decision record), or `render-check: unavailable (reason)` with status capped at `NOT PRODUCTION READY`;
 2. the `BLOCKER_CANDIDATE` / `ADVISORY` counts of [scripts/audit-ai-slop.mjs](scripts/audit-ai-slop.mjs) with each blocker candidate dispositioned;
 3. the filled Slop sweep from the critique ledger;
 4. the fresh-eyes reviewer's verdict (or `fresh-eyes: unavailable` and the cap).

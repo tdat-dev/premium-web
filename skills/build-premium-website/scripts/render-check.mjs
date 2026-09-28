@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Copyright (c) 2026 ByteWaker. Licensed under Apache-2.0.
-// Part of build-premium-website — https://github.com/tdat-dev/premium-web
+// Part of build-premium-website: https://github.com/tdat-dev/premium-web
 // Redistribution must retain this notice, LICENSE, and NOTICE.
 //
 // Render a page in headless Chromium over raw CDP (no npm packages) and measure the
@@ -17,7 +17,7 @@ import { tmpdir, homedir } from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-const VERSION = '1.0.0';
+const VERSION = '1.1.0';
 const args = process.argv.slice(2);
 const asJson = args.includes('--json');
 const positional = args.filter((a) => !a.startsWith('--'));
@@ -130,9 +130,42 @@ const MEASURE = `(() => {
     const lines = tops.size;
     if (lines >= 3 && text.length >= 12 && text.length / lines < 10 && cs.writingMode.startsWith('horizontal')) stacking.push({ el: label(el), text: text.slice(0, 50), lines, width: Math.round(r.width) });
   }
+  // Slop signals: warm-neutral body, nested boxes, emoji used as icons.
+  const toOklch = ([r, g, b]) => {
+    const lin = (v) => { v /= 255; return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+    const [R, G, B] = [lin(r), lin(g), lin(b)];
+    const l = Math.cbrt(0.4122214708 * R + 0.5363325363 * G + 0.0514459929 * B), m = Math.cbrt(0.2119034982 * R + 0.6806995451 * G + 0.1073969566 * B), q = Math.cbrt(0.0883024619 * R + 0.2817188376 * G + 0.6299787005 * B);
+    const L = 0.2104542553 * l + 0.793617785 * m - 0.0040720468 * q, A = 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * q, Bb = 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * q;
+    return { L, C: Math.hypot(A, Bb), H: (Math.atan2(Bb, A) * 180 / Math.PI + 360) % 360 };
+  };
+  const pageBg = (() => { for (const n of [document.body, document.documentElement]) { const c = rgba(getComputedStyle(n).backgroundColor); if (c[3] > 0.5) return c; } return [255, 255, 255, 1]; })();
+  const bgLch = toOklch(pageBg);
+  const warmNeutralBody = bgLch.L >= 0.84 && bgLch.L <= 0.97 && bgLch.C < 0.06 && bgLch.C > 0.008 && bgLch.H >= 40 && bgLch.H <= 100;
+  const vw = window.__rcWidth || innerWidth;
+  const boxed = (el) => {
+    const cs = getComputedStyle(el); const r = el.getBoundingClientRect();
+    if (r.width * r.height < 6000 || r.width > vw * 0.9 || r.height < 48) return false;
+    if (/^(INPUT|TEXTAREA|SELECT|BUTTON|TD|TH|TR|TABLE|IMG|SVG|VIDEO|CANVAS|LI)$/.test(el.tagName)) return false;
+    const border = ['Top', 'Right', 'Bottom', 'Left'].every((sd) => parseFloat(cs['border' + sd + 'Width']) > 0 && rgba(cs['border' + sd + 'Color'])[3] > 0.1);
+    const own = rgba(cs.backgroundColor); const parentBg = el.parentElement ? bgOf(el.parentElement) : null;
+    const filled = own[3] > 0.5 && parentBg && Math.abs(own[0] - parentBg[0]) + Math.abs(own[1] - parentBg[1]) + Math.abs(own[2] - parentBg[2]) > 12;
+    const shadow = cs.boxShadow && cs.boxShadow !== 'none';
+    return border || filled || shadow;
+  };
+  const nested = [];
+  for (const el of document.body.querySelectorAll('div,section,article,aside,form,fieldset,header,footer,nav,main,ul,details')) {
+    if (!boxed(el)) continue;
+    let depth = 1; for (let n = el.parentElement; n && n !== document.body; n = n.parentElement) if (boxed(n)) depth++;
+    if (depth >= 3) nested.push({ el: label(el), depth });
+  }
+  const emoji = [];
+  for (const el of textEls) {
+    const t = [...el.childNodes].filter((n) => n.nodeType === 3).map((n) => n.textContent).join('');
+    if (/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B50}\u{2728}]/u.test(t) && el.getBoundingClientRect().width > 0) emoji.push({ el: label(el), text: t.trim().slice(0, 30) });
+  }
   const broken = [...document.images].filter((i) => i.complete && i.naturalWidth === 0 && i.getBoundingClientRect().width > 0).map((i) => i.getAttribute('src'));
   const doc = document.documentElement;
-  return { pageHeight: doc.scrollHeight, overflowX: Math.max(0, doc.scrollWidth - innerWidth), contrast, stacking, hidden, broken };
+  return { pageHeight: doc.scrollHeight, overflowX: Math.max(0, doc.scrollWidth - (window.__rcWidth || innerWidth)), contrast, stacking, hidden, broken, warmNeutralBody, bodyOklch: bgLch, nested: nested.slice(0, 20), emoji: emoji.slice(0, 20) };
 })()`;
 
 async function run(name, width, height, mobile, { js = true, shots = true } = {}) {
@@ -140,16 +173,21 @@ async function run(name, width, height, mobile, { js = true, shots = true } = {}
   await send('Emulation.setScriptExecutionDisabled', { value: !js });
   await send('Page.navigate', { url: target });
   await sleep(3000);
+  // Snapshot opacity/transform below the fold before scrolling; elements that change on scroll are scroll-animated.
+  if (js) await evaluate(`(() => { const vh = innerHeight; window.__rcPre = []; for (const el of document.body.querySelectorAll('section,article,div,p,h1,h2,h3,h4,figure,img,li,blockquote,ul,ol,a,span')) { const r = el.getBoundingClientRect(); if (r.top < vh || r.height < 8) continue; const cs = getComputedStyle(el); window.__rcPre.push([el, cs.opacity, cs.transform]); } return window.__rcPre.length; })()`);
   // Scroll through once so observer-driven content settles, then return to top (timers do not run with JS disabled).
   if (js) await send('Runtime.evaluate', { expression: `(async()=>{const h=document.documentElement.scrollHeight;for(let y=0;y<h;y+=${Math.round(height / 2)}){scrollTo(0,y);await new Promise(r=>setTimeout(r,100));}scrollTo(0,0);})()`, awaitPromise: true });
   await sleep(1000);
+  // Mobile emulation can widen innerWidth to fit overflowing content; measure against the emulated width.
+  await evaluate(`window.__rcWidth = ${width}`);
   const m = await evaluate(MEASURE);
+  m.scrollAnimated = js ? await evaluate(`(() => { const changed = (window.__rcPre || []).filter(([el, op, tf]) => { const cs = getComputedStyle(el); return Math.abs(parseFloat(cs.opacity) - parseFloat(op)) > 0.2 || cs.transform !== tf; }).map(([el]) => el); return changed.filter((el) => !changed.some((o) => o !== el && o.contains(el))).length; })()`) : 0;
   const files = [];
   if (shots) {
     const h = Math.min(m.pageHeight, 12000);
     const full = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: true, clip: { x: 0, y: 0, width, height: h, scale: 1 } });
     const f = path.join(outDir, `${name}.png`); writeFileSync(f, Buffer.from(full.data, 'base64')); files.push(f);
-    if (!mobile && m.pageHeight > height * 1.5) {
+    if (m.pageHeight > height * 1.5) {
       for (const p of [0.25, 0.5, 0.75]) {
         await send('Runtime.evaluate', { expression: `scrollTo(0,${Math.round((m.pageHeight - height) * p)})` }); await sleep(600);
         const fr = await send('Page.captureScreenshot', { format: 'png' });
@@ -179,6 +217,10 @@ const report = {
     hidden_without_js: nojs.hidden.length,
     hidden_with_js: desktop.hidden.length,
     broken_images: new Set([...desktop.broken, ...mobile.broken]).size,
+    scroll_animated: desktop.scrollAnimated,
+    nested_boxes: new Set([...desktop.nested, ...mobile.nested].map((x) => x.el)).size,
+    emoji_icons: new Set([...desktop.emoji, ...mobile.emoji].map((x) => x.el + x.text)).size,
+    warm_neutral_body: desktop.warmNeutralBody ? 1 : 0,
   },
   details: {
     jsErrors,
@@ -187,18 +229,23 @@ const report = {
     hiddenWithoutJs: nojs.hidden.slice(0, 30),
     hiddenWithJs: desktop.hidden.slice(0, 30),
     brokenImages: [...new Set([...desktop.broken, ...mobile.broken])],
+    bodyOklch: desktop.bodyOklch,
+    nestedBoxes: [...desktop.nested, ...mobile.nested].slice(0, 12),
+    emojiIcons: [...desktop.emoji, ...mobile.emoji].slice(0, 12),
   },
   screenshots: [...desktop.files, ...mobile.files, ...nojs.files],
   boundaries: [
     'Contrast is computed against solid background colors only; text over images or gradients is skipped and must be checked by eye.',
     'hidden_with_js counts text that is still invisible after a full scroll pass (closed menus, tabs, and dialogs are expected there; review each).',
+    'Full-page captures draw position:fixed/sticky elements once, over whatever content sits there; judge fixed bars from the -scroll frames, not the full-page image.',
+    'Slop signals (scroll_animated, nested_boxes, emoji_icons, warm_neutral_body) are counts to disposition, not verdicts: scroll_animated >= 5 is the reveal-everywhere tell (craft ban 14), nested_boxes > 0 is box-in-box-in-box (ban 11), emoji_icons > 0 is S-33, warm_neutral_body = 1 is ban 8 unless the brand record justifies it.',
     'A clean report proves only these measurements. It does not judge design quality or slop.',
   ],
 };
 writeFileSync(path.join(outDir, 'render-check.json'), JSON.stringify(report, null, 2));
 
 const s = report.summary;
-const line = `RENDER-CHECK ${VERSION}: overflow_desktop=${s.overflow_desktop} overflow_mobile=${s.overflow_mobile} js_errors=${s.js_errors} contrast_failures=${s.contrast_failures} word_stacking=${s.word_stacking} hidden_without_js=${s.hidden_without_js} broken_images=${s.broken_images}`;
+const line = `RENDER-CHECK ${VERSION}: overflow_desktop=${s.overflow_desktop} overflow_mobile=${s.overflow_mobile} js_errors=${s.js_errors} contrast_failures=${s.contrast_failures} word_stacking=${s.word_stacking} hidden_without_js=${s.hidden_without_js} broken_images=${s.broken_images} | slop: scroll_animated=${s.scroll_animated} nested_boxes=${s.nested_boxes} emoji_icons=${s.emoji_icons} warm_neutral_body=${s.warm_neutral_body}`;
 if (asJson) console.log(JSON.stringify(report, null, 2));
 else {
   console.log(line);
@@ -206,8 +253,11 @@ else {
   for (const w of report.details.stacking.slice(0, 8)) console.log(`  stacking ${w.lines} lines @${w.width}px  ${w.el}  "${w.text}"`);
   for (const h of report.details.hiddenWithoutJs.slice(0, 8)) console.log(`  hidden-without-js  ${h.el}  "${h.text}"`);
   for (const e of jsErrors.slice(0, 5)) console.log(`  js-error  ${e}`);
+  for (const n of report.details.nestedBoxes.slice(0, 5)) console.log(`  nested-box depth ${n.depth}  ${n.el}`);
+  for (const e of report.details.emojiIcons.slice(0, 5)) console.log(`  emoji  ${e.el}  "${e.text}"`);
+  if (s.warm_neutral_body) console.log(`  warm-neutral body OKLCH L=${report.details.bodyOklch.L.toFixed(2)} C=${report.details.bodyOklch.C.toFixed(3)} H=${report.details.bodyOklch.H.toFixed(0)}`);
   console.log(`  screenshots + render-check.json in ${outDir}`);
 }
 clearInterval(keepAlive); ws.close(); proc.kill();
-const fail = s.overflow_desktop || s.overflow_mobile || s.js_errors || s.contrast_failures || s.word_stacking || s.hidden_without_js || s.broken_images;
+const fail = s.overflow_desktop || s.overflow_mobile || s.js_errors || s.contrast_failures || s.word_stacking || s.hidden_without_js || s.broken_images || s.scroll_animated >= 5 || s.nested_boxes || s.emoji_icons || s.warm_neutral_body;
 process.exit(fail ? 1 : 0);

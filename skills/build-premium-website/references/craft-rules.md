@@ -71,6 +71,7 @@ Match-and-refuse. If about to produce any of these, rewrite the element with a d
 12. **Generated imagery posing as the client's work** — AI images that read as the client's own buildings, products, interiors, staff, or customers. Generated media may show materials, place, process, or abstract context, captioned as such; each generated image appears once unless it is a deliberate identity element.
 13. **Decorative diagrams** — maps, timelines, steppers, or charts whose geometry encodes nothing (evenly spaced dots for places or years, a progress line for a non-sequence). A diagram's positions and lengths must come from real data (geography, dates, quantities) or it is decoration posing as information.
 14. **Scroll-reveal everywhere** — the same entrance animation on most blocks (RR-15). Budget: at most one entrance choreography per page, tied to a named content relationship; everything else is simply present.
+15. **Zigzag rows and the closing band**: image-left/text-right then swapped, repeated down the page, ending in a full-width "ready to start?" CTA band. Alternation is not rhythm. Vary the section forms (a full-bleed image with a caption, a list, a table, a quote, a map) and let the last section be the real next step in context, not a banner restating the hero.
 
 ## Saturated-look calibration
 

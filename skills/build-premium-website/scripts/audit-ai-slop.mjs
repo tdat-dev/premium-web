@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Copyright (c) 2026 ByteWaker. Licensed under Apache-2.0.
-// Part of build-premium-website — https://github.com/tdat-dev/premium-web
+// Part of build-premium-website: https://github.com/tdat-dev/premium-web
 // Redistribution must retain this notice, LICENSE, and NOTICE.
 
 import { readFile, readdir, stat } from 'node:fs/promises';
@@ -146,24 +146,24 @@ function auditFile(source, file, root, findings) {
   // Count only connector dashes between words; a lone "—" in a table cell is the standard empty-value glyph.
   const visibleDashes = isMarkup ? (visible.match(/[\p{L}\p{N},.)]\s*—\s*[\p{L}\p{N}(]/gu) ?? []).length : 0;
   const sourceDashes = (source.match(/—/g) ?? []).length;
-  if (isMarkup && visibleDashes >= 2) {
+  if (isMarkup && visibleDashes >= 1) {
     findings.push({
       level: 'BLOCKER_CANDIDATE',
       id: 'EM_DASH_IN_COPY',
       file: rel,
       line: null,
       evidence: `${visibleDashes} em-dashes (—) in visible copy`,
-      message: 'copy-voice.md allows at most one em-dash per page. Rewrite with commas, full stops, or colons; this is a P1 copy defect until resolved.',
+      message: 'copy-voice.md bans the em-dash in copy. Rewrite with commas, full stops, colons, or parentheses; this is a P1 copy defect until resolved.',
       manual_review_required: true,
     });
-  } else if (!isMarkup && sourceDashes >= 3) {
+  } else if (!isMarkup && sourceDashes >= 1) {
     findings.push({
       level: 'ADVISORY',
       id: 'EM_DASH_OVERUSE',
       file: rel,
       line: null,
       evidence: `${sourceDashes} em-dashes (—)`,
-      message: 'Em-dash is the loudest AI punctuation tell. Prefer commas, periods, or colons; keep at most one per page (copy-voice.md).',
+      message: 'Em-dash is the loudest AI punctuation tell and is banned in copy (copy-voice.md). Check whether these reach visible text.',
       manual_review_required: true,
     });
   }
