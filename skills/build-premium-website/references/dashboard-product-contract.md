@@ -169,6 +169,7 @@ Report `DASHBOARD_PRODUCT GATE: MET` only when rendered evidence proves all appl
 6. Required loading, empty, zero-result, partial, stale, offline, permission, success, undo/rollback, and destructive states are covered or explicitly not applicable with reasons.
 7. Responsive layouts preserve essential tasks, actions, relationships, and data across topology changes, zoom, localization, and virtual-keyboard conditions where applicable.
 8. Motion does not delay tasks and reduced-motion/runtime-failure behavior preserves operation; every supported theme has complete state and contrast evidence.
-9. No route-specific P0 or P1-N remains and every retained P1-P has external ownership.
+9. The recorded archetype's adopted signature patterns have rendered evidence, and every archetype anti-pattern from the loaded pattern files is absent or carried as a recorded exception.
+10. No route-specific P0 or P1-N remains and every retained P1-P has external ownership.
 
 Otherwise report `DASHBOARD_PRODUCT GATE: NOT MET`, list the failed numbered conditions, and apply the overall status from the anti-slop enforcement contract.

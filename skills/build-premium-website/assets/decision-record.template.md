@@ -20,6 +20,25 @@
 - Constraints:
 - Explicit non-goals:
 
+## Archetype and pattern defaults
+
+Required for `DASHBOARD_PRODUCT` and the product side of `HYBRID`; see `references/patterns/index.md`.
+
+- Primary archetype:
+- Secondary archetypes:
+- Classification sentence (primary repeated job):
+- Shell chosen (default or keyed alternative + predicate):
+- Screens in scope / deliberately excluded:
+- Cross-cutting pattern files loaded:
+
+| Signature pattern | Source file | ADOPTED / ADAPTED / NOT APPLICABLE | How or why | Evidence ref |
+| --- | --- | --- | --- | --- |
+|  |  |  |  |  |
+
+| Pattern default deviated from | Product fact justifying it |
+| --- | --- |
+|  |  |
+
 ## Fact, claim, and source map
 
 | ID | Fact or proposed claim | Source type | Source locator | Confidence | Allowed use |

@@ -1,4 +1,4 @@
 interface:
   display_name: "Build Premium Website"
-  short_description: "Route and build premium landing sites, dashboards, and hybrid UI"
-  default_prompt: "Use $build-premium-website to route this work as LANDING_BRAND, DASHBOARD_PRODUCT, or HYBRID; record the independent work mode; apply the route-specific conversion, product-state, accessibility, responsive, media, and production gates; verify rendered risks; and prepare the result for independent creative review."
+  short_description: "Route and build premium landing sites, product UI of every archetype, and hybrid UI"
+  default_prompt: "Use $build-premium-website to route this work as LANDING_BRAND, DASHBOARD_PRODUCT, or HYBRID; record the independent work mode and, for product UI, the archetype and its pattern defaults; apply the route-specific conversion, product-state, accessibility, responsive, media, and production gates; verify rendered risks; and prepare the result for independent creative review."
