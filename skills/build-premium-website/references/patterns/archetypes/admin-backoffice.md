@@ -61,6 +61,12 @@ Tables: [cross/data-tables-collections.md](../cross/data-tables-collections.md).
 
 **Audit trail.** Each record's activity tab merges notes and system events: actor, action, field before → after, absolute time, source. A global log adds actor/action/target/date filters and export. Impersonation is audited and shows a persistent banner.
 
+**Collision before action.** Rows show who is viewing or has selected an item before anyone claims it (avatar or initials in the row), so two operators see the overlap before they act. Claim and assign re-check ownership at submit and name the other person on conflict.
+
+**Soft limits with accountable overrides.** Capacity, credit, or quota limits warn at the threshold and block at the limit; crossing needs an override with a reason code, logged to the audit trail. A repeated Enter is never an override.
+
+**Detachable spatial panes.** For all-day desks with maps or live boards, let the pane open in its own window with selection synced both ways, so a second monitor holds context while the queue keeps the main one.
+
 **Reason codes.** Refund, suspend, override require a reason from a list plus optional note, so the change is reportable.
 
 **Keyboard speed.** `/` search, `j/k` rows, `Enter` open, `Esc` back to the row just left, `?` shortcut sheet (convention). Search jumps straight to an exact ID, email, or phone match.

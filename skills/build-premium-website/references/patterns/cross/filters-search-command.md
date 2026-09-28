@@ -81,6 +81,7 @@ Apply mode: live results when they return in under a second and users explore on
 - Palette and mobile filter sheet follow APG Dialog (Modal): focus in, Tab contained, Escape closes, focus returns to the trigger.
 - Checkbox filter dropdowns: button + popup with a labelled checkbox group; the trigger announces the selected count.
 - Token field: Backspace in an empty input focuses the last token, a second press removes and announces it.
+- Shortcuts and Enter-to-submit ignore keystrokes during IME composition (`event.isComposing`, or `keyCode 229` on older engines). Vietnamese Telex/VNI, Chinese, and Japanese input otherwise fire commands mid-word. Test with a real IME, not synthetic key events.
 - Result groups are labelled ("Customers, 3 results"). Match highlighting uses `mark` or weight, not color alone.
 
 ## Responsive transformation

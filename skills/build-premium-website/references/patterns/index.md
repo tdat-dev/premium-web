@@ -30,8 +30,8 @@ Record one primary archetype and at most two secondary archetypes in the decisio
 
 Classification rules:
 
-- **Industry is not an archetype.** A logistics company's dispatcher panel is admin/back-office (queues + exceptions) with a scheduling secondary; a clinic's reception tool is scheduling with an admin secondary.
-- **Most real products are one primary plus secondaries.** A helpdesk with an order sidebar is support-inbox primary, commerce secondary. Load the primary file in full; from secondaries, load only the sections for screens actually in scope.
+- **Industry is not an archetype.** A logistics dispatcher panel is admin/back-office (queues + exceptions); it takes scheduling as a secondary only if dispatchers book time slots. A clinic reception tool is scheduling primary. Add a secondary only when a screen in scope performs that archetype's job.
+- **Most real products are one primary plus secondaries.** A helpdesk with an order sidebar is support-inbox primary, commerce secondary. Load the primary file in full. From each secondary, read only `Core screen set`, `Signature patterns`, and `Archetype anti-patterns`, and apply only the rows for screens in scope; do not read further archetype files to be thorough.
 - **No row fits** — pick the nearest archetype by shell and job, record `archetype: CUSTOM (nearest: <name>)`, and state which signature patterns transfer and which are replaced.
 - **Admin is the fallback, not the default.** Choose it because the job is record/queue work, not because the brief says "panel".
 
@@ -71,6 +71,11 @@ In the decision record, fill the `Archetype and pattern defaults` section:
 5. deviations from pattern defaults with the product fact that justifies them.
 
 Then copy the archetype's and each loaded cross file's `Coverage additions` into the coverage matrix and the product journey/state matrix. An adopted signature pattern with no rendered evidence is an open `P1` under the dashboard gate; an archetype anti-pattern present in the build is graded at the severity hint its file gives unless the enforcement contract grades it higher.
+
+## Output shape
+
+- Record pattern decisions as the Step 4 tables; do not restate pattern-file prose in plans or deliverables. The plan states what this product does, not what the archetype generally needs.
+- Pattern files are not a current source for third-party policy or law (platform messaging windows, tax and e-invoice rules, address schemes, payment rails). Carry such items into the fact map as `verify against current official source`; never cite the pattern file as the authority.
 
 ## Fast path
 

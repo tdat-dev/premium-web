@@ -46,7 +46,7 @@ Alternatives:
 
 **Macros and canned replies.** Trigger with `/`, fuzzy search, preview inserted text and field changes (status, tags, assignee). Placeholders fill from the customer and ticket; unfilled placeholders block send and are highlighted. Multiple macros can apply; composer undo reverts the insertion.
 
-**Customer context sidebar.** Identity, linked channels, open orders or deals, recent conversations, tags, notes. When two profiles look like one person (same phone on Zalo and Messenger), suggest a merge with the match reason; merge follows [crm-sales.md](crm-sales.md) rules.
+**Customer context sidebar.** Identity, linked channels, open orders or deals, recent conversations, tags, notes. When two profiles look like one person (same phone on Zalo and Messenger), suggest a merge with the match reason; merge follows [crm-sales.md](crm-sales.md) rules. Never auto-merge on display name alone; names on Facebook and Zalo are nicknames. Order lookups run on a short timeout; on failure the sidebar says what failed and offers retry while the composer keeps working.
 
 **Status, snooze, merge, CSAT.** Status vocabulary: New, Open, Pending, Snoozed, Solved, Closed; define which ones stop SLA and which reopen on customer reply. Snooze until a time or until the customer replies; the item returns to the top of its view with a "Hết hẹn" marker. Merge picks a primary, moves messages, links the closed secondary, and states whether the customer is notified. CSAT asks after solve; a low score routes to a lead.
 
@@ -63,6 +63,7 @@ Alternatives:
 ## Localization notes
 
 - Enter-to-send must ignore IME composition (`event.isComposing`); Vietnamese Telex/VNI input otherwise sends half-typed words. Single-letter shortcuts fire only outside text fields.
+- Mass replies to customers are out of scope by default: platform messaging policies restrict unsolicited and bulk sends. Bulk actions cover status, tag, and assignment only.
 - Customers arrive as Facebook/Zalo display names (nicknames, emoji); real name and phone come later. Search both, diacritic-insensitive.
 - Macro placeholders for address terms: never guess gender; default to "anh/chị" unless the profile states it.
 - Business hours in Asia/Ho_Chi_Minh (UTC+7); holiday calendars must include Tết and other lunar-dated holidays, which move every year.
