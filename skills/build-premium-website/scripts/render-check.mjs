@@ -17,7 +17,7 @@ import { tmpdir, homedir } from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-const VERSION = '1.3.0';
+const VERSION = '1.3.1';
 const args = process.argv.slice(2);
 const asJson = args.includes('--json');
 const positional = args.filter((a) => !a.startsWith('--'));
@@ -177,6 +177,8 @@ const MEASURE = `(() => {
     }
     if (srOnly) continue;
     const closedDetails = el.closest('details:not([open])'); if (closedDetails && !el.closest('summary')) continue;
+    // Fixed and sticky layers (tab bars, headers, floating buttons) legitimately sit over scrolling content.
+    let layered = false; for (let n = el; n && n.nodeType === 1; n = n.parentElement) { const pz = getComputedStyle(n).position; if (pz === 'fixed' || pz === 'sticky') { layered = true; break; } } if (layered) continue;
     for (const n of el.childNodes) { if (n.nodeType !== 3 || !n.textContent.trim()) continue; const rg = document.createRange(); rg.selectNodeContents(n); for (const q of rg.getClientRects()) { if (q.width <= 4 || q.height <= 4) continue; if (clipBox) { const vis = Math.max(0, Math.min(q.right, clipBox.right) - Math.max(q.left, clipBox.left)) * Math.max(0, Math.min(q.bottom, clipBox.bottom) - Math.max(q.top, clipBox.top)); if (vis < 0.5 * q.width * q.height) continue; } textBoxes.push({ el, r: q }); } }
   }
   const area = (a) => Math.max(0, a.right - a.left) * Math.max(0, a.bottom - a.top);
@@ -215,9 +217,32 @@ const MEASURE = `(() => {
     if (lost) clipped.push({ el: label(el), lost: label(lost) + ' "' + lost.textContent.trim().slice(0, 30) + '"' });
     if (clipped.length >= 20) break;
   }
+  // Navigation that exists but renders no visible link at desktop width (e.g. trapped in a closed <details>).
+  const navHidden = [];
+  if ((window.__rcWidth || innerWidth) >= 1200) for (const nav of document.querySelectorAll('nav, [role=navigation]')) {
+    const links = [...nav.querySelectorAll('a[href], button')]; if (links.length < 2) continue;
+    const shown = links.filter((a) => { const q = a.getBoundingClientRect(); return q.width > 0 && q.height > 0 && getComputedStyle(a).visibility !== 'hidden'; });
+    if (shown.length === 0) navHidden.push(label(nav) + ' (' + links.length + ' links, none visible)');
+  }
+  // A closed <details> whose <summary> is hidden can never be opened: its links are unreachable.
+  for (const d of document.querySelectorAll('details:not([open])')) {
+    const sum = d.querySelector(':scope > summary'); const links = d.querySelectorAll('a[href], button');
+    if (links.length < 2) continue;
+    const sr = sum ? sum.getBoundingClientRect() : { width: 0, height: 0 };
+    if (!sum || sr.width === 0 || sr.height === 0 || getComputedStyle(sum).display === 'none') navHidden.push(label(d) + ' (closed details, summary hidden, ' + links.length + ' links unreachable)');
+  }
+  // Progress indicators whose label says progress was made but whose fill has no width.
+  const progressEmpty = [];
+  for (const pb of document.querySelectorAll('[role=progressbar], progress, meter')) {
+    const now = parseFloat(pb.getAttribute('aria-valuenow') ?? pb.value ?? 0), max = parseFloat(pb.getAttribute('aria-valuemax') ?? pb.max ?? 100) || 100;
+    if (!(now / max > 0.03) || pb.tagName === 'PROGRESS' || pb.tagName === 'METER') continue;
+    const fills = [...pb.querySelectorAll('*')].filter((c) => rgba(getComputedStyle(c).backgroundColor)[3] > 0.1 || getComputedStyle(c).backgroundImage !== 'none');
+    const own = rgba(getComputedStyle(pb).backgroundImage !== 'none' ? '#000' : 'transparent')[3] > 0;
+    if (!own && fills.length && fills.every((c) => c.getBoundingClientRect().width < 1)) progressEmpty.push(label(pb) + ' (' + Math.round(now / max * 100) + '% but fill is 0px)');
+  }
   const broken = [...document.images].filter((i) => i.complete && i.naturalWidth === 0 && i.getBoundingClientRect().width > 0).map((i) => i.getAttribute('src'));
   const doc = document.documentElement;
-  return { pageHeight: doc.scrollHeight, overflowX: Math.max(0, doc.scrollWidth - (window.__rcWidth || innerWidth)), contrast, stacking, hidden, broken, warmNeutralBody, bodyOklch: bgLch, nested: nested.slice(0, 20), emoji: emoji.slice(0, 20), collisions, clipped };
+  return { pageHeight: doc.scrollHeight, overflowX: Math.max(0, doc.scrollWidth - (window.__rcWidth || innerWidth)), contrast, stacking, hidden, broken, warmNeutralBody, bodyOklch: bgLch, nested: nested.slice(0, 20), emoji: emoji.slice(0, 20), collisions, clipped, navHidden, progressEmpty };
 })()`;
 
 // Controls that look interactive but have no click/key listener on themselves or any ancestor.
@@ -310,6 +335,8 @@ const report = {
     text_collisions: new Set([...desktop.collisions, ...mobile.collisions].map((x) => x.el + x.text)).size,
     clipped_content: new Set([...desktop.clipped, ...mobile.clipped].map((x) => x.el + x.lost)).size,
     assert_failures: assertFailures.length,
+    nav_hidden_desktop: desktop.navHidden.length,
+    progress_empty: new Set([...desktop.progressEmpty, ...mobile.progressEmpty]).size,
   },
   details: {
     jsErrors,
@@ -325,6 +352,8 @@ const report = {
     textCollisions: [...desktop.collisions, ...mobile.collisions].slice(0, 20),
     clippedContent: [...desktop.clipped, ...mobile.clipped].slice(0, 20),
     assertFailures: assertFailures.slice(0, 20),
+    navHiddenDesktop: desktop.navHidden,
+    progressEmpty: [...new Set([...desktop.progressEmpty, ...mobile.progressEmpty])],
   },
   screenshots: [...desktop.files, ...mobile.files, ...nojs.files],
   boundaries: [
@@ -342,7 +371,7 @@ const report = {
 writeFileSync(path.join(outDir, 'render-check.json'), JSON.stringify(report, null, 2));
 
 const s = report.summary;
-const line = `RENDER-CHECK ${VERSION}: overflow_desktop=${s.overflow_desktop} overflow_mobile=${s.overflow_mobile} js_errors=${s.js_errors} contrast_failures=${s.contrast_failures} word_stacking=${s.word_stacking} text_collisions=${s.text_collisions} clipped_content=${s.clipped_content} dead_controls=${s.dead_controls} assert_failures=${s.assert_failures} hidden_without_js=${s.hidden_without_js} broken_images=${s.broken_images} | slop: scroll_animated=${s.scroll_animated} nested_boxes=${s.nested_boxes} emoji_icons=${s.emoji_icons} warm_neutral_body=${s.warm_neutral_body}`;
+const line = `RENDER-CHECK ${VERSION}: overflow_desktop=${s.overflow_desktop} overflow_mobile=${s.overflow_mobile} js_errors=${s.js_errors} contrast_failures=${s.contrast_failures} word_stacking=${s.word_stacking} text_collisions=${s.text_collisions} clipped_content=${s.clipped_content} dead_controls=${s.dead_controls} assert_failures=${s.assert_failures} nav_hidden_desktop=${s.nav_hidden_desktop} progress_empty=${s.progress_empty} hidden_without_js=${s.hidden_without_js} broken_images=${s.broken_images} | slop: scroll_animated=${s.scroll_animated} nested_boxes=${s.nested_boxes} emoji_icons=${s.emoji_icons} warm_neutral_body=${s.warm_neutral_body}`;
 if (asJson) console.log(JSON.stringify(report, null, 2));
 else {
   console.log(line);
@@ -351,6 +380,8 @@ else {
   for (const h of report.details.hiddenWithoutJs.slice(0, 8)) console.log(`  hidden-without-js  ${h.el}  "${h.text}"`);
   for (const e of jsErrors.slice(0, 5)) console.log(`  js-error  ${e}`);
   for (const c of report.details.clippedContent.slice(0, 6)) console.log(`  clipped  ${c.el} cuts ${c.lost}`);
+  for (const n of report.details.navHiddenDesktop) console.log(`  nav-hidden-desktop  ${n}`);
+  for (const n of report.details.progressEmpty) console.log(`  progress-empty  ${n}`);
   for (const a of report.details.assertFailures.slice(0, 6)) console.log(`  assert  ${a}`);
   for (const d of report.details.deadControls.slice(0, 6)) console.log(`  dead-control  ${d}`);
   for (const c of report.details.textCollisions.slice(0, 6)) console.log(`  text-collision  ${c.el}  "${c.text}"`);
@@ -360,5 +391,5 @@ else {
   console.log(`  screenshots + render-check.json in ${outDir}`);
 }
 clearInterval(keepAlive); ws.close(); proc.kill();
-const fail = s.overflow_desktop || s.overflow_mobile || s.js_errors || s.contrast_failures || s.word_stacking || s.text_collisions || s.clipped_content || s.dead_controls || s.assert_failures || s.hidden_without_js || s.broken_images || s.scroll_animated >= 5 || s.nested_boxes || s.emoji_icons || s.warm_neutral_body;
+const fail = s.overflow_desktop || s.overflow_mobile || s.js_errors || s.contrast_failures || s.word_stacking || s.text_collisions || s.clipped_content || s.dead_controls || s.assert_failures || s.nav_hidden_desktop || s.progress_empty || s.hidden_without_js || s.broken_images || s.scroll_animated >= 5 || s.nested_boxes || s.emoji_icons || s.warm_neutral_body;
 process.exit(fail ? 1 : 0);
