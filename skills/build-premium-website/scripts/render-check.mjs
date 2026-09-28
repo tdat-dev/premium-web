@@ -17,7 +17,7 @@ import { tmpdir, homedir } from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-const VERSION = '1.2.0';
+const VERSION = '1.3.0';
 const args = process.argv.slice(2);
 const asJson = args.includes('--json');
 const positional = args.filter((a) => !a.startsWith('--'));
@@ -75,10 +75,11 @@ async function pageWs() {
 
 const ws = new WebSocket(await pageWs());
 await new Promise((r, j) => { ws.addEventListener('open', r, { once: true }); ws.addEventListener('error', j, { once: true }); });
-let seq = 0; const pending = new Map(); const jsErrors = [];
+let seq = 0; const pending = new Map(); const jsErrors = []; const assertFailures = [];
 ws.addEventListener('message', (m) => {
   const d = JSON.parse(m.data);
   if (d.id && pending.has(d.id)) { pending.get(d.id)(d); pending.delete(d.id); return; }
+  if (d.method === 'Runtime.consoleAPICalled' && d.params.type === 'assert') assertFailures.push((d.params.args ?? []).map((a) => a.value ?? a.description ?? '').join(' ').slice(0, 160) || 'console.assert failed');
   if (d.method === 'Runtime.exceptionThrown') jsErrors.push(d.params.exceptionDetails?.exception?.description?.split('\n')[0] ?? d.params.exceptionDetails?.text);
 });
 const send = (method, params = {}) => new Promise((res, rej) => { const id = ++seq; pending.set(id, (d) => (d.error ? rej(new Error(`${method}: ${d.error.message}`)) : res(d.result))); ws.send(JSON.stringify({ id, method, params })); });
@@ -193,9 +194,30 @@ const MEASURE = `(() => {
       const ov = inter(m, t.r); if (ov > 0.3 * area(m)) { collisions.push({ el: label(t.el) + ' x svg-mark', text: t.el.textContent.trim().slice(0, 30) }); break; } }
     if (collisions.length >= 30) break;
   }
+  // Clipped content: containers that cut their content off (hidden/clip overflow, no ellipsis, not a scroller).
+  const clipped = [];
+  for (const el of document.body.querySelectorAll('*')) {
+    const cs = getComputedStyle(el); if (cs.display === 'none' || cs.visibility === 'hidden') continue;
+    const ox = cs.overflowX, oy = cs.overflowY; const r = el.getBoundingClientRect(); if (r.width < 40 || r.height < 16) continue;
+    if (el.closest('[aria-hidden="true"], details:not([open])') || cs.textOverflow === 'ellipsis' || /line-clamp/.test(cs.cssText) || cs.webkitLineClamp !== 'none' && cs.webkitLineClamp) continue;
+    const cutX = (ox === 'hidden' || ox === 'clip') && el.scrollWidth > el.clientWidth + 4;
+    const cutY = (oy === 'hidden' || oy === 'clip') && el.scrollHeight > el.clientHeight + 4 && el.clientHeight > 0 && !/^(0px)$/.test(cs.maxHeight);
+    // On desktop, a data table that needs horizontal scrolling hides decision columns: report it too.
+    const wideDesk = (window.__rcWidth || innerWidth) >= 1200 && (ox === 'auto' || ox === 'scroll') && el.scrollWidth > el.clientWidth + 16 && el.querySelector('table, [role=grid], [role=table]');
+    if (wideDesk) { clipped.push({ el: label(el), lost: 'table needs horizontal scroll at desktop (' + (el.scrollWidth - el.clientWidth) + 'px hidden)' }); continue; }
+    if (!cutX && !cutY) continue;
+    // Only report when real text or a control sits in the cut-off part.
+    const box = el.getBoundingClientRect(); let lost = null;
+    for (const d of el.querySelectorAll('button, a, input, select, td, th, p, span, li, h2, h3, h4')) {
+      const q = d.getBoundingClientRect(); if (q.width === 0 || q.height === 0 || !d.textContent.trim()) continue;
+      if ((cutX && q.left >= box.right - 2) || (cutY && q.top >= box.bottom - 2)) { lost = d; break; }
+    }
+    if (lost) clipped.push({ el: label(el), lost: label(lost) + ' "' + lost.textContent.trim().slice(0, 30) + '"' });
+    if (clipped.length >= 20) break;
+  }
   const broken = [...document.images].filter((i) => i.complete && i.naturalWidth === 0 && i.getBoundingClientRect().width > 0).map((i) => i.getAttribute('src'));
   const doc = document.documentElement;
-  return { pageHeight: doc.scrollHeight, overflowX: Math.max(0, doc.scrollWidth - (window.__rcWidth || innerWidth)), contrast, stacking, hidden, broken, warmNeutralBody, bodyOklch: bgLch, nested: nested.slice(0, 20), emoji: emoji.slice(0, 20), collisions };
+  return { pageHeight: doc.scrollHeight, overflowX: Math.max(0, doc.scrollWidth - (window.__rcWidth || innerWidth)), contrast, stacking, hidden, broken, warmNeutralBody, bodyOklch: bgLch, nested: nested.slice(0, 20), emoji: emoji.slice(0, 20), collisions, clipped };
 })()`;
 
 // Controls that look interactive but have no click/key listener on themselves or any ancestor.
@@ -234,6 +256,15 @@ async function run(name, width, height, mobile, { js = true, shots = true } = {}
   // Mobile emulation can widen innerWidth to fit overflowing content; measure against the emulated width.
   await evaluate(`window.__rcWidth = ${width}`);
   const m = await evaluate(MEASURE);
+  // Re-measure contrast in the viewport at several scroll depths: scroll-linked color changes only show there.
+  if (js && m.pageHeight > height * 1.5) {
+    for (const f of [0.2, 0.4, 0.6, 0.8]) {
+      await send('Runtime.evaluate', { expression: `scrollTo(0,${Math.round((m.pageHeight - height) * f)})` }); await sleep(500);
+      const vis = await evaluate(MEASURE.replace('const textEls = [...document.body.querySelectorAll(\'*\')]', 'const textEls = [...document.body.querySelectorAll(\'*\')].filter((e) => { const q = e.getBoundingClientRect(); return q.bottom > 0 && q.top < innerHeight; })'));
+      for (const c of vis.contrast) if (!m.contrast.some((x) => x.el === c.el && x.text === c.text)) m.contrast.push({ ...c, atScroll: f });
+    }
+    await send('Runtime.evaluate', { expression: 'scrollTo(0,0)' });
+  }
   m.deadControls = js && !mobile ? await deadControls() : [];
   m.scrollAnimated = js ? await evaluate(`(() => { const changed = (window.__rcPre || []).filter(([el, op, tf]) => { const cs = getComputedStyle(el); return Math.abs(parseFloat(cs.opacity) - parseFloat(op)) > 0.2 || cs.transform !== tf; }).map(([el]) => el); return changed.filter((el) => !changed.some((o) => o !== el && o.contains(el))).length; })()`) : 0;
   const files = [];
@@ -277,6 +308,8 @@ const report = {
     warm_neutral_body: desktop.warmNeutralBody ? 1 : 0,
     dead_controls: desktop.deadControls.length,
     text_collisions: new Set([...desktop.collisions, ...mobile.collisions].map((x) => x.el + x.text)).size,
+    clipped_content: new Set([...desktop.clipped, ...mobile.clipped].map((x) => x.el + x.lost)).size,
+    assert_failures: assertFailures.length,
   },
   details: {
     jsErrors,
@@ -290,11 +323,15 @@ const report = {
     emojiIcons: [...desktop.emoji, ...mobile.emoji].slice(0, 12),
     deadControls: desktop.deadControls.slice(0, 20),
     textCollisions: [...desktop.collisions, ...mobile.collisions].slice(0, 20),
+    clippedContent: [...desktop.clipped, ...mobile.clipped].slice(0, 20),
+    assertFailures: assertFailures.slice(0, 20),
   },
   screenshots: [...desktop.files, ...mobile.files, ...nojs.files],
   boundaries: [
     'Contrast is computed against solid background colors only; text over images or gradients is skipped and must be checked by eye.',
     'dead_controls lists visible buttons, tabs, and toggles with no click/key listener on themselves or any ancestor; each is a control that does nothing when pressed. It cannot tell whether a listener does the right thing: click through every signature interaction yourself.',
+    'assert_failures counts failed console.assert calls: encode fixture invariants (totals sum, statuses match thresholds, counts match filters) as console.assert at load and they are checked here.',
+    'clipped_content lists containers with hidden/clip overflow that cut off text or controls without an ellipsis or scroll affordance.',
     'text_collisions lists text drawn over other text or small SVG marks (labels printed through map dots, captions under panels).',
     'hidden_with_js counts text that is still invisible after a full scroll pass (closed menus, tabs, and dialogs are expected there; review each).',
     'Full-page captures draw position:fixed/sticky elements once, over whatever content sits there; judge fixed bars from the -scroll frames, not the full-page image.',
@@ -305,14 +342,16 @@ const report = {
 writeFileSync(path.join(outDir, 'render-check.json'), JSON.stringify(report, null, 2));
 
 const s = report.summary;
-const line = `RENDER-CHECK ${VERSION}: overflow_desktop=${s.overflow_desktop} overflow_mobile=${s.overflow_mobile} js_errors=${s.js_errors} contrast_failures=${s.contrast_failures} word_stacking=${s.word_stacking} text_collisions=${s.text_collisions} dead_controls=${s.dead_controls} hidden_without_js=${s.hidden_without_js} broken_images=${s.broken_images} | slop: scroll_animated=${s.scroll_animated} nested_boxes=${s.nested_boxes} emoji_icons=${s.emoji_icons} warm_neutral_body=${s.warm_neutral_body}`;
+const line = `RENDER-CHECK ${VERSION}: overflow_desktop=${s.overflow_desktop} overflow_mobile=${s.overflow_mobile} js_errors=${s.js_errors} contrast_failures=${s.contrast_failures} word_stacking=${s.word_stacking} text_collisions=${s.text_collisions} clipped_content=${s.clipped_content} dead_controls=${s.dead_controls} assert_failures=${s.assert_failures} hidden_without_js=${s.hidden_without_js} broken_images=${s.broken_images} | slop: scroll_animated=${s.scroll_animated} nested_boxes=${s.nested_boxes} emoji_icons=${s.emoji_icons} warm_neutral_body=${s.warm_neutral_body}`;
 if (asJson) console.log(JSON.stringify(report, null, 2));
 else {
   console.log(line);
-  for (const c of report.details.contrast.slice(0, 12)) console.log(`  contrast ${c.ratio}:1 < ${c.need}:1  ${c.el}  "${c.text}"`);
+  for (const c of report.details.contrast.slice(0, 12)) console.log(`  contrast ${c.ratio}:1 < ${c.need}:1  ${c.el}  "${c.text}"${c.atScroll ? '  (at scroll ' + c.atScroll + ')' : ''}`);
   for (const w of report.details.stacking.slice(0, 8)) console.log(`  stacking ${w.lines} lines @${w.width}px  ${w.el}  "${w.text}"`);
   for (const h of report.details.hiddenWithoutJs.slice(0, 8)) console.log(`  hidden-without-js  ${h.el}  "${h.text}"`);
   for (const e of jsErrors.slice(0, 5)) console.log(`  js-error  ${e}`);
+  for (const c of report.details.clippedContent.slice(0, 6)) console.log(`  clipped  ${c.el} cuts ${c.lost}`);
+  for (const a of report.details.assertFailures.slice(0, 6)) console.log(`  assert  ${a}`);
   for (const d of report.details.deadControls.slice(0, 6)) console.log(`  dead-control  ${d}`);
   for (const c of report.details.textCollisions.slice(0, 6)) console.log(`  text-collision  ${c.el}  "${c.text}"`);
   for (const n of report.details.nestedBoxes.slice(0, 5)) console.log(`  nested-box depth ${n.depth}  ${n.el}`);
@@ -321,5 +360,5 @@ else {
   console.log(`  screenshots + render-check.json in ${outDir}`);
 }
 clearInterval(keepAlive); ws.close(); proc.kill();
-const fail = s.overflow_desktop || s.overflow_mobile || s.js_errors || s.contrast_failures || s.word_stacking || s.text_collisions || s.dead_controls || s.hidden_without_js || s.broken_images || s.scroll_animated >= 5 || s.nested_boxes || s.emoji_icons || s.warm_neutral_body;
+const fail = s.overflow_desktop || s.overflow_mobile || s.js_errors || s.contrast_failures || s.word_stacking || s.text_collisions || s.clipped_content || s.dead_controls || s.assert_failures || s.hidden_without_js || s.broken_images || s.scroll_animated >= 5 || s.nested_boxes || s.emoji_icons || s.warm_neutral_body;
 process.exit(fail ? 1 : 0);

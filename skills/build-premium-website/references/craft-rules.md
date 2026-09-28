@@ -42,6 +42,8 @@ Fonts are the strongest single AI fingerprint. The model's "tasteful" reflex pic
 
 ### Layout and tokens
 
+- At the primary desktop width, decision columns of a data table are visible without horizontal scrolling: drop or merge low-value columns, wrap long cells, or pin the decision columns. `render-check` reports a table that needs horizontal scrolling at 1440px as `clipped_content`.
+
 - Every color, font, radius, shadow, and z-index value flows from a named token. No inline one-off values that bypass the token block; improvising a new color mid-build is a defect.
 - Semantic z-index scale (dropdown → sticky → modal-backdrop → modal → toast → tooltip). Never 999/9999.
 - Flexbox for one-dimensional layout, Grid for two-dimensional; `repeat(auto-fit, minmax(Npx, 1fr))` before writing breakpoints.

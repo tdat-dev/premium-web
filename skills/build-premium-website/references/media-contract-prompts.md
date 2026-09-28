@@ -91,6 +91,8 @@ STATUS: BLOCKED ON ASSETS until delivered and rendered.
 - Generated images may depict materials, place, process, weather, tools, or abstract context. They may not depict what reads as the client's own finished work, products in use, premises, staff, or customers unless the client supplied that subject as reference.
 - Caption or frame generated media so a visitor cannot mistake it for documentation.
 - When the product itself is the picture people need (a dish, a room, a garment, a finished house) and no real photo exists, do not fall back to a generic prop (an empty bowl, a vase, a leaf, a texture). Either generate the actual subject category (this dish, this kind of room) captioned "Ảnh minh hoạ" / "Illustrative image", or design a typographic or drawn layout that does not depend on photos, and mark the real photography `REQUEST`. A generic prop standing in for the product is S-41 slop.
+- Generated imagery must be true to the named place and culture: landform (the Mekong delta is flat, no mountains), architecture, vegetation, signage language, clothing, and season. Check every generated image against the brief's place before placing it; a wrong landscape is a truth defect, not a style choice.
+- A patterned, striped, or textured box standing where a photo belongs is still an empty media slot (S-41). Either place a real or honestly generated subject image, or remove the slot and let the text carry the section.
 - Use each generated image once. Reuse only a deliberate identity element (a texture, a mark), never the same photo in two content roles.
 
 ## Media acceptance check
