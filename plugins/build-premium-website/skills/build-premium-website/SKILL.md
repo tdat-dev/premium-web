@@ -1,6 +1,6 @@
 ---
 name: build-premium-website
-description: Build, redesign, audit, or polish premium landing and brand sites, dashboard and product UI, or hybrid marketing-to-product experiences. Use for landing pages, campaigns, portfolios, editorial sites, SaaS dashboards, admin panels, analytics, navigation, tables, forms, charts, onboarding, settings, commerce, media-rich storytelling, animation, GSAP, Three.js/WebGL, responsive UI, UI/UX, accessibility, and anti-template review. Routes every task through LANDING_BRAND, DASHBOARD_PRODUCT, or HYBRID with route-specific evidence and production gates.
+description: Build, redesign, audit, or polish premium landing and brand sites, product UI, or hybrid marketing-to-product experiences. Use for landing pages, campaigns, portfolios, editorial and docs sites, pricing pages, SaaS dashboards, admin panels, internal tools, back-office and ops consoles, CRM, helpdesk and inbox, project and task tools, analytics, billing and finance, commerce and POS, HR, scheduling, CMS and wiki, canvas editors, AI chat and agent UI, LMS, navigation, tables, forms, charts, onboarding, settings, permissions, animation, GSAP, Three.js/WebGL, responsive UI, accessibility, and anti-template review. Routes every task through LANDING_BRAND, DASHBOARD_PRODUCT, or HYBRID with archetype pattern defaults, route-specific evidence, and production gates.
 license: Apache-2.0. Copyright (c) 2026 ByteWaker. Redistribution must retain LICENSE, NOTICE, and copyright notices. Canonical source github.com/tdat-dev/premium-web
 ---
 
@@ -20,6 +20,8 @@ After dispatch, load the mandatory route contract:
 - `LANDING_BRAND`: [references/landing-brand-contract.md](references/landing-brand-contract.md)
 - `DASHBOARD_PRODUCT`: [references/dashboard-product-contract.md](references/dashboard-product-contract.md)
 - `HYBRID`: both contracts above plus [references/hybrid-contract.md](references/hybrid-contract.md)
+
+For every `DASHBOARD_PRODUCT` task and the product side of every `HYBRID` task, load [references/patterns/index.md](references/patterns/index.md), classify the product archetype there, and load the primary archetype file plus the cross-cutting pattern files for the surfaces in scope. For `LANDING_BRAND` work that includes pricing, feature, customers, changelog, contact, blog, legal, status, or docs pages, load the matching `references/patterns/landing/` file. Pattern files are the default anatomy, screen set, signature patterns, and archetype anti-patterns; deviations are recorded decisions, and adopted signature patterns need rendered evidence like any other gate item.
 
 Before designing or critiquing any visual surface, also load [references/craft-rules.md](references/craft-rules.md) — the measurable floors and structural bans that make critique concrete. Its violations are severity-graded defects under the enforcement contract, not taste notes.
 
@@ -46,6 +48,8 @@ Record two independent fields before discovery or design:
 surface_route: LANDING_BRAND | DASHBOARD_PRODUCT | HYBRID
 work_mode: BUILD | REDESIGN | AUDIT | POLISH
 ```
+
+For `DASHBOARD_PRODUCT` and the product side of `HYBRID`, also record `archetype: <primary> (+ secondaries)` per [references/patterns/index.md](references/patterns/index.md).
 
 Do not use `AUDIT` as a surface route. A repository containing both a marketing site and an application is not automatically `HYBRID`; choose it only when the scoped user journey materially crosses both. Record relevant modifiers such as `GREENFIELD`, `CONSTRAINED`, `HIGH_UNCERTAINTY`, `MEDIA_LED`, `NO_MEDIA`, `MOTION_LED`, `THREE_D`, `COMMERCE`, `CONTENT_HEAVY`, `APPLICATION`, or `LOCAL_CHANGE`.
 
@@ -111,7 +115,7 @@ Resolve severity using the enforcement contract:
 
 Report:
 
-1. surface route, work mode, fact/claim/source map, assumptions, and decision record;
+1. surface route, work mode, product archetype when applicable, fact/claim/source map, assumptions, and decision record;
 2. reference evidence and originality boundaries;
 3. completed routes, sections, states, and primary journey;
 4. media manifest with rights, actual placement, loading, and fallbacks;

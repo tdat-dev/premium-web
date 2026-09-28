@@ -23,6 +23,10 @@ Edge rules:
 - If the requested change touches only one side of a larger hybrid system, route the bounded change to that side and record the other surface as an integration risk.
 - If the primary outcome remains ambiguous, compare the first successful user action under each route. Select the route whose gate can actually prove that success and record the rejected route.
 
+## Classify the product archetype
+
+After choosing `DASHBOARD_PRODUCT` or `HYBRID`, classify the product archetype with [patterns/index.md](patterns/index.md) by the user's primary repeated job, not the industry. Record one primary and at most two secondary archetypes. The archetype selects default shell, screen set, signature patterns, and archetype anti-patterns; it never changes the route gate. Re-classify when rendered evidence shows the primary repeated job differs from the one recorded.
+
 ## Choose the work mode independently
 
 | Work mode | Use when | Mandatory behavior |
@@ -39,7 +43,7 @@ Do not use `AUDIT`, `POLISH`, `CONSTRAINED`, or `LOCAL_CHANGE` to avoid evidence
 | Route | Contracts to load | Required route artifacts | Required sub-gates |
 | --- | --- | --- | --- |
 | `LANDING_BRAND` | `landing-brand-contract.md` | decision record, landing conversion map, coverage matrix, critique ledger, media manifest when applicable | `LANDING_BRAND GATE` |
-| `DASHBOARD_PRODUCT` | `dashboard-product-contract.md` | decision record, product journey/state matrix, dashboard data contract for data surfaces, coverage matrix, critique ledger | `DASHBOARD_PRODUCT GATE` |
+| `DASHBOARD_PRODUCT` | `dashboard-product-contract.md`, `patterns/index.md` + primary archetype + in-scope cross files | decision record with archetype section, product journey/state matrix, dashboard data contract for data surfaces, coverage matrix, critique ledger | `DASHBOARD_PRODUCT GATE` |
 | `HYBRID` | both route contracts plus `hybrid-contract.md` | all applicable artifacts plus hybrid conflict ledger | both sub-gates and `HYBRID CROSS-SURFACE GATE` |
 
 Templates:
