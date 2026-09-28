@@ -180,7 +180,7 @@ function auditFile(source, file, root, findings) {
     source, file, root,
     level: 'BLOCKER_CANDIDATE',
     id: 'PLACEHOLDER_IDENTITY_OR_DATA',
-    pattern: /\b(?:Acme|John Doe|Jane Doe|Lorem ipsum|Company Name|Your Company|Test User|Nguyễn Văn A|Trần Thị B|Lê Văn C)\b/g,
+    pattern: /\b(?:Acme|John Doe|Jane Doe|Lorem ipsum|Company Name|Your Company|Test User|Nguyễn Văn A|Trần Thị B|Lê Văn C|Sarah Chen|Alex Rivera|Jordan Lee|Priya Patel|Marcus Chen|Emily Zhang|Northwind|Contoso|Globex|Initech|Meridian|Umbrella Corp|Stark Industries)\b/g,
     message: 'Placeholder identity or data. Fixtures must read as one real, internally consistent situation (names, dates, counts, statuses agree).',
   });
 
@@ -208,6 +208,31 @@ function auditFile(source, file, root, findings) {
       message: 'A row of big numerals with small labels is the hero-metric template (craft-rules ban 4) even when the numbers are true. Put numbers inside sentences, a ledger, or a comparison.',
       manual_review_required: true,
     });
+  }
+
+  if (isMarkup) {
+    // Stock AI cadence constructions in headings.
+    const heads = [...source.matchAll(/<h[1-4]\b[^>]*>([\s\S]*?)<\/h[1-4]>/gi)].map((m) => m[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()).filter((t) => t.length > 3);
+    const constructions = [
+      ['count antithesis', /\b(?:two|three|four|one|hai|ba|bốn|một)\s+\p{L}+(?:\s\p{L}+)?,\s*(?:one|a single|một)\s+\p{L}+/iu],
+      ['X, not Y', /,\s*(?:not|never|không phải|chứ không phải)\s+(?:a |an |the |là )?\p{L}+/iu],
+      ['not X but Y', /\b(?:not just|not only|không chỉ(?: là)?)\b[^.]{0,40}\b(?:but|mà còn|mà là)\b/iu],
+      ['mirrored pair', /^(\p{L}+)\s[^.!?]{2,40}[.!?]\s+\1\s[^.!?]{2,40}[.!?]$/u],
+      ['three-beat', /^[\p{L}\s]{2,18}[.,]\s+[\p{L}\s]{2,18}[.,]\s+[\p{L}\s]{2,18}\.$/u],
+    ];
+    const hits = [];
+    for (const h of heads) for (const [name, re] of constructions) if (re.test(h)) hits.push(`${name}: "${h.slice(0, 50)}"`);
+    if (hits.length >= 2) {
+      findings.push({
+        level: 'ADVISORY',
+        id: 'AI_CADENCE_CONSTRUCTION',
+        file: rel,
+        line: null,
+        evidence: hits.slice(0, 5).join('; '),
+        message: 'Headings use stock AI constructions (count antithesis, "X, not Y", mirrored pairs, three-beat). Rewrite as plain statements the client would say; vary shape.',
+        manual_review_required: true,
+      });
+    }
   }
 
   if (/prefers-color-scheme\s*:\s*dark/i.test(source)) {

@@ -8,6 +8,17 @@ license: Apache-2.0. Copyright (c) 2026 ByteWaker. Redistribution must retain LI
 
 Treat `100k-quality` as an aspirational level of care, not a valuation, award, revenue, conversion, or originality guarantee. Never promise that a site is worth $100,000 or will win Awwwards.
 
+## Before reporting any status (non-negotiable)
+
+A status report is invalid unless it quotes, from the final build:
+
+1. the `RENDER-CHECK` summary line of [scripts/render-check.mjs](scripts/render-check.mjs) with every non-zero count fixed or dispositioned (text over media and intentionally closed menus are the only accepted dispositions), or `render-check: unavailable (reason)` with status capped at `NOT PRODUCTION READY`;
+2. the `BLOCKER_CANDIDATE` / `ADVISORY` counts of [scripts/audit-ai-slop.mjs](scripts/audit-ai-slop.mjs) with each blocker candidate dispositioned;
+3. the filled Slop sweep from the critique ledger;
+4. the fresh-eyes reviewer's verdict (or `fresh-eyes: unavailable` and the cap).
+
+Counting by eye does not replace the scripts: builders' manual counts of em-dashes and contrast have been wrong by a factor of three.
+
 ## Load the enforcement and routing contracts
 
 For **every** build, redesign, audit, or polish task, read and apply both:
@@ -92,7 +103,7 @@ For each implementation slice:
 1. Define its job, content, focal order, assets, states, responsive risks, motion, and failure behavior.
 2. Build the smallest complete slice with semantic structure and progressive enhancement.
 3. Run the real experience and capture the states required by the coverage matrix.
-4. Critique observable outcomes in the order defined by the enforcement contract, run [scripts/audit-ai-slop.mjs](scripts/audit-ai-slop.mjs) on the build, and fill the **Slop sweep** in the critique ledger from the screenshots.
+4. Critique observable outcomes in the order defined by the enforcement contract, run [scripts/render-check.mjs](scripts/render-check.mjs) (screenshots at 1440 and 390, overflow, contrast, word stacking, no-JS visibility, broken images, JS errors) and [scripts/audit-ai-slop.mjs](scripts/audit-ai-slop.mjs) on the build, and fill the **Slop sweep** in the critique ledger from the screenshots.
 5. Record defects and before/after evidence in [assets/critique-ledger.template.md](assets/critique-ledger.template.md).
 6. Repeat until no unhandled P0 or P1 defect remains.
 
@@ -129,7 +140,8 @@ Report:
 10. the advisory Awwwards-style review, clearly separated from production gates;
 11. ambition-gate results (A-E: satisfied / waived-with-reason / failed) and the resulting creative cap, when the gates applied;
 12. exact overall status from the enforcement contract;
-13. confirmation that the run-log entry was appended (or why not) — an unmentioned run-log is an incomplete package.
+13. confirmation that the run-log entry was appended (or why not) — an unmentioned run-log is an incomplete package;
+14. the quoted `RENDER-CHECK` and audit summary lines, the Slop sweep, and the fresh-eyes verdict.
 
 State what was measured, what remains subjective, and what was not verifiable.
 

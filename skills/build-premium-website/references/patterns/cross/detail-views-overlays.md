@@ -87,6 +87,7 @@ Split pane position: bottom when the table needs 5+ columns, side when 5 or fewe
 
 ## Anti-patterns
 
+- **Empty split pane on load**: a list + detail layout that opens with "select an item" when the user's job is to work the queue. Open the first item in the current sort (or the last item this user worked) so the first screen is already useful; keep the empty state for zero results. P1 (P0 when the brief names the open record as required).
 - **Record detail in a modal** — cannot be shared, bookmarked, or kept beside the list — P1.
 - **Modal on modal** — focus and escape order break — P1.
 - **Returning from detail resets list filters or scroll** — P1.

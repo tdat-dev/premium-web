@@ -52,8 +52,10 @@ Fill every row from the rendered screenshots at each tested width, not from inte
 | SW-09 | Palette equals category reflex or saturated look (a)-(d); reject-list or reflex font |  |  |
 | SW-10 | Generated image posing as client work, reused, or uncanny (ban 12) |  |  |
 | SW-11 | Content hidden or covered when JS/animation fails; text under scrims or overlays |  |  |
-| SW-12 | Narrowest width: every primary action reachable, charts/tables legible, no overflow |  |  |
+| SW-12 | Narrowest width: every primary action reachable, charts/tables legible; `render-check` overflow, contrast, word-stacking, hidden-without-JS counts all 0 or dispositioned |  |  |
+| SW-15 | Default state: the first load shows the state the brief asks for (a selected record in a split pane, real data in every panel), not an empty pane waiting for a click |  |  |
 
+- `render-check.mjs` summary line (quoted verbatim):
 - `audit-ai-slop.mjs` run (command, BLOCKER_CANDIDATE and ADVISORY counts):
 - Disposition of every BLOCKER_CANDIDATE (fixed / false positive with reason):
 - Fresh-eyes review: reviewer (subagent or person who did not build it), inputs given, verdict:
