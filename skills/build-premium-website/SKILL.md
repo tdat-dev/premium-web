@@ -17,7 +17,7 @@ A status report is invalid unless it quotes, from the final build:
 3. the filled Slop sweep from the critique ledger;
 4. the fresh-eyes reviewer's verdict (or `fresh-eyes: unavailable` and the cap).
 
-Counting by eye does not replace the scripts: builders' manual counts of em-dashes and contrast have been wrong by a factor of three.
+Every control a build renders as interactive (buttons, tabs, toggles, map nodes, accordions) must be pressed at least once in a real browser before reporting; `render-check` lists controls with no listener as `dead_controls`, but a listener that does the wrong thing is only caught by using it. Counting by eye does not replace the scripts: builders' manual counts of em-dashes and contrast have been wrong by a factor of three.
 
 ## Load the enforcement and routing contracts
 

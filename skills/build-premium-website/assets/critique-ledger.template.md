@@ -53,6 +53,7 @@ Fill every row from the rendered screenshots at each tested width, not from inte
 | SW-10 | Generated image posing as client work, reused, or uncanny (ban 12) |  |  |
 | SW-11 | Content hidden or covered when JS/animation fails; text under scrims or overlays |  |  |
 | SW-12 | Narrowest width: every primary action reachable, charts/tables legible; `render-check` counts all 0 or dispositioned, including the slop signals (scroll_animated, nested_boxes, emoji_icons, warm_neutral_body) |  |  |
+| SW-16 | Interaction truth: every signature interaction and every visible control exercised in a browser; `dead_controls` and `text_collisions` are 0 |  |  |
 | SW-15 | Default state: the first load shows the state the brief asks for (a selected record in a split pane, real data in every panel), not an empty pane waiting for a click |  |  |
 
 - `render-check.mjs` summary line (quoted verbatim):

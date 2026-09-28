@@ -17,7 +17,7 @@ import { tmpdir, homedir } from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-const VERSION = '1.1.0';
+const VERSION = '1.2.0';
 const args = process.argv.slice(2);
 const asJson = args.includes('--json');
 const positional = args.filter((a) => !a.startsWith('--'));
@@ -82,7 +82,7 @@ ws.addEventListener('message', (m) => {
   if (d.method === 'Runtime.exceptionThrown') jsErrors.push(d.params.exceptionDetails?.exception?.description?.split('\n')[0] ?? d.params.exceptionDetails?.text);
 });
 const send = (method, params = {}) => new Promise((res, rej) => { const id = ++seq; pending.set(id, (d) => (d.error ? rej(new Error(`${method}: ${d.error.message}`)) : res(d.result))); ws.send(JSON.stringify({ id, method, params })); });
-const evaluate = async (expression) => (await send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true })).result.value;
+const evaluate = async (expression) => { const r = await send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true }); if (r.exceptionDetails) throw new Error('in-page script failed: ' + (r.exceptionDetails.exception?.description ?? r.exceptionDetails.text)); return r.result.value; };
 
 await send('Page.enable'); await send('Runtime.enable');
 
@@ -128,7 +128,7 @@ const MEASURE = `(() => {
     const tops = new Set();
     for (const n of el.childNodes) { if (n.nodeType !== 3 || !n.textContent.trim()) continue; const rg = document.createRange(); rg.selectNodeContents(n); for (const q of rg.getClientRects()) if (q.width > 1) tops.add(Math.round(q.top / 4)); }
     const lines = tops.size;
-    if (lines >= 3 && text.length >= 12 && text.length / lines < 10 && cs.writingMode.startsWith('horizontal')) stacking.push({ el: label(el), text: text.slice(0, 50), lines, width: Math.round(r.width) });
+    if (lines >= 3 && text.length >= 12 && text.length / lines < 10 && cs.writingMode.startsWith('horizontal') && !el.closest('pre,code,kbd,samp')) stacking.push({ el: label(el), text: text.slice(0, 50), lines, width: Math.round(r.width) });
   }
   // Slop signals: warm-neutral body, nested boxes, emoji used as icons.
   const toOklch = ([r, g, b]) => {
@@ -163,10 +163,63 @@ const MEASURE = `(() => {
     const t = [...el.childNodes].filter((n) => n.nodeType === 3).map((n) => n.textContent).join('');
     if (/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B50}\u{2728}]/u.test(t) && el.getBoundingClientRect().width > 0) emoji.push({ el: label(el), text: t.trim().slice(0, 30) });
   }
+  // Text collisions: visible text boxes overlapping other text or SVG marks (labels printed through dots, captions under panels).
+  const textBoxes = [];
+  for (const el of textEls) {
+    const cs = getComputedStyle(el); if (cs.visibility === 'hidden' || cs.display === 'none' || effOpacity(el) < 0.1) continue;
+    // Skip screen-reader-only text and text clipped away by an overflow ancestor.
+    let srOnly = false, clipBox = null;
+    for (let n = el, d = 0; n && n.nodeType === 1 && d < 12; n = n.parentElement, d++) {
+      const ns = getComputedStyle(n); const nr = n.getBoundingClientRect();
+      if ((ns.clip && ns.clip !== 'auto') || (ns.clipPath && ns.clipPath !== 'none' && ns.clipPath.startsWith('inset(50%')) || (nr.width <= 2 && nr.height <= 2)) { srOnly = true; break; }
+      if (d > 0 && ns.overflow !== 'visible') clipBox = clipBox ? { left: Math.max(clipBox.left, nr.left), right: Math.min(clipBox.right, nr.right), top: Math.max(clipBox.top, nr.top), bottom: Math.min(clipBox.bottom, nr.bottom) } : { left: nr.left, right: nr.right, top: nr.top, bottom: nr.bottom };
+    }
+    if (srOnly) continue;
+    const closedDetails = el.closest('details:not([open])'); if (closedDetails && !el.closest('summary')) continue;
+    for (const n of el.childNodes) { if (n.nodeType !== 3 || !n.textContent.trim()) continue; const rg = document.createRange(); rg.selectNodeContents(n); for (const q of rg.getClientRects()) { if (q.width <= 4 || q.height <= 4) continue; if (clipBox) { const vis = Math.max(0, Math.min(q.right, clipBox.right) - Math.max(q.left, clipBox.left)) * Math.max(0, Math.min(q.bottom, clipBox.bottom) - Math.max(q.top, clipBox.top)); if (vis < 0.5 * q.width * q.height) continue; } textBoxes.push({ el, r: q }); } }
+  }
+  const area = (a) => Math.max(0, a.right - a.left) * Math.max(0, a.bottom - a.top);
+  const inter = (a, b) => area({ left: Math.max(a.left, b.left), right: Math.min(a.right, b.right), top: Math.max(a.top, b.top), bottom: Math.min(a.bottom, b.bottom) });
+  const collisions = [];
+  for (let i = 0; i < textBoxes.length && collisions.length < 30; i++) for (let j = i + 1; j < textBoxes.length; j++) {
+    const A = textBoxes[i], B = textBoxes[j]; if (A.el === B.el || A.el.contains(B.el) || B.el.contains(A.el)) continue;
+    const ov = inter(A.r, B.r); const ovH = Math.min(A.r.bottom, B.r.bottom) - Math.max(A.r.top, B.r.top);
+    // Tight display leading makes line boxes overlap slightly; a real collision overlaps most of the shorter line's height.
+    if (ov > 0.25 * Math.min(area(A.r), area(B.r)) && ovH > 0.5 * Math.min(A.r.height, B.r.height)) { collisions.push({ el: label(A.el) + ' x ' + label(B.el), text: (A.el.textContent.trim().slice(0, 20) + ' / ' + B.el.textContent.trim().slice(0, 20)) }); break; }
+  }
+  for (const mark of document.querySelectorAll('svg circle, svg ellipse, svg polygon, svg rect')) {
+    const m = mark.getBoundingClientRect(); if (m.width < 3 || m.width > 60 || m.height > 60) continue;
+    for (const t of textBoxes) { if (t.el.closest('svg') !== mark.closest('svg') && !t.el.closest('svg')) { /* html label over svg mark */ }
+      const ov = inter(m, t.r); if (ov > 0.3 * area(m)) { collisions.push({ el: label(t.el) + ' x svg-mark', text: t.el.textContent.trim().slice(0, 30) }); break; } }
+    if (collisions.length >= 30) break;
+  }
   const broken = [...document.images].filter((i) => i.complete && i.naturalWidth === 0 && i.getBoundingClientRect().width > 0).map((i) => i.getAttribute('src'));
   const doc = document.documentElement;
-  return { pageHeight: doc.scrollHeight, overflowX: Math.max(0, doc.scrollWidth - (window.__rcWidth || innerWidth)), contrast, stacking, hidden, broken, warmNeutralBody, bodyOklch: bgLch, nested: nested.slice(0, 20), emoji: emoji.slice(0, 20) };
+  return { pageHeight: doc.scrollHeight, overflowX: Math.max(0, doc.scrollWidth - (window.__rcWidth || innerWidth)), contrast, stacking, hidden, broken, warmNeutralBody, bodyOklch: bgLch, nested: nested.slice(0, 20), emoji: emoji.slice(0, 20), collisions };
 })()`;
+
+// Controls that look interactive but have no click/key listener on themselves or any ancestor.
+async function deadControls() {
+  const { result } = await send('Runtime.evaluate', { expression: `(() => { const sel = 'button:not([type=submit]):not([disabled]), [role=button], [role=tab], [role=switch], [aria-pressed], [aria-expanded]'; return [...document.querySelectorAll(sel)].filter((el) => { const r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0 && !el.closest('form button[type=submit], summary, label') && el.tagName !== 'SUMMARY' && !el.hasAttribute('popovertarget') && !el.hasAttribute('commandfor'); }).slice(0, 120); })()` });
+  if (!result.objectId) return [];
+  const props = await send('Runtime.getProperties', { objectId: result.objectId, ownProperties: true });
+  const els = props.result.filter((p) => /^\d+$/.test(p.name) && p.value?.objectId).map((p) => p.value.objectId);
+  const seen = new Map(); const dead = [];
+  const winObj = (await send('Runtime.evaluate', { expression: 'window' })).result.objectId;
+  const winHas = (await send('DOMDebugger.getEventListeners', { objectId: winObj })).listeners.some((l) => /^(click|pointerdown|pointerup|mousedown|keydown|touchstart)$/.test(l.type));
+  for (const oid of els) {
+    let cur = oid; let found = winHas; let depth = 0;
+    while (cur && !found && depth < 40) {
+      let has = seen.get(cur);
+      if (has === undefined) { const ls = (await send('DOMDebugger.getEventListeners', { objectId: cur })).listeners; has = ls.some((l) => /^(click|pointerdown|pointerup|mousedown|keydown|touchstart|change|input)$/.test(l.type)); seen.set(cur, has); }
+      if (has) { found = true; break; }
+      const parent = await send('Runtime.callFunctionOn', { objectId: cur, functionDeclaration: 'function(){ return this.parentNode; }' });
+      cur = parent.result.objectId; depth++;
+    }
+    if (!found) { const d = await send('Runtime.callFunctionOn', { objectId: oid, functionDeclaration: 'function(){ let s = this.tagName.toLowerCase(); if (this.id) s += "#" + this.id; else if (this.classList.length) s += "." + [...this.classList].slice(0,2).join("."); return s + " \\"" + (this.textContent || this.getAttribute("aria-label") || "").trim().slice(0, 30) + "\\""; }', returnByValue: true }); dead.push(d.result.value); }
+  }
+  return dead;
+}
 
 async function run(name, width, height, mobile, { js = true, shots = true } = {}) {
   await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile });
@@ -181,6 +234,7 @@ async function run(name, width, height, mobile, { js = true, shots = true } = {}
   // Mobile emulation can widen innerWidth to fit overflowing content; measure against the emulated width.
   await evaluate(`window.__rcWidth = ${width}`);
   const m = await evaluate(MEASURE);
+  m.deadControls = js && !mobile ? await deadControls() : [];
   m.scrollAnimated = js ? await evaluate(`(() => { const changed = (window.__rcPre || []).filter(([el, op, tf]) => { const cs = getComputedStyle(el); return Math.abs(parseFloat(cs.opacity) - parseFloat(op)) > 0.2 || cs.transform !== tf; }).map(([el]) => el); return changed.filter((el) => !changed.some((o) => o !== el && o.contains(el))).length; })()`) : 0;
   const files = [];
   if (shots) {
@@ -221,6 +275,8 @@ const report = {
     nested_boxes: new Set([...desktop.nested, ...mobile.nested].map((x) => x.el)).size,
     emoji_icons: new Set([...desktop.emoji, ...mobile.emoji].map((x) => x.el + x.text)).size,
     warm_neutral_body: desktop.warmNeutralBody ? 1 : 0,
+    dead_controls: desktop.deadControls.length,
+    text_collisions: new Set([...desktop.collisions, ...mobile.collisions].map((x) => x.el + x.text)).size,
   },
   details: {
     jsErrors,
@@ -232,10 +288,14 @@ const report = {
     bodyOklch: desktop.bodyOklch,
     nestedBoxes: [...desktop.nested, ...mobile.nested].slice(0, 12),
     emojiIcons: [...desktop.emoji, ...mobile.emoji].slice(0, 12),
+    deadControls: desktop.deadControls.slice(0, 20),
+    textCollisions: [...desktop.collisions, ...mobile.collisions].slice(0, 20),
   },
   screenshots: [...desktop.files, ...mobile.files, ...nojs.files],
   boundaries: [
     'Contrast is computed against solid background colors only; text over images or gradients is skipped and must be checked by eye.',
+    'dead_controls lists visible buttons, tabs, and toggles with no click/key listener on themselves or any ancestor; each is a control that does nothing when pressed. It cannot tell whether a listener does the right thing: click through every signature interaction yourself.',
+    'text_collisions lists text drawn over other text or small SVG marks (labels printed through map dots, captions under panels).',
     'hidden_with_js counts text that is still invisible after a full scroll pass (closed menus, tabs, and dialogs are expected there; review each).',
     'Full-page captures draw position:fixed/sticky elements once, over whatever content sits there; judge fixed bars from the -scroll frames, not the full-page image.',
     'Slop signals (scroll_animated, nested_boxes, emoji_icons, warm_neutral_body) are counts to disposition, not verdicts: scroll_animated >= 5 is the reveal-everywhere tell (craft ban 14), nested_boxes > 0 is box-in-box-in-box (ban 11), emoji_icons > 0 is S-33, warm_neutral_body = 1 is ban 8 unless the brand record justifies it.',
@@ -245,7 +305,7 @@ const report = {
 writeFileSync(path.join(outDir, 'render-check.json'), JSON.stringify(report, null, 2));
 
 const s = report.summary;
-const line = `RENDER-CHECK ${VERSION}: overflow_desktop=${s.overflow_desktop} overflow_mobile=${s.overflow_mobile} js_errors=${s.js_errors} contrast_failures=${s.contrast_failures} word_stacking=${s.word_stacking} hidden_without_js=${s.hidden_without_js} broken_images=${s.broken_images} | slop: scroll_animated=${s.scroll_animated} nested_boxes=${s.nested_boxes} emoji_icons=${s.emoji_icons} warm_neutral_body=${s.warm_neutral_body}`;
+const line = `RENDER-CHECK ${VERSION}: overflow_desktop=${s.overflow_desktop} overflow_mobile=${s.overflow_mobile} js_errors=${s.js_errors} contrast_failures=${s.contrast_failures} word_stacking=${s.word_stacking} text_collisions=${s.text_collisions} dead_controls=${s.dead_controls} hidden_without_js=${s.hidden_without_js} broken_images=${s.broken_images} | slop: scroll_animated=${s.scroll_animated} nested_boxes=${s.nested_boxes} emoji_icons=${s.emoji_icons} warm_neutral_body=${s.warm_neutral_body}`;
 if (asJson) console.log(JSON.stringify(report, null, 2));
 else {
   console.log(line);
@@ -253,11 +313,13 @@ else {
   for (const w of report.details.stacking.slice(0, 8)) console.log(`  stacking ${w.lines} lines @${w.width}px  ${w.el}  "${w.text}"`);
   for (const h of report.details.hiddenWithoutJs.slice(0, 8)) console.log(`  hidden-without-js  ${h.el}  "${h.text}"`);
   for (const e of jsErrors.slice(0, 5)) console.log(`  js-error  ${e}`);
+  for (const d of report.details.deadControls.slice(0, 6)) console.log(`  dead-control  ${d}`);
+  for (const c of report.details.textCollisions.slice(0, 6)) console.log(`  text-collision  ${c.el}  "${c.text}"`);
   for (const n of report.details.nestedBoxes.slice(0, 5)) console.log(`  nested-box depth ${n.depth}  ${n.el}`);
   for (const e of report.details.emojiIcons.slice(0, 5)) console.log(`  emoji  ${e.el}  "${e.text}"`);
   if (s.warm_neutral_body) console.log(`  warm-neutral body OKLCH L=${report.details.bodyOklch.L.toFixed(2)} C=${report.details.bodyOklch.C.toFixed(3)} H=${report.details.bodyOklch.H.toFixed(0)}`);
   console.log(`  screenshots + render-check.json in ${outDir}`);
 }
 clearInterval(keepAlive); ws.close(); proc.kill();
-const fail = s.overflow_desktop || s.overflow_mobile || s.js_errors || s.contrast_failures || s.word_stacking || s.hidden_without_js || s.broken_images || s.scroll_animated >= 5 || s.nested_boxes || s.emoji_icons || s.warm_neutral_body;
+const fail = s.overflow_desktop || s.overflow_mobile || s.js_errors || s.contrast_failures || s.word_stacking || s.text_collisions || s.dead_controls || s.hidden_without_js || s.broken_images || s.scroll_animated >= 5 || s.nested_boxes || s.emoji_icons || s.warm_neutral_body;
 process.exit(fail ? 1 : 0);
