@@ -103,15 +103,15 @@ A page that serves two quadrants splits into two linked pages.
 
 ## Anti-patterns
 
-- **Tutorial and reference on one page** — newcomers drown, experts cannot scan (Diátaxis) — P2.
-- **Language tabs that reset per block or per page** — readers re-pick constantly — P2.
-- **Copy button that grabs `$`, line numbers, or output** — pasted commands fail — P1.
-- **Try it pointed at live mode by default** — real charges or data changes from a docs page — P0.
-- **Unversioned docs for a multi-version package** — readers on old versions follow wrong instructions — P1.
-- **Login wall on public docs** — blocks evaluation and search indexing — P1.
-- **Marketing hero or scroll animation on reference pages** — slows lookup — P2.
-- **Content only in screenshots or JS-only tabs** — invisible to search, assistive tech, AI readers — P1-N.
-- **Samples that do not run** — destroys trust in every other page — P1.
+- **Tutorial and reference on one page**: newcomers drown, experts cannot scan (Diátaxis). P2.
+- **Language tabs that reset per block or per page**: readers re-pick constantly. P2.
+- **Copy button that grabs `$`, line numbers, or output**: pasted commands fail. P1.
+- **Try it pointed at live mode by default**: real charges or data changes from a docs page. P0.
+- **Unversioned docs for a multi-version package**: readers on old versions follow wrong instructions. P1.
+- **Login wall on public docs**: blocks evaluation and search indexing. P1.
+- **Marketing hero or scroll animation on reference pages**: slows lookup. P2.
+- **Content only in screenshots or JS-only tabs**: invisible to search, assistive tech, AI readers. P1-N.
+- **Samples that do not run**: destroys trust in every other page. P1.
 
 ## Coverage additions
 

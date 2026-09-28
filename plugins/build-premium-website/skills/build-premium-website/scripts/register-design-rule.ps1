@@ -1,5 +1,5 @@
 ﻿# Copyright (c) 2026 ByteWaker. Licensed under Apache-2.0.
-# Part of build-premium-website — https://github.com/tdat-dev/premium-web
+# Part of build-premium-website: https://github.com/tdat-dev/premium-web
 # Redistribution must retain this notice, LICENSE, and NOTICE.
 #
 # Registers a design-routing rule into each installed AI's rule file so the
@@ -13,16 +13,19 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$beginMark = '<!-- premium-web:auto-rule BEGIN (managed by premium-web installer — edits between markers are overwritten on re-install) -->'
+$beginMark = '<!-- premium-web:auto-rule BEGIN (managed by premium-web installer: edits between markers are overwritten on re-install) -->'
+# Older installs wrote the marker with an em-dash; recognise it so re-install replaces instead of duplicating.
+$legacyBeginMark = '<!-- premium-web:auto-rule BEGIN (managed by premium-web installer ' + [char]0x2014 + ' edits between markers are overwritten on re-install) -->'
+$beginPattern = '(?:' + [regex]::Escape($beginMark) + '|' + [regex]::Escape($legacyBeginMark) + ')'
 $endMark   = '<!-- premium-web:auto-rule END -->'
 
 $ruleBody = @'
-## Định tuyến thiết kế web — build-premium-website (mặc định)
+## Định tuyến thiết kế web: build-premium-website (mặc định)
 
 Mọi task xây / redesign / audit / polish một website, landing page, dashboard, admin/quản lý,
 product UI, hay component: **đi qua skill `build-premium-website` TRƯỚC khi viết UI.** Skill này tự
 chọn tuyến (LANDING_BRAND / DASHBOARD_PRODUCT / HYBRID), áp craft-rules + ambition-gates (chống
-AI-slop, luật font/màu, media thật bằng tool tạo ảnh), và nghiệm thu bằng gate — rồi ủy quyền phần
+AI-slop, luật font/màu, media thật bằng tool tạo ảnh), và nghiệm thu bằng gate, rồi ủy quyền phần
 dựng chi tiết cho các skill design sẵn có (frontend-design / impeccable / ui-ux-pro-max) khi cần.
 
 - Nếu agent KHÔNG gọi được skill (không có Skill tool): đọc và làm theo `build-premium-website/SKILL.md`
@@ -34,7 +37,7 @@ dựng chi tiết cho các skill design sẵn có (frontend-design / impeccable 
 $block = "$beginMark`r`n`r`n$ruleBody`r`n`r`n$endMark"
 
 # Standalone file content for directory-style rule roots.
-$standalone = "# build-premium-website — định tuyến thiết kế (managed by premium-web installer)`r`n`r`n$ruleBody`r`n"
+$standalone = "# build-premium-website: định tuyến thiết kế (managed by premium-web installer)`r`n`r`n$ruleBody`r`n"
 
 # Rule files that hold a managed block (only touched if they already exist).
 $singleFiles = @(
@@ -58,11 +61,11 @@ function Set-ManagedBlock([string]$path) {
         return
     }
     $raw = Get-Content -LiteralPath $full -Raw -Encoding UTF8
-    $hasBlock = $raw -match [regex]::Escape($beginMark)
+    $hasBlock = $raw -match $beginPattern
 
     if ($Remove) {
         if (-not $hasBlock) { Write-Output "  no rule         $full"; return }
-        $pattern = "(\r?\n)*" + [regex]::Escape($beginMark) + "[\s\S]*?" + [regex]::Escape($endMark)
+        $pattern = "(\r?\n)*" + $beginPattern + "[\s\S]*?" + [regex]::Escape($endMark)
         $new = [regex]::Replace($raw, $pattern, '')
         if ($DryRun) { Write-Output "  [DRY] remove    $full"; return }
         [System.IO.File]::WriteAllText($full, $new.TrimEnd() + "`r`n", (New-Object System.Text.UTF8Encoding($false)))
@@ -71,7 +74,7 @@ function Set-ManagedBlock([string]$path) {
     }
 
     if ($hasBlock) {
-        $pattern = [regex]::Escape($beginMark) + "[\s\S]*?" + [regex]::Escape($endMark)
+        $pattern = $beginPattern + "[\s\S]*?" + [regex]::Escape($endMark)
         # MatchEvaluator so `$` inside $block is inserted literally, not as a group ref.
         $new = [regex]::Replace($raw, $pattern, { param($m) $block })
         $verb = '  updated block   '

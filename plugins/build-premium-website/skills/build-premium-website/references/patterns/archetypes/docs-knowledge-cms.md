@@ -9,9 +9,9 @@ Jobs: write and restructure long-form content, find answers, and move structured
 Two sub-shapes: **doc workspace** (free-form pages in a tree) and **structured CMS** (typed entries from a content model, rendered by a channel). Record which leads.
 
 Neighbors:
-- **Admin / back-office** — a CMS-lite with no draft/published divergence, review, or scheduling is admin.
-- **Work management** — a unit with assignee and status, not prose or content fields.
-- **landing/docs-developer-portal.md** — owns the public reader site; authoring and content ops live here.
+- **Admin / back-office**: a CMS-lite with no draft/published divergence, review, or scheduling is admin.
+- **Work management**: a unit with assignee and status, not prose or content fields.
+- **landing/docs-developer-portal.md**: owns the public reader site; authoring and content ops live here.
 
 ## Shell and topology
 
@@ -73,21 +73,21 @@ Co-editing, comments, presence: [cross/collaboration-realtime.md](../cross/colla
 
 ## Study pointers
 
-- **Notion** — structural actions reachable from both slash menu and block handle give one mental model.
-- **Confluence** — stating that view restrictions cascade and edit restrictions do not makes access predictable.
-- **Sanity Studio** — stacking published, draft, and release versions lets editors preview a future date.
-- **Strapi** — a locale choice that persists across content types keeps translation in one flow.
+- **Notion**: structural actions reachable from both slash menu and block handle give one mental model.
+- **Confluence**: stating that view restrictions cascade and edit restrictions do not makes access predictable.
+- **Sanity Studio**: stacking published, draft, and release versions lets editors preview a future date.
+- **Strapi**: a locale choice that persists across content types keeps translation in one flow.
 
 ## Archetype anti-patterns
 
-- **Publish button with no status** — users cannot tell whether live differs from what they see — P1.
-- **Schedule that arms on date pick, or shows no timezone** — content ships at the wrong time or not at all — P1.
-- **Drag-only tree and block reorder** — keyboard and screen-reader users cannot restructure — P1.
-- **Hidden restriction state** — a page is shared wider or narrower than the author believes — P1.
-- **Unpublish that silently drops the draft** — hours of edits lost — P1.
-- **Search ignoring diacritics or permissions** — misses Vietnamese queries or leaks restricted titles — P1.
-- **Delete with no trash** — one click destroys a subtree — P1.
-- **Card-grid home of identical page tiles** — hides hierarchy a wiki depends on — P2.
+- **Publish button with no status**: users cannot tell whether live differs from what they see. P1.
+- **Schedule that arms on date pick, or shows no timezone**: content ships at the wrong time or not at all. P1.
+- **Drag-only tree and block reorder**: keyboard and screen-reader users cannot restructure. P1.
+- **Hidden restriction state**: a page is shared wider or narrower than the author believes. P1.
+- **Unpublish that silently drops the draft**: hours of edits lost. P1.
+- **Search ignoring diacritics or permissions**: misses Vietnamese queries or leaks restricted titles. P1.
+- **Delete with no trash**: one click destroys a subtree. P1.
+- **Card-grid home of identical page tiles**: hides hierarchy a wiki depends on. P2.
 
 ## Coverage additions
 
@@ -104,10 +104,10 @@ Co-editing, comments, presence: [cross/collaboration-realtime.md](../cross/colla
 
 ## Sources
 
-- https://docs.strapi.io/cms/features/draft-and-publish — accessed 2026-09-28
-- https://docs.strapi.io/cms/features/internationalization — accessed 2026-09-28
-- https://www.notion.com/help/writing-and-editing-basics — accessed 2026-09-28
-- https://www.notion.com/help/duplicate-delete-and-restore-content — accessed 2026-09-28
-- https://www.sanity.io/docs/studio/content-releases — accessed 2026-09-28
-- https://support.atlassian.com/confluence-cloud/docs/add-or-remove-page-restrictions/ — accessed 2026-09-28
+- https://docs.strapi.io/cms/features/draft-and-publish (accessed 2026-09-28)
+- https://docs.strapi.io/cms/features/internationalization (accessed 2026-09-28)
+- https://www.notion.com/help/writing-and-editing-basics (accessed 2026-09-28)
+- https://www.notion.com/help/duplicate-delete-and-restore-content (accessed 2026-09-28)
+- https://www.sanity.io/docs/studio/content-releases (accessed 2026-09-28)
+- https://support.atlassian.com/confluence-cloud/docs/add-or-remove-page-restrictions/ (accessed 2026-09-28)
 - Contentful model/workflow points, APG pattern mapping, Vietnamese collation and search: practitioner knowledge (Contentful help returned HTTP 429).

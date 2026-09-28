@@ -102,6 +102,7 @@ Secondary navigation:
 
 ## Anti-patterns
 
+- **Stub navigation**: nav items labelled "Coming soon", "Chưa có", or greyed-out placeholders to fill a sidebar in a single-screen build. Show only destinations derived from the product's object model; items outside scope render as normal links recorded as out-of-scope, or are omitted. P1.
 - **Icon-only rail for occasional users**: every visit pays a decoding cost. P1.
 - **Hamburger hiding primary nav on desktop**: out of sight, out of mind. P1.
 - **Panel tabs for distinct sections**: no deep link or back. P1.

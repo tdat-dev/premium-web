@@ -8,6 +8,17 @@ license: Apache-2.0. Copyright (c) 2026 ByteWaker. Redistribution must retain LI
 
 Treat `100k-quality` as an aspirational level of care, not a valuation, award, revenue, conversion, or originality guarantee. Never promise that a site is worth $100,000 or will win Awwwards.
 
+## Before reporting any status (non-negotiable)
+
+A status report is invalid unless it quotes, from the final build:
+
+1. the `RENDER-CHECK` summary line of [scripts/render-check.mjs](scripts/render-check.mjs) with every non-zero count fixed or dispositioned (for craft counts, text over media and intentionally closed menus are the only accepted dispositions; slop signals need a project fact from the decision record), or `render-check: unavailable (reason)` with status capped at `NOT PRODUCTION READY`;
+2. the `BLOCKER_CANDIDATE` / `ADVISORY` counts of [scripts/audit-ai-slop.mjs](scripts/audit-ai-slop.mjs) with each blocker candidate dispositioned;
+3. the filled Slop sweep from the critique ledger;
+4. the fresh-eyes reviewer's verdict (or `fresh-eyes: unavailable` and the cap).
+
+Every control a build renders as interactive (buttons, tabs, toggles, map nodes, accordions) must be pressed at least once in a real browser before reporting; `render-check` lists controls with no listener as `dead_controls`, but a listener that does the wrong thing is only caught by using it. Counting by eye does not replace the scripts: builders' manual counts of em-dashes and contrast have been wrong by a factor of three.
+
 ## Load the enforcement and routing contracts
 
 For **every** build, redesign, audit, or polish task, read and apply both:
@@ -23,11 +34,11 @@ After dispatch, load the mandatory route contract:
 
 For every `DASHBOARD_PRODUCT` task and the product side of every `HYBRID` task, load [references/patterns/index.md](references/patterns/index.md), classify the product archetype there, and load the primary archetype file plus the cross-cutting pattern files for the surfaces in scope. For `LANDING_BRAND` work that includes pricing, feature, customers, changelog, contact, blog, legal, status, or docs pages, load the matching `references/patterns/landing/` file. Pattern files are the default anatomy, screen set, signature patterns, and archetype anti-patterns; deviations are recorded decisions, and adopted signature patterns need rendered evidence like any other gate item.
 
-Before designing or critiquing any visual surface, also load [references/craft-rules.md](references/craft-rules.md) — the measurable floors and structural bans that make critique concrete. Its violations are severity-graded defects under the enforcement contract, not taste notes.
+Before designing or critiquing any visual surface, also load [references/craft-rules.md](references/craft-rules.md): the measurable floors and structural bans that make critique concrete. Its violations are severity-graded defects under the enforcement contract, not taste notes.
 
-Before writing or reviewing any copy — headlines, body, CTAs, labels, empty/error states, alt text — on any route, load [references/copy-voice.md](references/copy-voice.md). It is the authority for human-sounding words (Vietnamese and English): the AI word/structure ban lists, punctuation rules, and the cadence-loop rule that stops every heading and CTA from sharing one template. Hero-level or looping AI-tone copy is a defect, not a style preference.
+Before writing or reviewing any copy (headlines, body, CTAs, labels, empty/error states, alt text) on any route, load [references/copy-voice.md](references/copy-voice.md). It is the authority for human-sounding words (Vietnamese and English): the AI word/structure ban lists, punctuation rules, and the cadence-loop rule that stops every heading and CTA from sharing one template. Hero-level or looping AI-tone copy is a defect, not a style preference.
 
-For every `LANDING_BRAND` or `HYBRID` build/redesign with visual freedom, also load [references/ambition-gates.md](references/ambition-gates.md) — the demand side. Floors delete failures; the five gates (media, composition risk, type bravery, motion, signature interaction) demand the excellence that floors alone never produce. A page that passes every floor but fails an unwaived gate is capped at `CLEAN BASELINE` and must be reported as such.
+For every `LANDING_BRAND` or `HYBRID` build/redesign with visual freedom, also load [references/ambition-gates.md](references/ambition-gates.md): the demand side. Floors delete failures; the five gates (media, composition risk, type bravery, motion, signature interaction) demand the excellence that floors alone never produce. A page that passes every floor but fails an unwaived gate is capped at `CLEAN BASELINE` and must be reported as such.
 
 For greenfield work, creative art direction, or any task with substantial visual freedom, also read [references/reflex-registry-2026.md](references/reflex-registry-2026.md), [references/structure-catalog.md](references/structure-catalog.md), and [references/run-log.md](references/run-log.md). Treat the registry's dated patterns as review signals, never eternal bans; treat the catalog's macrostructure pick and the run-log diversification protocol as required steps.
 
@@ -53,7 +64,7 @@ For `DASHBOARD_PRODUCT` and the product side of `HYBRID`, also record `archetype
 
 Do not use `AUDIT` as a surface route. A repository containing both a marketing site and an application is not automatically `HYBRID`; choose it only when the scoped user journey materially crosses both. Record relevant modifiers such as `GREENFIELD`, `CONSTRAINED`, `HIGH_UNCERTAINTY`, `MEDIA_LED`, `NO_MEDIA`, `MOTION_LED`, `THREE_D`, `COMMERCE`, `CONTENT_HEAVY`, `APPLICATION`, or `LOCAL_CHANGE`.
 
-**`LOCAL_CHANGE` fast path.** When the scope is a single component, section, or small visual fix, skip the full decision record, reference research, structure catalog, and coverage matrix. Still required: the route contract's relevant gates, [references/craft-rules.md](references/craft-rules.md), rendered evidence of the changed surface in its surrounding page at the affected breakpoints, and the severity rules. The fast path changes the paperwork, never the quality bar. A change stops being local — exit the fast path and classify again — when it adds, removes, or reorders sections; changes the page grid, hero form, or navigation; or alters a step in a user journey. Adjusting values inside an existing element (spacing, color, type size, copy, one component's internal layout) stays local.
+**`LOCAL_CHANGE` fast path.** When the scope is a single component, section, or small visual fix, skip the full decision record, reference research, structure catalog, and coverage matrix. Still required: the route contract's relevant gates, [references/craft-rules.md](references/craft-rules.md), rendered evidence of the changed surface in its surrounding page at the affected breakpoints, and the severity rules. The fast path changes the paperwork, never the quality bar. A change stops being local (exit the fast path and classify again) when it adds, removes, or reorders sections; changes the page grid, hero form, or navigation; or alters a step in a user journey. Adjusting values inside an existing element (spacing, color, type size, copy, one component's internal layout) stays local.
 
 Build a fact/claim/source map from the user, repository, existing product, supplied assets, and verified URLs. Label assumptions. Never invent proof, customers, metrics, testimonials, capabilities, rights, or research.
 
@@ -92,17 +103,19 @@ For each implementation slice:
 1. Define its job, content, focal order, assets, states, responsive risks, motion, and failure behavior.
 2. Build the smallest complete slice with semantic structure and progressive enhancement.
 3. Run the real experience and capture the states required by the coverage matrix.
-4. Critique observable outcomes in the order defined by the enforcement contract.
+4. Critique observable outcomes in the order defined by the enforcement contract, run [scripts/render-check.mjs](scripts/render-check.mjs) (screenshots at 1440 and 390, overflow, contrast, word stacking, no-JS visibility, broken images, JS errors) and [scripts/audit-ai-slop.mjs](scripts/audit-ai-slop.mjs) on the build, and fill the **Slop sweep** in the critique ledger from the screenshots.
 5. Record defects and before/after evidence in [assets/critique-ledger.template.md](assets/critique-ledger.template.md).
 6. Repeat until no unhandled P0 or P1 defect remains.
 
 Do not approve work from source code or a single beauty screenshot.
 
+**Fresh-eyes review before any status above `IMPLEMENTATION INCOMPLETE`.** The builder's own sweep is not enough: builders consistently mark their own tells absent. When the host can start a subagent, give a fresh one only the brief, the screenshots, the audit output, and the Slop sweep table with results blanked, and ask it to fill the sweep and list P0/P1 defects. Frame it adversarially: "assume this page was generated by an AI with no designer; name the three most template-like elements with screenshot evidence, then fill the sweep". A reviewer that returns no finding must justify each `ABSENT` row with where it looked. Its `PRESENT` rows become defects even if the builder disagrees; a disagreement is resolved by changing the build or recording an exception, not by overruling the reviewer. When no subagent or second person is available, record `fresh-eyes: unavailable` and cap the status at `NOT PRODUCTION READY`.
+
 ### 6. Verify production before creative review
 
 Test the primary journey, keyboard operation, focus, labels, contrast, zoom/reflow, reduced motion, loading/error/empty states, slow network, missing media, animation failure, and responsive behavior where applicable. Measure performance with the environment labeled. Treat Lighthouse and Core Web Vitals as diagnostics, not proof of field performance or visual quality.
 
-Run [scripts/audit-ai-slop.mjs](scripts/audit-ai-slop.mjs) when the project contains supported text-based frontend sources. Its findings are candidates for human review, not authority on originality or release.
+Run [scripts/audit-ai-slop.mjs](scripts/audit-ai-slop.mjs) on every build that contains supported text-based frontend sources, on every render pass. Its findings are candidates, not authority on originality or release, but every `BLOCKER_CANDIDATE` must be dispositioned in the critique ledger (fixed, or false positive with reason); an undispositioned one is an open `P1`.
 
 Resolve severity using the enforcement contract:
 
@@ -127,7 +140,8 @@ Report:
 10. the advisory Awwwards-style review, clearly separated from production gates;
 11. ambition-gate results (A-E: satisfied / waived-with-reason / failed) and the resulting creative cap, when the gates applied;
 12. exact overall status from the enforcement contract;
-13. confirmation that the run-log entry was appended (or why not) — an unmentioned run-log is an incomplete package.
+13. confirmation that the run-log entry was appended (or why not). An unmentioned run-log is an incomplete package;
+14. the quoted `RENDER-CHECK` and audit summary lines, the Slop sweep, and the fresh-eyes verdict.
 
 State what was measured, what remains subjective, and what was not verifiable.
 
@@ -135,7 +149,7 @@ After delivering a build or redesign that locked a creative direction, append th
 
 ## Compose with richer local tooling
 
-When the host harness has a dedicated interactive design skill installed (palette generators, slop detectors, live browser iteration, focused single-verb commands), prefer its tools for *execution* of small refine tasks and palette seeding — it is usually faster and better instrumented. Two hard boundaries: this skill's enforcement contract, route gates, and [references/craft-rules.md](references/craft-rules.md) remain the acceptance authority over any tool's output; and on harnesses without such tooling (cross-AI installs), the references here must be applied directly — never skip a gate because a helper script was unavailable.
+When the host harness has a dedicated interactive design skill installed (palette generators, slop detectors, live browser iteration, focused single-verb commands), prefer its tools for *execution* of small refine tasks and palette seeding. It is usually faster and better instrumented. Two hard boundaries: this skill's enforcement contract, route gates, and [references/craft-rules.md](references/craft-rules.md) remain the acceptance authority over any tool's output; and on harnesses without such tooling (cross-AI installs), the references here must be applied directly. Never skip a gate because a helper script was unavailable.
 
 ## Use across AI tools
 

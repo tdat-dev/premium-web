@@ -87,15 +87,16 @@ Split pane position: bottom when the table needs 5+ columns, side when 5 or fewe
 
 ## Anti-patterns
 
-- **Record detail in a modal** — cannot be shared, bookmarked, or kept beside the list — P1.
-- **Modal on modal** — focus and escape order break — P1.
-- **Returning from detail resets list filters or scroll** — P1.
-- **Scrim click discards a dirty form** — silent data loss — P1.
-- **Hover-only peek** — unreachable by keyboard and touch — P1.
-- **Yes/No confirmations, or confirming every reversible action** — habituation; prefer undo — P2.
-- **Drawer without "Open full page"** — dead end — P2.
-- **Tabs for two short sections, or primary facts hidden behind a tab** — P2.
-- **Properties sidebar as nested cards** — craft ban — P2.
+- **Empty split pane on load**: a list + detail layout that opens with "select an item" when the user's job is to work the queue. Open the first item in the current sort (or the last item this user worked) so the first screen is already useful; keep the empty state for zero results. P1 (P0 when the brief names the open record as required).
+- **Record detail in a modal**: cannot be shared, bookmarked, or kept beside the list. P1.
+- **Modal on modal**: focus and escape order break. P1.
+- **Returning from detail resets list filters or scroll**. P1.
+- **Scrim click discards a dirty form**: silent data loss. P1.
+- **Hover-only peek**: unreachable by keyboard and touch. P1.
+- **Yes/No confirmations, or confirming every reversible action**: habituation; prefer undo. P2.
+- **Drawer without "Open full page"**: dead end. P2.
+- **Tabs for two short sections, or primary facts hidden behind a tab**. P2.
+- **Properties sidebar as nested cards**: craft ban. P2.
 
 ## Coverage additions
 

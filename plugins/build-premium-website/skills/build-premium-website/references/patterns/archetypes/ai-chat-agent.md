@@ -9,9 +9,9 @@ Jobs: ask, refine over turns, delegate multi-step work to an agent and supervise
 Two sub-shapes: **standalone assistant/agent workspace** and **embedded AI** (copilot panel or inline suggestions inside another archetype, which owns the shell).
 
 Neighbors:
-- **Support inbox** — humans answering humans, even with AI drafts, is support inbox with embedded AI.
-- **Docs / CMS, creative canvas** — if output is edited at length as a document or design, that editor is primary.
-- **Devtools** — an agent that deploys is this archetype for runs and approvals only.
+- **Support inbox**: humans answering humans, even with AI drafts, is support inbox with embedded AI.
+- **Docs / CMS, creative canvas**: if output is edited at length as a document or design, that editor is primary.
+- **Devtools**: an agent that deploys is this archetype for runs and approvals only.
 
 ## Shell and topology
 
@@ -68,23 +68,24 @@ States and background jobs: [cross/feedback-states-notifications.md](../cross/fe
 
 ## Study pointers
 
-- **Microsoft HAX guidelines** — design four moments separately: at start, during interaction, when wrong, over time.
-- **Google PAIR Guidebook** — explain capabilities and limits at the point of use to calibrate trust.
-- **Shape of AI** — named governors (action plan, verification, citations, memory) help pick the control each risk needs.
-- **IBM Carbon for AI** — one AI label with an explanation popover and edited state gives disclosure without decoration.
-- **NN/g on AI chatbots** — one entry point, capabilities in the first message, no autoscroll to the end.
+- **Microsoft HAX guidelines**: design four moments separately: at start, during interaction, when wrong, over time.
+- **Google PAIR Guidebook**: explain capabilities and limits at the point of use to calibrate trust.
+- **Shape of AI**: named governors (action plan, verification, citations, memory) help pick the control each risk needs.
+- **IBM Carbon for AI**: one AI label with an explanation popover and edited state gives disclosure without decoration.
+- **NN/g on AI chatbots**: one entry point, capabilities in the first message, no autoscroll to the end.
 
 ## Archetype anti-patterns
 
-- **Agent acts without a reviewable payload** — sends, deletes, or pays blind — P1.
-- **Error or rate limit clears the prompt** — long prompts retyped — P1.
-- **Citations as bare numbers far from claims, broken links hidden** — false confidence — P1.
-- **Enter sends during IME composition** — Vietnamese users send half-typed text — P1.
-- **Silent memory** — facts stored or used with no visible trace or delete path — P1.
-- **Approval on every trivial step** — fatigue produces blind approval — P2.
-- **Autoscroll to the end of streaming answers** — start of the answer lost — P2.
-- **Prompt-card grid as home screen** — buries the composer — P2.
-- **Anthropomorphic copy** ("I'm so happy to help!") — inflates capability, breaks copy-voice — P2.
+- **Agent acts without a reviewable payload**: sends, deletes, or pays blind. P1.
+- **Error or rate limit clears the prompt**: long prompts retyped. P1.
+- **Citations as bare numbers far from claims, broken links hidden**: false confidence. P1.
+- **Enter sends during IME composition**: Vietnamese users send half-typed text. P1.
+- **Silent memory**: facts stored or used with no visible trace or delete path. P1.
+- **Approval on every trivial step**: fatigue produces blind approval. P2.
+- **Autoscroll to the end of streaming answers**: start of the answer lost. P2.
+- **Prompt-card grid as home screen**: buries the composer. P2.
+- **Sparkle glyph as the AI marker**: the ✨/four-point star is the category reflex for "AI"; mark assistant content with the product's own name, avatar, or a neutral label. P1.
+- **Anthropomorphic copy** ("I'm so happy to help!"): inflates capability, breaks copy-voice. P2.
 
 ## Coverage additions
 
@@ -100,11 +101,11 @@ States and background jobs: [cross/feedback-states-notifications.md](../cross/fe
 
 ## Sources
 
-- https://www.microsoft.com/en-us/haxtoolkit/library/ — accessed 2026-09-28
-- https://www.shapeof.ai/ — accessed 2026-09-28
-- https://www.shapeof.ai/patterns/action-plan — accessed 2026-09-28
-- https://www.shapeof.ai/patterns/citations — accessed 2026-09-28
-- https://www.shapeof.ai/patterns/verification — accessed 2026-09-28
-- https://www.nngroup.com/articles/ai-chatbots-design-guidelines/ — accessed 2026-09-28
-- https://www.nngroup.com/articles/explainable-ai/ — accessed 2026-09-28
+- https://www.microsoft.com/en-us/haxtoolkit/library/ (accessed 2026-09-28)
+- https://www.shapeof.ai/ (accessed 2026-09-28)
+- https://www.shapeof.ai/patterns/action-plan (accessed 2026-09-28)
+- https://www.shapeof.ai/patterns/citations (accessed 2026-09-28)
+- https://www.shapeof.ai/patterns/verification (accessed 2026-09-28)
+- https://www.nngroup.com/articles/ai-chatbots-design-guidelines/ (accessed 2026-09-28)
+- https://www.nngroup.com/articles/explainable-ai/ (accessed 2026-09-28)
 - PAIR Guidebook, Carbon for AI, Copilot inline suggestions, `isComposing`, live-region streaming: practitioner knowledge (PAIR and Carbon pages returned no readable content).

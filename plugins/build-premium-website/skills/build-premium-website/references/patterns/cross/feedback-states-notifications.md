@@ -46,7 +46,7 @@ That each state must exist is already required ("System states and recovery" in 
 | No permission | "You don't have access to billing" | Who can grant it, by name or role | "Request access"; never a create button |
 | Needs setup | "Connect a payment provider first" | The blocking step | Link to that setting |
 | Load failed | Not an empty state: use an inline error with Retry, keep last known data (Cloudscape) | | |
-| Empty field value | "—" with accessible name "Not set" | | Inline action if editable |
+| Empty field value | "–" (en dash, never the em-dash) with accessible name "Not set" | | Inline action if editable |
 
 Compact in cards, tables, modals; large for a full page (PatternFly).
 
@@ -99,15 +99,15 @@ Compact in cards, tables, modals; large for a full page (PatternFly).
 
 ## Anti-patterns
 
-- **Error toast that auto-dismisses** — failure and recovery missed — P1.
-- **One generic empty state for first use, no results, and no permission** — wrong action offered — P1.
-- **Spinner for a multi-minute job, or progress lost on reload** — P1.
-- **Text-only "Loading…" with no structure** — P2 (NN/g).
-- **Confirm dialog where undo would do** — habituation — P2.
-- **Badge counts that disagree with the list** — P2.
-- **Email for everything, no per-category unsubscribe** — users mute the channel — P2.
-- **Stacked global banners, or marketing in the system banner slot** — P2.
-- **Celebratory illustration and exclamation on routine empty states** — copy-voice — P2.
+- **Error toast that auto-dismisses**: failure and recovery missed. P1.
+- **One generic empty state for first use, no results, and no permission**: wrong action offered. P1.
+- **Spinner for a multi-minute job, or progress lost on reload**. P1.
+- **Text-only "Loading…" with no structure**. P2 (NN/g).
+- **Confirm dialog where undo would do**: habituation. P2.
+- **Badge counts that disagree with the list**. P2.
+- **Email for everything, no per-category unsubscribe**: users mute the channel. P2.
+- **Stacked global banners, or marketing in the system banner slot**. P2.
+- **Celebratory illustration and exclamation on routine empty states**: copy-voice. P2.
 
 ## Coverage additions
 

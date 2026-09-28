@@ -101,14 +101,14 @@ No hero banners, illustrations, or marketing copy in the app. The table sits abo
 
 ## Archetype anti-patterns
 
-- **Feature-list navigation** — sidebar mirrors the backlog, not the data model, so staff cannot guess where records live — P1.
-- **KPI-card home for operators** — metrics push the queue below the fold — P2.
-- **Silent partial bulk failure** — "Done" while 40 rows failed destroys trust in data — P1.
-- **Same confirm for everything** — trivial and irreversible actions look alike, users click through — P1.
-- **Dead IDs** — references that are not links force copy-paste searching — P2.
-- **Lost list context** — back from a record resets filters, scroll, or focus — P1.
-- **Production looks like staging** — real data mutated by mistake — P1.
-- **Free-text-only overrides** — no reporting, no accountability — P2.
+- **Feature-list navigation**: sidebar mirrors the backlog, not the data model, so staff cannot guess where records live. P1.
+- **KPI-card home for operators**: metrics push the queue below the fold. P2.
+- **Silent partial bulk failure**: "Done" while 40 rows failed destroys trust in data. P1.
+- **Same confirm for everything**: trivial and irreversible actions look alike, users click through. P1.
+- **Dead IDs**: references that are not links force copy-paste searching. P2.
+- **Lost list context**: back from a record resets filters, scroll, or focus. P1.
+- **Production looks like staging**: real data mutated by mistake. P1.
+- **Free-text-only overrides**: no reporting, no accountability. P2.
 
 ## Coverage additions
 

@@ -30,7 +30,7 @@ Elsewhere: who may comment, edit, or share → [permissions-roles-audit.md](perm
 
 **Live cursor / selection.** Pointer or caret in the collaborator's assigned color + name label that fades to a small tag after inactivity; selection highlight at low opacity so text stays readable.
 
-**Collision notice.** Inline above the composer or save bar: "Linh is also replying" / "Tuan changed this record 1 minute ago. Review changes" — shown before the user commits, not after.
+**Collision notice.** Inline above the composer or save bar: "Linh is also replying" / "Tuan changed this record 1 minute ago. Review changes", shown before the user commits, not after.
 
 **Conflict panel.** Triggered by a failed version check: heading "This record changed while you were editing" → per-field rows: field name, "Their version" (who, when), "Your version" → per-field choice or "Keep mine for all" / "Use theirs for all" → "Save". The user's input is never discarded without a copy.
 
@@ -94,16 +94,16 @@ Elsewhere: who may comment, edit, or share → [permissions-roles-audit.md](perm
 
 ## Anti-patterns
 
-- **Silent last-write-wins on forms** — the second saver erases the first without either knowing — P1.
-- **Live list inserts that push content under the cursor** — misclicks on the wrong row — P1.
-- **Restore that deletes later versions** — irreversible data loss — P1.
-- **Presence as decoration on single-user objects** — noise, costs connection budget — P2.
-- **Mentions that notify people who can't open the resource** — dead-end notifications, possible leak of titles — P1.
-- **Deeply nested reply trees** — unreadable on mobile, hard to follow — P2.
-- **Announcing every remote change to screen readers** — unusable noise — P1.
-- **Activity feed of raw event names (`task.field_updated`)** — P2.
-- **Cursor colors as the only way to identify collaborators** — fails color-vision users — P2.
-- **Auto-follow with no visible unfollow** — notification fatigue, users mute everything — P2.
+- **Silent last-write-wins on forms**: the second saver erases the first without either knowing. P1.
+- **Live list inserts that push content under the cursor**: misclicks on the wrong row. P1.
+- **Restore that deletes later versions**: irreversible data loss. P1.
+- **Presence as decoration on single-user objects**: noise, costs connection budget. P2.
+- **Mentions that notify people who can't open the resource**: dead-end notifications, possible leak of titles. P1.
+- **Deeply nested reply trees**: unreadable on mobile, hard to follow. P2.
+- **Announcing every remote change to screen readers**: unusable noise. P1.
+- **Activity feed of raw event names (`task.field_updated`)**. P2.
+- **Cursor colors as the only way to identify collaborators**: fails color-vision users. P2.
+- **Auto-follow with no visible unfollow**: notification fatigue, users mute everything. P2.
 
 ## Coverage additions
 

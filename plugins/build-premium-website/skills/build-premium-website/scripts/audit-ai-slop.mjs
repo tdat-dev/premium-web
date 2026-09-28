@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 // Copyright (c) 2026 ByteWaker. Licensed under Apache-2.0.
-// Part of build-premium-website — https://github.com/tdat-dev/premium-web
+// Part of build-premium-website: https://github.com/tdat-dev/premium-web
 // Redistribution must retain this notice, LICENSE, and NOTICE.
 
 import { readFile, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
 
-const VERSION = '1.0.0';
+const VERSION = '1.1.0';
 const SUPPORTED = new Set([
   '.html', '.htm', '.css', '.scss', '.sass', '.less',
   '.js', '.jsx', '.mjs', '.cjs', '.ts', '.tsx', '.vue', '.svelte', '.astro',
@@ -129,16 +129,155 @@ function auditFile(source, file, root, findings) {
     message: 'AI-tone word or phrase (see copy-voice.md ban lists). Rewrite in the audience\'s own words or cut.',
   });
 
-  // Em-dash used as the signature AI connector: flag when it recurs.
-  const emDashes = (source.match(/—/g) ?? []).length;
-  if (emDashes >= 3) {
+  const rel = path.relative(root, file).replaceAll('\\', '/');
+  const isMarkup = /\.(?:html?|vue|svelte|astro|jsx|tsx)$/i.test(file);
+  // Visible copy: markup minus scripts, styles, comments, and tags. Lexical approximation.
+  const visible = isMarkup
+    ? source
+        .replace(/<script\b[\s\S]*?<\/script>/gi, ' ')
+        .replace(/<style\b[\s\S]*?<\/style>/gi, ' ')
+        .replace(/<!--[\s\S]*?-->/g, ' ')
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/&nbsp;|&#160;/g, ' ')
+        .replace(/\s+/g, ' ')
+    : '';
+
+  // Em-dash is the loudest AI punctuation tell. copy-voice.md allows at most one per page.
+  // Count only connector dashes between words; a lone dash in a table cell is an empty-value glyph (copy-voice prefers the en dash there).
+  const visibleDashes = isMarkup ? (visible.match(/[\p{L}\p{N},.)]\s*—\s*[\p{L}\p{N}(]/gu) ?? []).length : 0;
+  const sourceDashes = (source.match(/—/g) ?? []).length;
+  if (isMarkup && visibleDashes >= 1) {
+    findings.push({
+      level: 'BLOCKER_CANDIDATE',
+      id: 'EM_DASH_IN_COPY',
+      file: rel,
+      line: null,
+      evidence: `${visibleDashes} em-dashes (—) in visible copy`,
+      message: 'copy-voice.md bans the em-dash in copy. Rewrite with commas, full stops, colons, or parentheses; this is a P1 copy defect until resolved.',
+      manual_review_required: true,
+    });
+  } else if (!isMarkup && sourceDashes >= 1) {
     findings.push({
       level: 'ADVISORY',
       id: 'EM_DASH_OVERUSE',
+      file: rel,
+      line: null,
+      evidence: `${sourceDashes} em-dashes (—)`,
+      message: 'Em-dash is the loudest AI punctuation tell and is banned in copy (copy-voice.md). Check whether these reach visible text.',
+      manual_review_required: true,
+    });
+  }
+
+  addRegexFindings(findings, {
+    source, file, root,
+    level: 'BLOCKER_CANDIDATE',
+    id: 'UNSOURCED_POPULARITY_CLAIM',
+    pattern: /(?:most popular|best[- ]?sell(?:er|ing)|customer favou?rite|fan favou?rite|#1 choice|phổ biến nhất|bán chạy nhất|được chọn nhiều nhất|được yêu thích nhất|lựa chọn số 1|nhiều người chọn nhất|hàng đầu việt nam)/gi,
+    message: 'Popularity or ranking claim. Without a sales/usage source in the fact map this is fabricated proof (P0). Use an honest recommendation instead, e.g. "Hợp với cửa hàng xuất trên 20 hoá đơn/tháng".',
+  });
+
+  addRegexFindings(findings, {
+    source, file, root,
+    level: 'BLOCKER_CANDIDATE',
+    id: 'PLACEHOLDER_IDENTITY_OR_DATA',
+    pattern: /\b(?:Acme|John Doe|Jane Doe|Lorem ipsum|Company Name|Your Company|Test User|Nguyễn Văn A|Trần Thị B|Lê Văn C|Sarah Chen|Alex Rivera|Jordan Lee|Priya Patel|Marcus Chen|Emily Zhang|Northwind|Contoso|Globex|Initech|Meridian|Umbrella Corp|Stark Industries)\b/g,
+    message: 'Placeholder identity or data. Fixtures must read as one real, internally consistent situation (names, dates, counts, statuses agree).',
+  });
+
+  const eyebrowClasses = (source.match(/class(?:Name)?\s*=\s*["'][^"']*\b(?:eyebrow|kicker|overline|section-label|pretitle|subheading-caps)\b/gi) ?? []).length;
+  if (eyebrowClasses >= 3) {
+    findings.push({
+      level: 'ADVISORY',
+      id: 'EYEBROW_SCAFFOLD',
+      file: rel,
+      line: null,
+      evidence: `${eyebrowClasses} eyebrow/kicker labels`,
+      message: 'An uppercase label above most sections is scaffold grammar (craft-rules ban 6). Keep at most one deliberate kicker system or remove.',
+      manual_review_required: true,
+    });
+  }
+
+  const statClasses = (source.match(/class(?:Name)?\s*=\s*["'][^"']*\b(?:stats?|metric|counter|figure-num|big-number|fact-num|number-row|kpi-value)\b/gi) ?? []).length;
+  if (statClasses >= 3 && !/role\s*=\s*["']application["']|\bdashboard\b|<table\b/i.test(source)) {
+    findings.push({
+      level: 'ADVISORY',
+      id: 'NUMBER_ROW_TEMPLATE',
+      file: rel,
+      line: null,
+      evidence: `${statClasses} stat/metric elements on a non-application page`,
+      message: 'A row of big numerals with small labels is the hero-metric template (craft-rules ban 4) even when the numbers are true. Put numbers inside sentences, a ledger, or a comparison.',
+      manual_review_required: true,
+    });
+  }
+
+  if (isMarkup) {
+    // Stock AI cadence constructions in headings.
+    const heads = [...source.matchAll(/<h[1-4]\b[^>]*>([\s\S]*?)<\/h[1-4]>/gi)].map((m) => m[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()).filter((t) => t.length > 3);
+    const constructions = [
+      ['count antithesis', /\b(?:two|three|four|one|hai|ba|bốn|một)\s+\p{L}+(?:\s\p{L}+)?,\s*(?:one|a single|một)\s+\p{L}+/iu],
+      ['X, not Y', /,\s*(?:not|never|không phải|chứ không phải)\s+(?:a |an |the |là )?\p{L}+/iu],
+      ['not X but Y', /\b(?:not just|not only|không chỉ(?: là)?)\b[^.]{0,40}\b(?:but|mà còn|mà là)\b/iu],
+      ['mirrored pair', /^(\p{L}+)\s[^.!?]{2,40}[.!?]\s+\1\s[^.!?]{2,40}[.!?]$/u],
+      ['three-beat', /^[\p{L}\s]{2,18}[.,]\s+[\p{L}\s]{2,18}[.,]\s+[\p{L}\s]{2,18}\.$/u],
+    ];
+    const hits = [];
+    for (const h of heads) for (const [name, re] of constructions) if (re.test(h)) hits.push(`${name}: "${h.slice(0, 50)}"`);
+    if (hits.length >= 2) {
+      findings.push({
+        level: 'ADVISORY',
+        id: 'AI_CADENCE_CONSTRUCTION',
+        file: rel,
+        line: null,
+        evidence: hits.slice(0, 5).join('; '),
+        message: 'Headings use stock AI constructions (count antithesis, "X, not Y", mirrored pairs, three-beat). Rewrite as plain statements the client would say; vary shape.',
+        manual_review_required: true,
+      });
+    }
+  }
+
+  if (/prefers-color-scheme\s*:\s*dark/i.test(source)) {
+    findings.push({
+      level: 'ADVISORY',
+      id: 'AUTO_DARK_THEME',
+      file: rel,
+      line: null,
+      evidence: 'prefers-color-scheme: dark',
+      message: 'Automatic OS theme switching needs a recorded decision and complete tokens for every state; otherwise remove it and ship one theme.',
+      manual_review_required: true,
+    });
+  }
+
+  if (isMarkup && visible.length > 400) {
+    const words = visible.toLowerCase().replace(/[.,:;!?()“”"'«»]/g, ' ').split(/\s+/).filter(Boolean);
+    const counts = new Map();
+    for (let i = 0; i + 4 <= words.length; i++) {
+      const gram = words.slice(i, i + 4).join(' ');
+      if (/\d/.test(gram) || gram.length < 14) continue;
+      counts.set(gram, (counts.get(gram) ?? 0) + 1);
+    }
+    const repeated = [...counts].filter(([, n]) => n >= 3).sort((a, b) => b[1] - a[1]).slice(0, 3);
+    if (repeated.length) {
+      findings.push({
+        level: 'ADVISORY',
+        id: 'REPEATED_PHRASE',
+        file: rel,
+        line: null,
+        evidence: repeated.map(([g, n]) => `"${g}" ×${n}`).join('; '),
+        message: 'A phrase repeats across the page. Say each fact once where it matters; repetition reads as generated filler.',
+        manual_review_required: true,
+      });
+    }
+  }
+
+  const revealTargets = (source.match(/(?:class(?:Name)?\s*=\s*["'][^"']*\b(?:reveal|fade-?in|fade-?up|animate-?in|js-reveal|scroll-reveal|appear)\b|\bdata-(?:reveal|aos|animate|sal)\b)/gi) ?? []).length;
+  if (revealTargets >= 5 && /IntersectionObserver|ScrollTrigger|data-aos|sal\(/.test(source)) {
+    findings.push({
+      level: 'BLOCKER_CANDIDATE',
+      id: 'SCROLL_REVEAL_EVERYWHERE',
       file: path.relative(root, file).replaceAll('\\', '/'),
       line: null,
-      evidence: `${emDashes} em-dashes (—)`,
-      message: 'Em-dash is the loudest AI punctuation tell. Prefer commas, periods, or colons; keep at most one per page (copy-voice.md).',
+      evidence: `${revealTargets} scroll-reveal targets`,
+      message: 'Most blocks share one entrance animation (craft-rules ban 14, RR-15). Keep at most one entrance choreography tied to a content relationship; this is not a false positive because the opacity is "decorative".',
       manual_review_required: true,
     });
   }
