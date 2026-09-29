@@ -12,12 +12,12 @@
 // browser: set CHROME_PATH, otherwise common Chrome/Edge/Chromium locations are tried.
 
 import { spawn, execSync } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readdirSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir, homedir } from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-const VERSION = '1.3.1';
+const VERSION = '1.3.2';
 const args = process.argv.slice(2);
 const asJson = args.includes('--json');
 const positional = args.filter((a) => !a.startsWith('--'));
@@ -75,7 +75,7 @@ async function pageWs() {
 
 const ws = new WebSocket(await pageWs());
 await new Promise((r, j) => { ws.addEventListener('open', r, { once: true }); ws.addEventListener('error', j, { once: true }); });
-let seq = 0; const pending = new Map(); const jsErrors = []; const assertFailures = [];
+let seq = 0; const pending = new Map(); const jsErrors = []; const assertFailures = []; const navErrors = [];
 ws.addEventListener('message', (m) => {
   const d = JSON.parse(m.data);
   if (d.id && pending.has(d.id)) { pending.get(d.id)(d); pending.delete(d.id); return; }
@@ -242,7 +242,7 @@ const MEASURE = `(() => {
   }
   const broken = [...document.images].filter((i) => i.complete && i.naturalWidth === 0 && i.getBoundingClientRect().width > 0).map((i) => i.getAttribute('src'));
   const doc = document.documentElement;
-  return { pageHeight: doc.scrollHeight, overflowX: Math.max(0, doc.scrollWidth - (window.__rcWidth || innerWidth)), contrast, stacking, hidden, broken, warmNeutralBody, bodyOklch: bgLch, nested: nested.slice(0, 20), emoji: emoji.slice(0, 20), collisions, clipped, navHidden, progressEmpty };
+  return { pageHeight: doc.scrollHeight, overflowX: Math.max(0, doc.scrollWidth - (window.__rcWidth || innerWidth)), contrast, stacking, hidden, broken, warmNeutralBody, bodyOklch: bgLch, nested: nested.slice(0, 20), emoji: emoji.slice(0, 20), collisions, clipped, navHidden, progressEmpty, textLength: (document.body.innerText || "").trim().length };
 })()`;
 
 // Controls that look interactive but have no click/key listener on themselves or any ancestor.
@@ -271,7 +271,8 @@ async function deadControls() {
 async function run(name, width, height, mobile, { js = true, shots = true } = {}) {
   await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile });
   await send('Emulation.setScriptExecutionDisabled', { value: !js });
-  await send('Page.navigate', { url: target });
+  const nav = await send('Page.navigate', { url: target });
+  if (nav.errorText) navErrors.push(`${name}: ${nav.errorText}`);
   await sleep(3000);
   // Snapshot opacity/transform below the fold before scrolling; elements that change on scroll are scroll-animated.
   if (js) await evaluate(`(() => { const vh = innerHeight; window.__rcPre = []; for (const el of document.body.querySelectorAll('section,article,div,p,h1,h2,h3,h4,figure,img,li,blockquote,ul,ol,a,span')) { const r = el.getBoundingClientRect(); if (r.top < vh || r.height < 8) continue; const cs = getComputedStyle(el); window.__rcPre.push([el, cs.opacity, cs.transform]); } return window.__rcPre.length; })()`);
@@ -337,6 +338,7 @@ const report = {
     assert_failures: assertFailures.length,
     nav_hidden_desktop: desktop.navHidden.length,
     progress_empty: new Set([...desktop.progressEmpty, ...mobile.progressEmpty]).size,
+    blank_page: navErrors.length || desktop.textLength < 40 ? 1 : 0,
   },
   details: {
     jsErrors,
@@ -361,6 +363,7 @@ const report = {
     'dead_controls lists visible buttons, tabs, and toggles with no click/key listener on themselves or any ancestor; each is a control that does nothing when pressed. It cannot tell whether a listener does the right thing: click through every signature interaction yourself.',
     'assert_failures counts failed console.assert calls: encode fixture invariants (totals sum, statuses match thresholds, counts match filters) as console.assert at load and they are checked here.',
     'clipped_content lists containers with hidden/clip overflow that cut off text or controls without an ellipsis or scroll affordance.',
+    'blank_page = 1 means the page rendered under 40 characters of text (dev server down, error page, SPA that failed to boot); every other count is meaningless until it is 0.',
     'text_collisions lists text drawn over other text or small SVG marks (labels printed through map dots, captions under panels).',
     'hidden_with_js counts text that is still invisible after a full scroll pass (closed menus, tabs, and dialogs are expected there; review each).',
     'Full-page captures draw position:fixed/sticky elements once, over whatever content sits there; judge fixed bars from the -scroll frames, not the full-page image.',
@@ -371,13 +374,14 @@ const report = {
 writeFileSync(path.join(outDir, 'render-check.json'), JSON.stringify(report, null, 2));
 
 const s = report.summary;
-const line = `RENDER-CHECK ${VERSION}: overflow_desktop=${s.overflow_desktop} overflow_mobile=${s.overflow_mobile} js_errors=${s.js_errors} contrast_failures=${s.contrast_failures} word_stacking=${s.word_stacking} text_collisions=${s.text_collisions} clipped_content=${s.clipped_content} dead_controls=${s.dead_controls} assert_failures=${s.assert_failures} nav_hidden_desktop=${s.nav_hidden_desktop} progress_empty=${s.progress_empty} hidden_without_js=${s.hidden_without_js} broken_images=${s.broken_images} | slop: scroll_animated=${s.scroll_animated} nested_boxes=${s.nested_boxes} emoji_icons=${s.emoji_icons} warm_neutral_body=${s.warm_neutral_body}`;
+const line = `RENDER-CHECK ${VERSION}: overflow_desktop=${s.overflow_desktop} overflow_mobile=${s.overflow_mobile} js_errors=${s.js_errors} contrast_failures=${s.contrast_failures} word_stacking=${s.word_stacking} text_collisions=${s.text_collisions} clipped_content=${s.clipped_content} dead_controls=${s.dead_controls} assert_failures=${s.assert_failures} nav_hidden_desktop=${s.nav_hidden_desktop} progress_empty=${s.progress_empty} blank_page=${s.blank_page} hidden_without_js=${s.hidden_without_js} broken_images=${s.broken_images} | slop: scroll_animated=${s.scroll_animated} nested_boxes=${s.nested_boxes} emoji_icons=${s.emoji_icons} warm_neutral_body=${s.warm_neutral_body}`;
 if (asJson) console.log(JSON.stringify(report, null, 2));
 else {
   console.log(line);
   for (const c of report.details.contrast.slice(0, 12)) console.log(`  contrast ${c.ratio}:1 < ${c.need}:1  ${c.el}  "${c.text}"${c.atScroll ? '  (at scroll ' + c.atScroll + ')' : ''}`);
   for (const w of report.details.stacking.slice(0, 8)) console.log(`  stacking ${w.lines} lines @${w.width}px  ${w.el}  "${w.text}"`);
   for (const h of report.details.hiddenWithoutJs.slice(0, 8)) console.log(`  hidden-without-js  ${h.el}  "${h.text}"`);
+  for (const e of navErrors) console.log(`  navigation-failed  ${e}`);
   for (const e of jsErrors.slice(0, 5)) console.log(`  js-error  ${e}`);
   for (const c of report.details.clippedContent.slice(0, 6)) console.log(`  clipped  ${c.el} cuts ${c.lost}`);
   for (const n of report.details.navHiddenDesktop) console.log(`  nav-hidden-desktop  ${n}`);
@@ -391,5 +395,8 @@ else {
   console.log(`  screenshots + render-check.json in ${outDir}`);
 }
 clearInterval(keepAlive); ws.close(); proc.kill();
-const fail = s.overflow_desktop || s.overflow_mobile || s.js_errors || s.contrast_failures || s.word_stacking || s.text_collisions || s.clipped_content || s.dead_controls || s.assert_failures || s.nav_hidden_desktop || s.progress_empty || s.hidden_without_js || s.broken_images || s.scroll_animated >= 5 || s.nested_boxes || s.emoji_icons || s.warm_neutral_body;
+// Remove the throwaway Chrome profile (hundreds of runs once filled a drive). Chrome releases files shortly after exit.
+await new Promise((r) => { proc.once("exit", r); setTimeout(r, 3000); });
+for (let i = 0; i < 5; i++) { try { rmSync(profile, { recursive: true, force: true }); break; } catch { await sleep(400); } }
+const fail = s.overflow_desktop || s.overflow_mobile || s.js_errors || s.contrast_failures || s.word_stacking || s.text_collisions || s.clipped_content || s.dead_controls || s.assert_failures || s.nav_hidden_desktop || s.progress_empty || s.blank_page || s.hidden_without_js || s.broken_images || s.scroll_animated >= 5 || s.nested_boxes || s.emoji_icons || s.warm_neutral_body;
 process.exit(fail ? 1 : 0);
