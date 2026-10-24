@@ -17,7 +17,7 @@ import { tmpdir, homedir } from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-const VERSION = '1.3.2';
+const VERSION = '1.4.0';
 const args = process.argv.slice(2);
 const asJson = args.includes('--json');
 const positional = args.filter((a) => !a.startsWith('--'));
@@ -240,9 +240,57 @@ const MEASURE = `(() => {
     const own = rgba(getComputedStyle(pb).backgroundImage !== 'none' ? '#000' : 'transparent')[3] > 0;
     if (!own && fills.length && fills.every((c) => c.getBoundingClientRect().width < 1)) progressEmpty.push(label(pb) + ' (' + Math.round(now / max * 100) + '% but fill is 0px)');
   }
+  // Human-factors floors (WCAG 2.2 AA): target size 2.5.8, accessible names 1.1.1/2.4.4/4.1.2, placeholder-as-label, page language and title.
+  const shown = (el) => { if (el.closest('[aria-hidden="true"], [inert], details:not([open]) > :not(summary)')) return false; const cs = getComputedStyle(el); const r = el.getBoundingClientRect(); return cs.visibility !== 'hidden' && cs.display !== 'none' && r.width > 2 && r.height > 2 && effOpacity(el) >= 0.1; };
+  const nameOf = (el) => {
+    const lb = el.getAttribute('aria-labelledby'); if (lb) { const t = lb.split(' ').map((id) => document.getElementById(id)?.textContent || '').join(' ').trim(); if (t) return t; }
+    const al = (el.getAttribute('aria-label') || '').trim(); if (al) return al;
+    if (el.labels && el.labels.length) { const t = [...el.labels].map((l) => l.textContent).join(' ').trim(); if (t) return t; }
+    if (el.tagName === 'INPUT' && /^(submit|button|reset)$/.test(el.type)) return (el.value || '').trim();
+    if (el.tagName === 'INPUT' && el.type === 'image') return (el.alt || '').trim();
+    if (!/^(INPUT|SELECT|TEXTAREA)$/.test(el.tagName)) { const t = (el.innerText || el.textContent || '').trim(); if (t) return t; const alt = [...el.querySelectorAll('img[alt], svg title, [aria-label]')].map((n) => n.getAttribute('alt') || n.getAttribute('aria-label') || n.textContent).join(' ').trim(); if (alt) return alt; }
+    return (el.getAttribute('title') || '').trim();
+  };
+  const unnamed = [], placeholderLabels = [];
+  for (const el of document.body.querySelectorAll('a[href], button, input:not([type=hidden]), select, textarea, [role=button], [role=link], [role=tab], [role=checkbox], [role=radio], [role=switch], [role=menuitem], [role=combobox], [role=textbox]')) {
+    if (!shown(el) && !(el.labels && [...el.labels].some(shown))) continue;
+    if (nameOf(el)) continue;
+    if (el.getAttribute('placeholder')) placeholderLabels.push({ el: label(el), text: el.getAttribute('placeholder').slice(0, 40) });
+    else unnamed.push({ el: label(el), text: (el.outerHTML || '').slice(0, 60) });
+  }
+  const targetSel = 'a[href], button, input:not([type=hidden]), select, textarea, summary, [role=button], [role=link], [role=tab], [role=checkbox], [role=radio], [role=switch], [role=menuitem], [tabindex]:not([tabindex="-1"])';
+  const targets = [];
+  for (const el of document.body.querySelectorAll(targetSel)) {
+    let box = el;
+    // A visually hidden native input is operated through its label: measure the label.
+    if (el.tagName === 'INPUT' && !shown(el)) { box = el.labels && [...el.labels].find(shown); if (!box) continue; }
+    else if (!shown(el)) continue;
+    if (targets.some((t) => t.box === box)) continue;
+    const r = box.getBoundingClientRect();
+    // 2.5.8 inline exception: a link inside a sentence or block of text.
+    const block = el.closest('p, li, td, dd, dt, blockquote, figcaption, label, small, legend, caption');
+    const inline = el.tagName === 'A' && getComputedStyle(el).display.startsWith('inline') && block && block !== el && (block.textContent || '').trim().length > (el.textContent || '').trim().length + 3;
+    targets.push({ el, box, r, inline });
+  }
+  const dist = (x, y, r) => Math.hypot(Math.max(r.left - x, 0, x - r.right), Math.max(r.top - y, 0, y - r.bottom));
+  const smallTargets = [];
+  for (const t of targets) {
+    if (t.inline || (t.r.width >= 24 && t.r.height >= 24)) continue;
+    const cx = (t.r.left + t.r.right) / 2, cy = (t.r.top + t.r.bottom) / 2;
+    // 2.5.8 spacing exception: a 24px circle on the target touches no other target and no other undersized target's circle.
+    const crowded = targets.some((u) => { if (u === t || u.box.contains(t.box) || t.box.contains(u.box)) return false; if (dist(cx, cy, u.r) < 12) return true; const small = u.r.width < 24 || u.r.height < 24; return small && !u.inline && Math.hypot(cx - (u.r.left + u.r.right) / 2, cy - (u.r.top + u.r.bottom) / 2) < 24; });
+    if (crowded) smallTargets.push({ el: label(t.box), size: Math.round(t.r.width) + 'x' + Math.round(t.r.height), text: nameOf(t.el).slice(0, 30) });
+    if (smallTargets.length >= 40) break;
+  }
+  const imgNoAlt = [...document.images].filter((i) => !i.hasAttribute('alt') && !i.closest('[aria-hidden="true"]') && i.getAttribute('role') !== 'presentation' && i.getBoundingClientRect().width > 0).map((i) => (i.getAttribute('src') || '').slice(-60));
+  const docBasics = [];
+  if (!(document.documentElement.getAttribute('lang') || '').trim()) docBasics.push('html has no lang (3.1.1; Vietnamese pages need lang="vi" for screen readers and hyphenation)');
+  if (!(document.title || '').trim()) docBasics.push('page has no <title> (2.4.2)');
+  if (!document.querySelector('h1, [role=heading][aria-level="1"]')) docBasics.push('no h1: the page has no top heading for screen-reader navigation');
+  if (document.querySelector('meta[name=viewport][content*="user-scalable=no"], meta[name=viewport][content*="maximum-scale=1"]')) docBasics.push('viewport blocks zoom (1.4.4)');
   const broken = [...document.images].filter((i) => i.complete && i.naturalWidth === 0 && i.getBoundingClientRect().width > 0).map((i) => i.getAttribute('src'));
   const doc = document.documentElement;
-  return { pageHeight: doc.scrollHeight, overflowX: Math.max(0, doc.scrollWidth - (window.__rcWidth || innerWidth)), contrast, stacking, hidden, broken, warmNeutralBody, bodyOklch: bgLch, nested: nested.slice(0, 20), emoji: emoji.slice(0, 20), collisions, clipped, navHidden, progressEmpty, textLength: (document.body.innerText || "").trim().length };
+  return { pageHeight: doc.scrollHeight, overflowX: Math.max(0, doc.scrollWidth - (window.__rcWidth || innerWidth)), contrast, stacking, hidden, broken, warmNeutralBody, bodyOklch: bgLch, nested: nested.slice(0, 20), emoji: emoji.slice(0, 20), collisions, clipped, navHidden, progressEmpty, unnamed: unnamed.slice(0, 30), placeholderLabels: placeholderLabels.slice(0, 20), smallTargets, imgNoAlt: imgNoAlt.slice(0, 20), docBasics, textLength: (document.body.innerText || "").trim().length };
 })()`;
 
 // Controls that look interactive but have no click/key listener on themselves or any ancestor.
@@ -266,6 +314,48 @@ async function deadControls() {
     if (!found) { const d = await send('Runtime.callFunctionOn', { objectId: oid, functionDeclaration: 'function(){ let s = this.tagName.toLowerCase(); if (this.id) s += "#" + this.id; else if (this.classList.length) s += "." + [...this.classList].slice(0,2).join("."); return s + " \\"" + (this.textContent || this.getAttribute("aria-label") || "").trim().slice(0, 30) + "\\""; }', returnByValue: true }); dead.push(d.result.value); }
   }
   return dead;
+}
+
+// Real keyboard pass: press Tab through the page and check each focus stop is visible (2.4.7),
+// not entirely covered by a fixed/sticky layer (2.4.11), and not an invisible element (closed menu links).
+async function keyboardPass(limit = 60) {
+  await evaluate(`(() => {
+    if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); scrollTo(0, 0);
+    const sig = (el, p) => { if (!el || el.nodeType !== 1) return ''; const cs = getComputedStyle(el, p); return [cs.outlineStyle, cs.outlineWidth, cs.outlineColor, cs.boxShadow, cs.borderColor, cs.backgroundColor, cs.color, cs.textDecorationLine, cs.opacity, cs.transform].join('|'); };
+    window.__rcFull = (el) => [sig(el), sig(el, '::before'), sig(el, '::after'), sig(el.parentElement), sig(el.parentElement && el.parentElement.parentElement)].join('#');
+    window.__rcBase = new Map(); for (const el of document.querySelectorAll('a[href], button, input, select, textarea, summary, [tabindex]')) window.__rcBase.set(el, window.__rcFull(el));
+    window.__rcSeen = new Set(); return true; })()`);
+  const issues = { invisible: [], obscured: [], hidden: [] }; let stops = 0;
+  for (let i = 0; i < limit; i++) {
+    for (const type of ['keyDown', 'keyUp']) await send('Input.dispatchKeyEvent', { type, key: 'Tab', code: 'Tab', windowsVirtualKeyCode: 9, nativeVirtualKeyCode: 9 });
+    await sleep(90);
+    const s = await evaluate(`(async () => {
+      const el = document.activeElement; if (!el || el === document.body || el === document.documentElement) return { end: true };
+      if (window.__rcSeen.has(el)) return { end: true }; window.__rcSeen.add(el);
+      if (el.tagName === 'IFRAME') return { skip: true };
+      let name = el.tagName.toLowerCase(); if (el.id) name += '#' + el.id; else if (el.classList.length) name += '.' + [...el.classList].slice(0, 2).join('.');
+      name += ' "' + ((el.getAttribute('aria-label') || el.innerText || el.value || '') + '').trim().slice(0, 30) + '"';
+      // Wait out smooth scrolling and focus transitions (skip links sliding in) before judging.
+      const wait = (ms) => new Promise((res) => setTimeout(res, ms)); let prev = '';
+      for (let k = 0; k < 12; k++) { const q = el.getBoundingClientRect(); const key = [q.left, q.top, q.width, q.height, getComputedStyle(el).opacity].map((v) => Math.round(v * 10)).join(','); if (key === prev) break; prev = key; await wait(80); }
+      // A flow element just below the fold is reachable: bring it into view the way a browser would. Fixed/offset drawers stay where they are.
+      { const q = el.getBoundingClientRect(); if (q.top >= innerHeight || q.bottom <= 0) { el.scrollIntoView({ block: 'nearest', behavior: 'instant' }); await wait(60); } }
+      const r = el.getBoundingClientRect(); const cs = getComputedStyle(el); let op = 1; for (let n = el; n && n.nodeType === 1; n = n.parentElement) op *= parseFloat(getComputedStyle(n).opacity);
+      const hidden = r.width < 2 || r.height < 2 || cs.visibility === 'hidden' || op < 0.1 || r.bottom <= 0 || r.right <= 0 || r.top >= innerHeight || r.left >= innerWidth;
+      let covered = 0, sampled = 0;
+      if (!hidden) for (const [fx, fy] of [[0.5, 0.5], [0.15, 0.2], [0.85, 0.2], [0.15, 0.8], [0.85, 0.8]]) {
+        const x = r.left + r.width * fx, y = r.top + r.height * fy; if (x < 0 || y < 0 || x >= innerWidth || y >= innerHeight) continue; sampled++;
+        const hit = document.elementFromPoint(x, y); if (!hit || hit === el || el.contains(hit) || hit.contains(el)) continue;
+        for (let n = hit; n && n.nodeType === 1; n = n.parentElement) { const pz = getComputedStyle(n).position; if (pz === 'fixed' || pz === 'sticky') { covered++; break; } }
+      }
+      const base = window.__rcBase.get(el); const invisible = !hidden && base !== undefined && base === window.__rcFull(el);
+      return { name, hidden, obscured: sampled > 0 && covered === sampled, invisible };
+    })()`);
+    if (s.end) break; if (s.skip) continue; stops++;
+    if (s.hidden) issues.hidden.push(s.name); else if (s.obscured) issues.obscured.push(s.name); else if (s.invisible) issues.invisible.push(s.name);
+  }
+  await evaluate('(() => { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); scrollTo(0, 0); return true; })()');
+  return { stops, ...issues };
 }
 
 async function run(name, width, height, mobile, { js = true, shots = true } = {}) {
@@ -292,6 +382,7 @@ async function run(name, width, height, mobile, { js = true, shots = true } = {}
     await send('Runtime.evaluate', { expression: 'scrollTo(0,0)' });
   }
   m.deadControls = js && !mobile ? await deadControls() : [];
+  m.keyboard = js && !mobile ? await keyboardPass() : { stops: 0, invisible: [], obscured: [], hidden: [] };
   m.scrollAnimated = js ? await evaluate(`(() => { const changed = (window.__rcPre || []).filter(([el, op, tf]) => { const cs = getComputedStyle(el); return Math.abs(parseFloat(cs.opacity) - parseFloat(op)) > 0.2 || cs.transform !== tf; }).map(([el]) => el); return changed.filter((el) => !changed.some((o) => o !== el && o.contains(el))).length; })()`) : 0;
   const files = [];
   if (shots) {
@@ -339,6 +430,15 @@ const report = {
     nav_hidden_desktop: desktop.navHidden.length,
     progress_empty: new Set([...desktop.progressEmpty, ...mobile.progressEmpty]).size,
     blank_page: navErrors.length || desktop.textLength < 40 ? 1 : 0,
+    small_targets: new Set([...desktop.smallTargets, ...mobile.smallTargets].map((x) => x.el + x.text)).size,
+    unnamed_controls: new Set([...desktop.unnamed, ...mobile.unnamed].map((x) => x.el + x.text)).size,
+    placeholder_labels: new Set([...desktop.placeholderLabels, ...mobile.placeholderLabels].map((x) => x.el + x.text)).size,
+    img_missing_alt: new Set([...desktop.imgNoAlt, ...mobile.imgNoAlt]).size,
+    doc_basics: desktop.docBasics.length,
+    focus_stops: desktop.keyboard.stops,
+    focus_invisible: desktop.keyboard.invisible.length,
+    focus_obscured: desktop.keyboard.obscured.length,
+    focus_hidden: desktop.keyboard.hidden.length,
   },
   details: {
     jsErrors,
@@ -356,6 +456,12 @@ const report = {
     assertFailures: assertFailures.slice(0, 20),
     navHiddenDesktop: desktop.navHidden,
     progressEmpty: [...new Set([...desktop.progressEmpty, ...mobile.progressEmpty])],
+    smallTargets: [...desktop.smallTargets, ...mobile.smallTargets.map((x) => ({ ...x, at: 'mobile' }))].slice(0, 40),
+    unnamedControls: [...desktop.unnamed, ...mobile.unnamed].slice(0, 30),
+    placeholderLabels: [...desktop.placeholderLabels, ...mobile.placeholderLabels].slice(0, 20),
+    imgMissingAlt: [...new Set([...desktop.imgNoAlt, ...mobile.imgNoAlt])],
+    docBasics: desktop.docBasics,
+    keyboard: desktop.keyboard,
   },
   screenshots: [...desktop.files, ...mobile.files, ...nojs.files],
   boundaries: [
@@ -368,13 +474,17 @@ const report = {
     'hidden_with_js counts text that is still invisible after a full scroll pass (closed menus, tabs, and dialogs are expected there; review each).',
     'Full-page captures draw position:fixed/sticky elements once, over whatever content sits there; judge fixed bars from the -scroll frames, not the full-page image.',
     'Slop signals (scroll_animated, nested_boxes, emoji_icons, warm_neutral_body) are counts to disposition, not verdicts: scroll_animated >= 5 is the reveal-everywhere tell (craft ban 14), nested_boxes > 0 is box-in-box-in-box (ban 11), emoji_icons > 0 is S-33, warm_neutral_body = 1 is ban 8 unless the brand record justifies it.',
+    'small_targets lists pointer targets under 24x24 CSS px that also fail the WCAG 2.5.8 spacing exception (inline links in running text are exempt); touch-first surfaces should still aim for 44px (Apple) / 48dp (Material).',
+    'unnamed_controls lists links, buttons, and fields with no accessible name (icon-only buttons without aria-label, inputs without a label); placeholder_labels lists fields whose only label is placeholder text, which disappears on input.',
+    'focus_* come from pressing Tab up to 60 times on the desktop render: focus_invisible = focus moved but nothing on the element, its pseudo-elements, or its two nearest ancestors changed (2.4.7); focus_obscured = every sampled point of the focused element sits under a fixed/sticky layer (2.4.11); focus_hidden = focus landed on something invisible or off-screen (closed menu links, hidden drawers). focus_stops = 0 on a page with controls means the keyboard cannot reach them.',
+    'doc_basics flags a missing lang or <title>, no h1, and a viewport that blocks zoom. img_missing_alt counts images with no alt attribute at all (alt="" is a valid decorative mark).',
     'A clean report proves only these measurements. It does not judge design quality or slop.',
   ],
 };
 writeFileSync(path.join(outDir, 'render-check.json'), JSON.stringify(report, null, 2));
 
 const s = report.summary;
-const line = `RENDER-CHECK ${VERSION}: overflow_desktop=${s.overflow_desktop} overflow_mobile=${s.overflow_mobile} js_errors=${s.js_errors} contrast_failures=${s.contrast_failures} word_stacking=${s.word_stacking} text_collisions=${s.text_collisions} clipped_content=${s.clipped_content} dead_controls=${s.dead_controls} assert_failures=${s.assert_failures} nav_hidden_desktop=${s.nav_hidden_desktop} progress_empty=${s.progress_empty} blank_page=${s.blank_page} hidden_without_js=${s.hidden_without_js} broken_images=${s.broken_images} | slop: scroll_animated=${s.scroll_animated} nested_boxes=${s.nested_boxes} emoji_icons=${s.emoji_icons} warm_neutral_body=${s.warm_neutral_body}`;
+const line = `RENDER-CHECK ${VERSION}: overflow_desktop=${s.overflow_desktop} overflow_mobile=${s.overflow_mobile} js_errors=${s.js_errors} contrast_failures=${s.contrast_failures} word_stacking=${s.word_stacking} text_collisions=${s.text_collisions} clipped_content=${s.clipped_content} dead_controls=${s.dead_controls} assert_failures=${s.assert_failures} nav_hidden_desktop=${s.nav_hidden_desktop} progress_empty=${s.progress_empty} blank_page=${s.blank_page} hidden_without_js=${s.hidden_without_js} broken_images=${s.broken_images} | a11y: small_targets=${s.small_targets} unnamed_controls=${s.unnamed_controls} placeholder_labels=${s.placeholder_labels} img_missing_alt=${s.img_missing_alt} doc_basics=${s.doc_basics} focus_stops=${s.focus_stops} focus_invisible=${s.focus_invisible} focus_obscured=${s.focus_obscured} focus_hidden=${s.focus_hidden} | slop: scroll_animated=${s.scroll_animated} nested_boxes=${s.nested_boxes} emoji_icons=${s.emoji_icons} warm_neutral_body=${s.warm_neutral_body}`;
 if (asJson) console.log(JSON.stringify(report, null, 2));
 else {
   console.log(line);
@@ -391,6 +501,13 @@ else {
   for (const c of report.details.textCollisions.slice(0, 6)) console.log(`  text-collision  ${c.el}  "${c.text}"`);
   for (const n of report.details.nestedBoxes.slice(0, 5)) console.log(`  nested-box depth ${n.depth}  ${n.el}`);
   for (const e of report.details.emojiIcons.slice(0, 5)) console.log(`  emoji  ${e.el}  "${e.text}"`);
+  for (const t of report.details.smallTargets.slice(0, 6)) console.log(`  small-target ${t.size}  ${t.el}  "${t.text}"${t.at ? '  (mobile)' : ''}`);
+  for (const u of report.details.unnamedControls.slice(0, 6)) console.log(`  unnamed-control  ${u.el}  ${u.text}`);
+  for (const p of report.details.placeholderLabels.slice(0, 4)) console.log(`  placeholder-as-label  ${p.el}  "${p.text}"`);
+  for (const d of report.details.docBasics) console.log(`  doc  ${d}`);
+  for (const k of report.details.keyboard.invisible.slice(0, 5)) console.log(`  focus-invisible  ${k}`);
+  for (const k of report.details.keyboard.obscured.slice(0, 5)) console.log(`  focus-obscured  ${k}`);
+  for (const k of report.details.keyboard.hidden.slice(0, 5)) console.log(`  focus-hidden  ${k}`);
   if (s.warm_neutral_body) console.log(`  warm-neutral body OKLCH L=${report.details.bodyOklch.L.toFixed(2)} C=${report.details.bodyOklch.C.toFixed(3)} H=${report.details.bodyOklch.H.toFixed(0)}`);
   console.log(`  screenshots + render-check.json in ${outDir}`);
 }
@@ -398,5 +515,5 @@ clearInterval(keepAlive); ws.close(); proc.kill();
 // Remove the throwaway Chrome profile (hundreds of runs once filled a drive). Chrome releases files shortly after exit.
 await new Promise((r) => { proc.once("exit", r); setTimeout(r, 3000); });
 for (let i = 0; i < 5; i++) { try { rmSync(profile, { recursive: true, force: true }); break; } catch { await sleep(400); } }
-const fail = s.overflow_desktop || s.overflow_mobile || s.js_errors || s.contrast_failures || s.word_stacking || s.text_collisions || s.clipped_content || s.dead_controls || s.assert_failures || s.nav_hidden_desktop || s.progress_empty || s.blank_page || s.hidden_without_js || s.broken_images || s.scroll_animated >= 5 || s.nested_boxes || s.emoji_icons || s.warm_neutral_body;
+const fail = s.overflow_desktop || s.overflow_mobile || s.js_errors || s.contrast_failures || s.word_stacking || s.text_collisions || s.clipped_content || s.dead_controls || s.assert_failures || s.nav_hidden_desktop || s.progress_empty || s.blank_page || s.hidden_without_js || s.broken_images || s.scroll_animated >= 5 || s.nested_boxes || s.emoji_icons || s.warm_neutral_body || s.small_targets || s.unnamed_controls || s.placeholder_labels || s.img_missing_alt || s.doc_basics || s.focus_invisible || s.focus_obscured || s.focus_hidden;
 process.exit(fail ? 1 : 0);
