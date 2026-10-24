@@ -34,21 +34,24 @@ The WebAIM Million 2026 report found detectable WCAG failures on **95.9%** of th
 | `unnamed_controls` | 1.1.1, 2.4.4, 4.1.2 | none |
 | `placeholder_labels` | 1.3.1, 3.3.2 | none |
 | `img_missing_alt` | 1.1.1 | none (decorative images take `alt=""`) |
-| `doc_basics` | 2.4.2, 3.1.1, 1.4.4 | a deliberate single-heading layout may use a visually hidden h1 |
-| `focus_invisible` | 2.4.7 | focus style drawn on an ancestor three or more levels up, verified in a screenshot |
+| `doc_basics` | 2.4.2, 3.1.1, 1.4.4 | none (a missing h1 is printed separately as an advisory) |
+| `focus_invisible` | 2.4.7 | the ring is drawn on an element the script does not compare (a wrapper three or more levels up, a non-adjacent sibling, inside a closed shadow root), verified in a focused-state screenshot |
 | `focus_obscured` | 2.4.11 | none |
 | `focus_hidden` | 2.4.3, 2.4.7 | none: closed menus and drawers must be `inert`, `hidden`, or `display:none` |
-| `focus_stops` = 0 with controls on the page | 2.1.1 | none |
+| `keyboard_unreachable` | 2.1.1 | none |
+| `keyboard-pass` truncation note (iframe, trap, cap) | 2.1.1, 2.1.2 | not a failure by itself: Tab through the embed or the rest of the page by hand and record the result |
 | `overflow_mobile` | 1.4.10 | content that needs two dimensions (maps, data tables with their own scroller) |
 
 Running axe or WAVE in addition is welcome and its findings are dispositioned the same way; neither replaces the manual script.
 
 ## 2. Manual test script (required, record results in the coverage matrix)
 
-1. **Keyboard only.** Unplug the mouse mentally. Complete the primary journey with Tab, Shift+Tab, Enter, Space, arrows, and Escape. Check: a skip link appears first on pages with repeated navigation; focus order follows the visual order; every action is reachable; menus, dialogs, and popovers open, trap focus only while open, close on Escape, and return focus to their trigger; no keyboard trap anywhere.
-2. **Zoom and reflow.** Browser zoom 200%: nothing clipped or overlapping. Viewport 320 CSS px wide (equal to 1280px at 400%): one-direction scrolling only, nothing lost.
+Run it once at final verification on the primary journey, and again for any surface a later fix touches. A step the environment cannot perform is recorded `unavailable (reason)` and caps the status at `NOT PRODUCTION READY`; it is never recorded as passed. Executable substitutes are named in each step where they exist.
+
+1. **Keyboard only.** `render-check` covers the Tab order and focus visibility; this step covers what it cannot: opening and closing things. Unplug the mouse mentally. Complete the primary journey with Tab, Shift+Tab, Enter, Space, arrows, and Escape. Check: a skip link appears first on pages with repeated navigation; focus order follows the visual order; every action is reachable; menus, dialogs, and popovers open, trap focus only while open, close on Escape, and return focus to their trigger; no keyboard trap anywhere.
+2. **Zoom and reflow.** Browser zoom 200%: nothing clipped or overlapping. Viewport 320 CSS px wide (equal to 1280px at 400%): one-direction scrolling only, nothing lost. An agent can emulate both with device metrics (a 720px-wide viewport approximates 200% of 1440; a 320px viewport is the reflow check) and screenshots.
 3. **Text spacing.** Apply line-height 1.5, paragraph spacing 2x, letter spacing 0.12em, word spacing 0.16em (a bookmarklet or devtools style): no text is cut off or overlaps.
-4. **Screen reader smoke test.** NVDA with Chrome or Firefox on Windows, VoiceOver with Safari on macOS or iOS, TalkBack on Android: pick the one closest to the audience. Check the headings list reads as an outline of the page, landmarks exist (header, nav, main, footer), every field announces its label and error, every button and link announces its purpose, status messages (saved, added to cart, errors after submit) are announced without moving focus (4.1.3).
+4. **Screen reader smoke test.** Best: NVDA with Chrome or Firefox on Windows, VoiceOver with Safari on macOS or iOS, TalkBack on Android, whichever is closest to the audience. An agent without a screen reader inspects the accessibility tree instead (Chrome DevTools Protocol `Accessibility.getFullAXTree`, Playwright `page.accessibility.snapshot()`, or a browser tool that returns the accessibility tree) and records the result as `accessibility tree, not a screen reader`. Check the headings list reads as an outline of the page, landmarks exist (header, nav, main, footer), every field announces its label and error, every button and link announces its purpose, status messages (saved, added to cart, errors after submit) are announced without moving focus (4.1.3).
 5. **Color and contrast by eye.** View a grayscale screenshot: no information is carried by color alone (1.4.1). Borders of inputs, focus rings, chart lines, and icon-only controls reach 3:1 against neighbors (1.4.11). Check text over images or gradients that `render-check` skips.
 6. **Motion and timing.** With `prefers-reduced-motion: reduce`, non-essential motion stops. Anything moving, blinking, or auto-updating for more than five seconds can be paused (2.2.2). Nothing flashes more than three times a second (2.3.1). Time limits can be turned off, adjusted, or extended (2.2.1).
 7. **Hover and focus content.** Tooltips and popovers can be dismissed with Escape without moving the pointer, can be hovered themselves, and stay until dismissed (1.4.13).

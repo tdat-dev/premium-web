@@ -14,6 +14,8 @@ The skill routes each request to the contract that matches the work:
 
 All three routes retain the same anti-template, accessibility, responsive, browser-evidence, performance, and independent creative-review gates.
 
+Under every route sits a human-factors layer distilled from NN/g, Laws of UX, W3C WCAG 2.2, Baymard, GOV.UK, MeasuringU, and the Google PAIR and Microsoft HAX guidelines: how people perceive, scan, remember, decide, trust, and physically operate an interface; an automated and manual WCAG 2.2 AA check; and evidence levels that keep simulated reviews from being reported as user research.
+
 ## Repository layout
 
 - `skills/build-premium-website/` is the canonical source of truth.

@@ -12,7 +12,7 @@ The evidence base is Baymard Institute's large-scale e-commerce benchmarks. Perc
 
 ## Why shoppers leave (Baymard, cart abandonment list, updated 2025-09-22)
 
-Average documented cart abandonment is about 70%. Excluding people who were only browsing, the leading reasons during checkout are: extra costs too high (40%), delivery too slow (20%), did not trust the site with card details (19%), forced account creation (18%), checkout too long or complicated (17%), site errors (17%), unsatisfactory returns policy (13%), could not see the total cost up front (12%), card declined (10%), too few payment methods (9%). Nearly every rule below answers one of these.
+Average documented cart abandonment is about 70%. Excluding people who were only browsing, the leading reasons during checkout among US online shoppers (the survey sample; local shoppers may weigh delivery and COD differently) are: extra costs too high (40%), delivery too slow (20%), did not trust the site with card details (19%), forced account creation (18%), checkout too long or complicated (17%), site errors (17%), unsatisfactory returns policy (13%), could not see the total cost up front (12%), card declined (10%), too few payment methods (9%). Nearly every rule below answers one of these.
 
 ## Choose the variant
 
@@ -37,7 +37,7 @@ Average documented cart abandonment is about 70%. Excluding people who were only
 **Checkout.**
 - Guest checkout is the most prominent option, labeled with the word "guest", as a button above sign-in (62% fail). Offer account creation on the confirmation page, where it costs nothing.
 - About 8 visible fields is achievable for most stores (Baymard's 2024 average was 11.3). One "Full name" field (42% of testers typed their full name into "First name" on split forms). Address line 2 behind a link. Billing address defaults to shipping, with a checkbox to differ. Address autocomplete where reliable.
-- Mark both required and optional fields (61% fail; marking only optional fields made 32% of testers miss a required one).
+- Mark both required and optional fields (61% fail; marking only optional fields made 32% of testers miss a required one). This is the consumer-checkout exception to the "mark the minority" default in [cross/forms-wizards-settings.md](../cross/forms-wizards-settings.md).
 - Explain why a phone number is needed (49% fail; most shoppers hesitate to give one). In Vietnam the phone is usually required for the courier: say so in the hint.
 - Delivery options all visible in one selector with dates or date ranges, not only speeds (48% fail to show dates).
 - Password rules, when an account is created, stay simple (65% impose complex rules).
@@ -51,15 +51,15 @@ Average documented cart abandonment is about 70%. Excluding people who were only
 
 ## Anti-patterns
 
-- Shipping, COD, or service fees first revealed at the last step: hidden-cost deceptive pattern. P0 when it affects the amount charged, otherwise P1.
-- Forced account creation before payment. P1.
-- Pre-checked add-ons, insurance, or newsletter consent. P0 (consent and money).
-- Fake low-stock or countdown timers not backed by real data. P0.
-- Coupon field shown open at checkout with no codes available publicly. P2.
-- Variant chosen through a dropdown that hides unavailable options. P2.
-- Form cleared after a server error. P1.
-- Phone, email, or address requested without a stated reason. P2.
-- Search icon only, no visible field, on a catalog site. P2.
+- Shipping, COD, or service fees first revealed at the last step: hidden-cost deceptive pattern. `P0` when it affects the amount charged, otherwise `P1-N` (human-factors HF-09).
+- Forced account creation before payment. `P1-P`.
+- Pre-checked add-ons, insurance, or newsletter consent. `P0` (consent and money).
+- Fake low-stock or countdown timers not backed by real data. `P0`.
+- Coupon field shown open at checkout with no codes available publicly. `P2`.
+- Variant chosen through a dropdown that hides unavailable options. `P2`.
+- Form cleared after a server error. `P1-N` on checkout.
+- Phone, email, or address requested without a stated reason. `P2`.
+- Search icon only, no visible field, on a catalog site. `P2`.
 
 ## Coverage additions
 

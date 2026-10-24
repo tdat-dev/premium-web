@@ -12,7 +12,7 @@ Treat `100k-quality` as an aspirational level of care, not a valuation, award, r
 
 A status report is invalid unless it quotes, from the final build:
 
-1. the `RENDER-CHECK` summary line of [scripts/render-check.mjs](scripts/render-check.mjs) with every non-zero count fixed or dispositioned (the `a11y:` group follows the dispositions in [references/accessibility-inclusive.md](references/accessibility-inclusive.md)) (for craft counts, text over media and intentionally closed menus are the only accepted dispositions; slop signals need a project fact from the decision record), or `render-check: unavailable (reason)` with status capped at `NOT PRODUCTION READY`;
+1. the `RENDER-CHECK` summary line of [scripts/render-check.mjs](scripts/render-check.mjs) with every non-zero count fixed or dispositioned: for craft counts, text over media and intentionally closed menus are the only accepted dispositions; slop signals need a project fact from the decision record; the `a11y:` counts accept only the dispositions listed in [references/accessibility-inclusive.md](references/accessibility-inclusive.md) (a closed menu never excuses `focus_hidden`), or `render-check: unavailable (reason)` with status capped at `NOT PRODUCTION READY`;
 2. the `BLOCKER_CANDIDATE` / `ADVISORY` counts of [scripts/audit-ai-slop.mjs](scripts/audit-ai-slop.mjs) with each blocker candidate dispositioned;
 3. the filled Slop sweep from the critique ledger;
 4. the fresh-eyes reviewer's verdict (or `fresh-eyes: unavailable` and the cap);
@@ -33,14 +33,15 @@ After dispatch, load the mandatory route contract:
 - `DASHBOARD_PRODUCT`: [references/dashboard-product-contract.md](references/dashboard-product-contract.md)
 - `HYBRID`: both contracts above plus [references/hybrid-contract.md](references/hybrid-contract.md)
 
-For every `DASHBOARD_PRODUCT` task and the product side of every `HYBRID` task, load [references/patterns/index.md](references/patterns/index.md), classify the product archetype there, and load the primary archetype file plus the cross-cutting pattern files for the surfaces in scope. For `LANDING_BRAND` work that includes pricing, feature, customers, changelog, contact, blog, legal, status, or docs pages, load the matching `references/patterns/landing/` file. Pattern files are the default anatomy, screen set, signature patterns, and archetype anti-patterns; deviations are recorded decisions, and adopted signature patterns need rendered evidence like any other gate item.
+For every `DASHBOARD_PRODUCT` task and the product side of every `HYBRID` task, load [references/patterns/index.md](references/patterns/index.md), classify the product archetype there, and load the primary archetype file plus the cross-cutting pattern files for the surfaces in scope. For `LANDING_BRAND` work that includes pricing, feature, customers, changelog, contact, blog, legal, status, docs, or shop pages (product list, search, product page, cart, checkout), load the matching `references/patterns/landing/` file. Whenever the `COMMERCE` modifier applies, on any route, load [references/patterns/landing/storefront-checkout.md](references/patterns/landing/storefront-checkout.md). Pattern files are the default anatomy, screen set, signature patterns, and archetype anti-patterns; deviations are recorded decisions, and adopted signature patterns need rendered evidence like any other gate item.
 
 Before designing or critiquing any visual surface, also load [references/craft-rules.md](references/craft-rules.md): the measurable floors and structural bans that make critique concrete. Its violations are severity-graded defects under the enforcement contract, not taste notes.
 
-Before designing or critiquing any surface on any route, also load the human-factors layer. It is the authority for whether people can actually use what was built, and its failures are graded defects like any other:
+Before designing or critiquing any surface on any route, also load the human-factors layer. It is the authority for whether people can actually use what was built, and its failures are graded defects like any other. Cadence: the Human-factors pass runs on every render pass of the changed surfaces; the heuristic evaluation, cognitive walkthrough, and manual accessibility script run once at final verification (step 6) and again only for surfaces a later fix touches. On the `LOCAL_CHANGE` fast path, apply only the HF rows and accessibility checks that the changed component can affect, plus the automated `a11y:` counts.
 
 - [references/human-factors.md](references/human-factors.md): perception, attention and scanning, cognitive load, mental models, memory, decision-making and deceptive patterns, trust, motivation, motor limits, response times; the four lines to write before designing a surface, the Human-factors pass (HF-01 to HF-14), and the heuristic evaluation.
 - [references/accessibility-inclusive.md](references/accessibility-inclusive.md): WCAG 2.2 AA as an automated floor, a manual test script, and a complete A/AA checklist, plus inclusive design, cognitive accessibility, and Vietnamese-language specifics. Production gate 4 is judged against it.
+- [references/ux-research-validation.md](references/ux-research-validation.md), for every task except `LOCAL_CHANGE`: the evidence levels every usability claim must carry, the agent-run evaluations (cognitive walkthrough, task scripts, simulated five-second, first-click, and tree tests), and the research plan to hand the owner for what only real users can answer.
 
 Before writing or reviewing any copy (headlines, body, CTAs, labels, empty/error states, alt text) on any route, load [references/copy-voice.md](references/copy-voice.md). It is the authority for human-sounding words (Vietnamese and English): the AI word/structure ban lists, punctuation rules, and the cadence-loop rule that stops every heading and CTA from sharing one template. Hero-level or looping AI-tone copy is a defect, not a style preference.
 
@@ -50,9 +51,7 @@ For greenfield work, creative art direction, or any task with substantial visual
 
 Read the remaining references only when relevant:
 
-- Use [references/ux-research-validation.md](references/ux-research-validation.md) when choosing evidence for the critique, when the brief asks for research or testing, or before writing any usability claim; it defines the evidence levels and the agent-run evaluations (cognitive walkthrough, task scripts, simulated five-second, first-click, and tree tests) and the research plan to hand the owner for what only real users can answer.
 - Use [references/source-library.md](references/source-library.md) to verify a rule or number at its source, to pick the design system to study for a component, or to choose reference galleries in step 2.
-
 - Use [references/awwwards-evidence-rubric.md](references/awwwards-evidence-rubric.md) when researching references or preparing a creative review package.
 - Use [references/media-contract-prompts.md](references/media-contract-prompts.md) before approving a media-led direction or when an asset is missing.
 - Use [references/motion-3d-decision.md](references/motion-3d-decision.md) before adding animation or 3D dependencies.
@@ -112,7 +111,7 @@ For each implementation slice:
 1. Define its job, content, focal order, assets, states, responsive risks, motion, and failure behavior.
 2. Build the smallest complete slice with semantic structure and progressive enhancement.
 3. Run the real experience and capture the states required by the coverage matrix.
-4. Critique observable outcomes in the order defined by the enforcement contract, run [scripts/render-check.mjs](scripts/render-check.mjs) (screenshots at 1440 and 390, overflow, contrast, word stacking, no-JS visibility, broken images, JS errors, target size, accessible names, and a real Tab pass for focus visibility and obscuring) and [scripts/audit-ai-slop.mjs](scripts/audit-ai-slop.mjs) on the build, and fill the **Slop sweep** and the **Human-factors pass** in the critique ledger from the screenshots. Once per journey, run the heuristic evaluation and the cognitive walkthrough from [references/ux-research-validation.md](references/ux-research-validation.md).
+4. Critique observable outcomes in the order defined by the enforcement contract, run [scripts/render-check.mjs](scripts/render-check.mjs) (screenshots at 1440 and 390, overflow, contrast, word stacking, no-JS visibility, broken images, JS errors, target size, accessible names, and a real Tab pass for focus visibility and obscuring) and [scripts/audit-ai-slop.mjs](scripts/audit-ai-slop.mjs) on the build, and fill the **Slop sweep** and the **Human-factors pass** in the critique ledger from the screenshots.
 5. Record defects and before/after evidence in [assets/critique-ledger.template.md](assets/critique-ledger.template.md).
 6. Repeat until no unhandled P0 or P1 defect remains.
 
@@ -122,7 +121,7 @@ Do not approve work from source code or a single beauty screenshot.
 
 ### 6. Verify production before creative review
 
-Test the primary journey, run the manual accessibility script in [references/accessibility-inclusive.md](references/accessibility-inclusive.md) (keyboard, zoom and reflow, text spacing, screen reader smoke test, color, motion, hover content, forms and authentication, media, forced colors), and check focus, labels, contrast, reduced motion, loading/error/empty states, slow network, missing media, animation failure, and responsive behavior where applicable. Measure performance with the environment labeled. Treat Lighthouse and Core Web Vitals as diagnostics, not proof of field performance or visual quality.
+Test the primary journey, run the heuristic evaluation and cognitive walkthrough ([references/ux-research-validation.md](references/ux-research-validation.md)), run the manual accessibility script in [references/accessibility-inclusive.md](references/accessibility-inclusive.md) (keyboard, zoom and reflow, text spacing, screen reader smoke test, color, motion, hover content, forms and authentication, media, forced colors), and check focus, labels, contrast, reduced motion, loading/error/empty states, slow network, missing media, animation failure, and responsive behavior where applicable. Measure performance with the environment labeled. Treat Lighthouse and Core Web Vitals as diagnostics, not proof of field performance or visual quality.
 
 Run [scripts/audit-ai-slop.mjs](scripts/audit-ai-slop.mjs) on every build that contains supported text-based frontend sources, on every render pass. Its findings are candidates, not authority on originality or release, but every `BLOCKER_CANDIDATE` must be dispositioned in the critique ledger (fixed, or false positive with reason); an undispositioned one is an open `P1`.
 

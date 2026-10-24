@@ -71,7 +71,9 @@ In the decision record, fill the `Archetype and pattern defaults` section:
 4. each `Signature pattern` marked `ADOPTED`, `ADAPTED (how)`, or `NOT APPLICABLE (why)`;
 5. deviations from pattern defaults with the product fact that justifies them.
 
-Then copy the archetype's and each loaded cross file's `Coverage additions` into the coverage matrix and the product journey/state matrix. An adopted signature pattern with no rendered evidence is an open `P1` under the dashboard gate; an archetype anti-pattern present in the build is graded at the severity hint its file gives unless the enforcement contract grades it higher.
+Then copy the archetype's and each loaded cross file's `Coverage additions` into the coverage matrix and the product journey/state matrix. An adopted signature pattern with no rendered evidence is an open `P1-N` under the dashboard gate (a changed surface without rendered evidence); an archetype anti-pattern present in the build is graded at the severity hint its file gives unless the enforcement contract grades it higher.
+
+Pattern files give severity hints as `P0`, `P1`, or `P2`. A bare `P1` hint is `P1-N` when the defect breaks the primary journey, an accessibility floor, or truth, and `P1-P` otherwise; record the resolved label in the ledger.
 
 ## Output shape
 

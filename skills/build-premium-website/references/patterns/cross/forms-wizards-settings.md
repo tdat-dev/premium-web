@@ -24,7 +24,7 @@ Not restated: labels, required status, validation states, unsaved changes, focus
 
 **Page form**: title naming the task → optional intro → fieldset groups with legends → fields → action row.
 
-**Field**: label → hint (one short sentence, no links; GOV.UK) → input sized to the expected answer → inline error. Labels above inputs by default: they survive long Vietnamese labels, zoom, and narrow widths. Left-aligned labels only for dense, read-mostly admin forms. Mark the minority: tag optional fields "(optional)", no asterisks (GOV.UK). Two inputs share a row only when they are one concept (start/end, amount/currency); a Vietnamese full name is one field.
+**Field**: label → hint (one short sentence, no links; GOV.UK) → input sized to the expected answer → inline error. Labels above inputs by default: they survive long Vietnamese labels, zoom, and narrow widths. Left-aligned labels only for dense, read-mostly admin forms. Mark the minority: tag optional fields "(optional)", no asterisks (GOV.UK). Exception: consumer checkout and other forms where hesitant first-time buyers fill fields fast mark both required and optional fields (Baymard; see [landing/storefront-checkout.md](../landing/storefront-checkout.md)). Two inputs share a row only when they are one concept (start/end, amount/currency); a Vietnamese full name is one field.
 
 **Action row**: one primary. Page forms: bottom-left, aligned with fields (Primer, GOV.UK). Dialogs: bottom-right. Inline edit: beside the input. Submit stays enabled (Primer, Cloudscape).
 

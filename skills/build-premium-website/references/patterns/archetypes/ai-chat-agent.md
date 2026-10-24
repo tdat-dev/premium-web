@@ -76,7 +76,7 @@ States and background jobs: [cross/feedback-states-notifications.md](../cross/fe
 
 ## Human-AI interaction checklist
 
-Microsoft's 18 Guidelines for Human-AI Interaction (Amershi et al., CHI 2019), grouped by moment. Review the build against each and record `MET`, `PARTIAL`, or `N/A` in the decision record; a `PARTIAL` on G1, G2, G8, G9, or G11 for a primary flow is a P1.
+Microsoft's 18 Guidelines for Human-AI Interaction (Amershi et al., CHI 2019), grouped by moment. Review the build against each and record `MET`, `PARTIAL`, or `N/A` in the decision record; a `PARTIAL` on G1, G2, G8, G9, or G11 for a primary flow is a `P1-P`; a missing way to dismiss or correct the AI on the primary flow (G8, G9) is `P1-N`.
 
 | Moment | Guidelines |
 | --- | --- |

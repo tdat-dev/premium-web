@@ -78,7 +78,7 @@ From [human-factors.md](../references/human-factors.md) section 11. `PRESENT` ro
 | HF-13 | Dead-end success or end state |  |  |
 | HF-14 | Vocabulary differs from the audience's words; unlabeled non-universal icons |  |  |
 
-## Heuristic evaluation and walkthrough (once per primary journey)
+## Heuristic evaluation and walkthrough (once at final verification, per primary journey)
 
 | Heuristic (Nielsen) | Screen | Observed problem | NN/g severity 0-4 | Ledger severity |
 | --- | --- | --- | --- | --- |
@@ -86,7 +86,7 @@ From [human-factors.md](../references/human-factors.md) section 11. `PRESENT` ro
 
 Cognitive walkthrough: for each step, the four answers (right goal? control noticed? label matches intent? progress visible?) and any "no" as a defect.
 
-## Accessibility manual script
+## Accessibility manual script (once at final verification; `unavailable (reason)` caps status at NOT PRODUCTION READY)
 
 | Step ([accessibility-inclusive.md](../references/accessibility-inclusive.md) section 2) | Result | Evidence |
 | --- | --- | --- |

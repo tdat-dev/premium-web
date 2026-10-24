@@ -2,7 +2,7 @@
 
 Copyright (c) 2026 ByteWaker. Part of the `build-premium-website` skill. See LICENSE and NOTICE at the repository root.
 
-Good UX is finally proven by the people who use the product, not by the builder and not by a model. This file sets out which questions an agent can answer itself, how to run those checks so they mean something, and how to hand the rest to the owner as a ready research plan. Load it when choosing evidence for the critique, when the brief asks for UX research or testing, and before writing any claim about usability in a deliverable.
+Good UX is finally proven by the people who use the product, not by the builder and not by a model. This file sets out which questions an agent can answer itself, how to run those checks so they mean something, and how to hand the rest to the owner as a ready research plan. Load it for every task except the LOCAL_CHANGE fast path: at critique time to choose evidence, at final verification for the heuristic evaluation and cognitive walkthrough, and before writing any claim about usability in a deliverable.
 
 Two rules carry over from the enforcement contract and are absolute: **never invent research** (participants, quotes, findings, scores, analytics) and **never present simulated evaluation as user research.** Both are `P0` truth defects.
 

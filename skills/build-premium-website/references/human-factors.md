@@ -27,7 +27,7 @@ Every layout decision below should trace back to one of these lines. If it trace
 | Uniform connectedness | Lines and connectors claim a relationship. Decorative connectors between unrelated items lie. | Every drawn connector maps to a real flow or dependency. |
 | Figure-ground / Prägnanz | One clear foreground per view. Text never sits on busy media without a solid treatment. | Blur the screenshot about 8px: groups and the primary action are still identifiable. |
 
-**Squint test (required once per surface):** blurred, does the page show the intended first, second, third read? If the blur shows five equal blobs, hierarchy failed.
+**Squint test (required once per surface):** blur the screenshot (ImageMagick `magick shot.png -blur 0x8 blur.png`, ffmpeg `-vf boxblur=8`, or a CSS `filter: blur(8px)` capture) and look at it: does it show the intended first, second, third read? If the blur shows five equal blobs, hierarchy failed. With no way to blur, record `squint: unavailable (reason)`; never mark it passed.
 
 ## 2. Attention and scanning
 
@@ -44,7 +44,7 @@ Rules:
 - **Von Restorff, sparingly.** The one different element is remembered. Emphasize one thing per view; when everything is highlighted nothing is. Never signal by color alone.
 - **Motion steals attention.** Nothing moves near text the user is reading or a form they are filling. Auto-advancing carousels are attention theft and an accessibility failure unless pausable (WCAG 2.2.2).
 
-Check: **five-second read.** Show the screenshot for five seconds (a fresh-eyes subagent works) and ask what the page is for and what to do next. The answer must match the surface's job line. Severity: a wrong answer on the hero or a primary task view is `P1-P`.
+Check: **five-second read.** Give a fresh-eyes subagent the screenshot and ask it to answer from first impression, without studying details: what is the page for, and what would you do next? (A model cannot be timed; this tests what the page presents first, not human memory.) The answer must match the surface's job line. Severity: a wrong answer on the hero or a primary task view is `P1-P`.
 
 ## 3. Cognitive load
 
@@ -70,7 +70,7 @@ Check: list every element on the view and tag it `task`, `orientation`, or `deco
 ## 5. Memory: recognition over recall
 
 - **Show, do not make them remember.** Visible options, recent items, saved filters, autocomplete, persistent labels, format examples next to the field, breadcrumbs, visible selected state.
-- **Placeholders are not labels.** They vanish on input, look like filled data, and are unreliably announced. `render-check` counts them as `placeholder_labels`; each is a defect (`P1-N` on any form a user must complete).
+- **Placeholders are not labels.** They vanish on input, look like filled data, and are unreliably announced. `render-check` counts them as `placeholder_labels`; each is a defect (`P1-N` on the primary journey, else `P1-P`, the same grading as [accessibility-inclusive.md](accessibility-inclusive.md)).
 - **Serial position.** People remember the first and last items best. Put the most important navigation items at the ends of a nav bar and the least important in the middle.
 - **Peak-end rule.** People judge an experience by its most intense moment and its ending. Design the hardest moment (an error, a long wait, a payment) and the final moment (confirmation, receipt, success state) on purpose. A success page that is a dead end wastes the ending: say what happens next, when, and how to get help.
 - **Resume, do not restart.** Save drafts and offer "tiếp tục chỗ đang làm". The tendency to resume interrupted tasks holds up in research; the memory advantage claimed for unfinished tasks (Zeigarnik) did not replicate in a 2025 meta-analysis **(contested)**, so do not justify nagging or fake incomplete-profile meters with it.
@@ -128,11 +128,11 @@ Fill these rows in the critique ledger. `PRESENT` rows become defects.
 | HF-04 | Look-alike elements with different behavior (static badge styled as button, link styled as text) | `P1-P` |
 | HF-05 | Essential content or the primary action inside an ad-shaped container or auto-rotating carousel | `P1-P` |
 | HF-06 | More than one competing primary action in a view; recommended option without a reason | `P2`, `P1-P` on decision views |
-| HF-07 | User must recall information from an earlier step or screen; placeholder used as label | `P1-N` for placeholder labels, else `P1-P` |
+| HF-07 | User must recall information from an earlier step or screen; placeholder used as label | `P1-N` on the primary journey, else `P1-P` |
 | HF-08 | Convention broken on a basic control (logo, search, cart, links, native inputs) without a recorded reason | `P1-P` |
 | HF-09 | Hidden cost, preselected add-on or consent, asymmetric cancel, confirmshaming, fake urgency or scarcity | `P0` money/consent/data, else `P1-N` |
 | HF-10 | Irreversible action without a named consequence, or reversible action without undo | `P1-P` |
-| HF-11 | Touch targets under floor (`small_targets` > 0), hover-only reveals, drag without alternative | `P1-N` |
+| HF-11 | Touch targets under floor (`small_targets` > 0), hover-only reveals, drag without alternative | `P1-N` on the primary journey, else `P1-P` |
 | HF-12 | Wait over 1s without status, over 10s without progress and cancel; status of saves or sync invisible | `P1-P` |
 | HF-13 | Success or end state is a dead end (no next step, timing, or help) | `P2`, `P1-P` on checkout or booking |
 | HF-14 | Interface vocabulary differs from the audience's own words; unlabeled non-universal icons | `P2`, `P1-P` on primary navigation |
