@@ -59,6 +59,7 @@ The macrostructure and ambition choice stay in [structure-catalog.md](../structu
 | --- | --- |
 | Pricing, feature, solutions, customers, integrations, changelog, about/careers, contact/demo, blog, legal/trust, status, 404, site nav and footer | [landing/marketing-site-pages.md](landing/marketing-site-pages.md) |
 | Docs sites, API reference, developer portals, quickstarts | [landing/docs-developer-portal.md](landing/docs-developer-portal.md) |
+| Shop front: product lists, search, product pages, cart, checkout, order confirmation and tracking for buyers | [landing/storefront-checkout.md](landing/storefront-checkout.md) |
 
 ## Step 4: Turn the files into commitments
 

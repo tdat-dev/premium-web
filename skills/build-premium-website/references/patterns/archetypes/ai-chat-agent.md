@@ -74,6 +74,19 @@ States and background jobs: [cross/feedback-states-notifications.md](../cross/fe
 - **IBM Carbon for AI**: one AI label with an explanation popover and edited state gives disclosure without decoration.
 - **NN/g on AI chatbots**: one entry point, capabilities in the first message, no autoscroll to the end.
 
+## Human-AI interaction checklist
+
+Microsoft's 18 Guidelines for Human-AI Interaction (Amershi et al., CHI 2019), grouped by moment. Review the build against each and record `MET`, `PARTIAL`, or `N/A` in the decision record; a `PARTIAL` on G1, G2, G8, G9, or G11 for a primary flow is a P1.
+
+| Moment | Guidelines |
+| --- | --- |
+| Initially | G1 make clear what the system can do; G2 make clear how well it can do it |
+| During interaction | G3 time services based on context; G4 show contextually relevant information; G5 match relevant social norms; G6 mitigate social biases |
+| When wrong | G7 support efficient invocation; G8 support efficient dismissal; G9 support efficient correction; G10 scope services when in doubt; G11 make clear why the system did what it did |
+| Over time | G12 remember recent interactions; G13 learn from user behavior; G14 update and adapt cautiously; G15 encourage granular feedback; G16 convey the consequences of user actions; G17 provide global controls; G18 notify users about changes |
+
+Google's People + AI Guidebook adds the questions to settle before designing screens: does AI add value over a rule here (user needs); what mental model the product sets and how onboarding stages it; how confidence and data sources are shown so users calibrate trust (explain for understanding, not completeness, and show confidence only when it changes what the user does); how feedback reaches the model and when the user sees its effect; how control returns to the user when automation fails; and what an error means from the user's point of view, with a path forward that keeps their work.
+
 ## Archetype anti-patterns
 
 - **Agent acts without a reviewable payload**: sends, deletes, or pays blind. P1.
@@ -108,4 +121,7 @@ States and background jobs: [cross/feedback-states-notifications.md](../cross/fe
 - https://www.shapeof.ai/patterns/verification (accessed 2026-09-28)
 - https://www.nngroup.com/articles/ai-chatbots-design-guidelines/ (accessed 2026-09-28)
 - https://www.nngroup.com/articles/explainable-ai/ (accessed 2026-09-28)
-- PAIR Guidebook, Carbon for AI, Copilot inline suggestions, `isComposing`, live-region streaming: practitioner knowledge (PAIR and Carbon pages returned no readable content).
+- https://www.microsoft.com/en-us/research/blog/guidelines-for-human-ai-interaction-design/ (accessed 2026-10-24)
+- https://pair.withgoogle.com/guidebook-v2/ and its six chapter pages (accessed 2026-10-24)
+- https://carbondesignsystem.com/guidelines/carbon-for-ai/ (accessed 2026-10-24)
+- Copilot inline suggestions, `isComposing`, live-region streaming: practitioner knowledge.

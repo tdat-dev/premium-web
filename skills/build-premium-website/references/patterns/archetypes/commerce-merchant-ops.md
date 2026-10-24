@@ -50,7 +50,7 @@ Tables, filters, overlays: follow [../cross/data-tables-collections.md](../cross
 
 **6. POS tender and offline.** Methods: tiền mặt, VietQR, card, e-wallet, split. Cash: keypad, quick-amount chips, change due in large figures. VietQR: dynamic QR with amount and order code, waiting state until the bank notification arrives, manual confirm with the staff name when no webhook exists. Offline: persistent banner with time left to upload stored payments (Square documents a countdown and a 72-hour ceiling for offline card payments), queue count, post-reconnect decline list. Receipt: print, Zalo/SMS, none.
 
-**7. Checkout without surprises.** Shipping and COD fee visible before payment; coupon behind a link; billing defaults to shipping; guest checkout, account offered after purchase (Baymard favors fewer visible fields and deferred account creation). Pending transfers land on an order page that keeps checking and says what happens if the buyer leaves.
+**7. Checkout without surprises.** Shipping and COD fee visible before payment; coupon behind a link; billing defaults to shipping; guest checkout, account offered after purchase (Baymard favors fewer visible fields and deferred account creation). Pending transfers land on an order page that keeps checking and says what happens if the buyer leaves. The full buyer-side checklist with Baymard benchmarks is [landing/storefront-checkout.md](../landing/storefront-checkout.md).
 
 **8. Channel sync surface.** Per connected shop (Shopee, TikTok Shop, Lazada): health, token expiry, last order import, last stock push, errors. Channel orders carry a channel chip and marketplace code; actions the marketplace owns show locked with the reason or link out.
 
