@@ -97,18 +97,34 @@ Libraries' default looks are exactly the template look the reflex registry flags
 
 ## Galleries and flow libraries (reference research)
 
+Checked 2026-10-24 and viewed by the owner. Start with the free curated set; the paid flow libraries are better for real product UI, which free sources cover thinly.
+
+**Free and hand-curated**
+
 | Library | Best for |
 | --- | --- |
-| Mobbin https://mobbin.com/ | Real app and web screens and full flows; agent access may require a paid plan |
-| Page Flows https://pageflows.com/ | Recorded user flows (onboarding, checkout, cancel) |
-| Refero https://refero.design/ | Screens and patterns searchable by function |
-| SaaSFrame https://saasframe.io/ , SaaSUI https://www.saasui.design/ , Nicely Done https://nicelydone.club/ | SaaS dashboards, settings, onboarding |
-| UI Sources, Pttrns, Collect UI | Mobile and small-component patterns |
-| Land-book https://www.land-book.com/ , Lapa Ninja https://www.lapa.ninja/ , One Page Love https://onepagelove.com/ | Landing pages (also the best place to see what is overused) |
-| Awwwards https://www.awwwards.com/ , SiteInspire https://www.siteinspire.com/ | Ambitious visual and motion work; see [awwwards-evidence-rubric.md](awwwards-evidence-rubric.md) |
+| Recent https://recent.design/websites (successor to Godly) | Current websites filtered by AI, SaaS, ecommerce, portfolio; also app store screenshots https://recent.design/app-store-screenshots |
+| Siteinspire https://www.siteinspire.com/websites | Agency, studio, and brand sites, filterable by style and subject |
+| Minimal Gallery https://minimal.gallery/ | Restrained editorial and portfolio sites, updated almost daily |
+| SaaS Landing Page https://www.saaslandingpage.com/ | 800+ SaaS landing pages by category (B2B, AI, fintech, dev tools); undated, some old |
+| SaaSUI https://www.saasui.design/ | Real SaaS product screens (sign-in, onboarding, dashboards) from about 150 products; the main free source for app UI |
+| Component Gallery https://component.gallery/ | How 95 design systems build each component (buttons, tables, menus) |
+| Navbar Gallery https://navbar.gallery/ , Footer Design https://www.footer.design/ | Navigation bars, mega menus, footers |
+| Awwwards https://www.awwwards.com/websites/ | Jury-judged ambitious visual and motion work; see [awwwards-evidence-rubric.md](awwwards-evidence-rubric.md) |
+
+**Mostly paid or limited free tiers**
+
+| Library | Best for |
+| --- | --- |
+| Mobbin https://mobbin.com/ | Real app and web screens and full flows; the free plan has no search or flows, and agent access needs a paid plan |
+| Page Flows https://pageflows.com/ , Refero https://refero.design/ | Recorded user flows and screens searchable by function |
+| SaaSFrame https://saasframe.io/ , Nicely Done https://nicelydone.club/ | SaaS dashboards, settings, onboarding |
+| Land-book https://www.land-book.com/ , Lapa Ninja https://www.lapa.ninja/ , One Page Love https://onepagelove.com/ | Landing pages (also the best place to see what is overused); free tiers limited or unverified |
 | Dribbble https://dribbble.com/ , Behance https://www.behance.net/ | Visual concepts; many are unbuilt and untested, never evidence of usability |
 
-Use flows (Mobbin, Page Flows, Refero) to learn how a task is usually structured; use visual galleries for direction and for spotting reflexes to avoid.
+Avoid as references: open screenshot dumps sorted without curation (dated captures, no quality bar) and galleries of unattributed or AI-generated "templates".
+
+Use flows (Mobbin, Page Flows, Refero, SaaSUI) to learn how a task is usually structured; use visual galleries for direction and for spotting reflexes to avoid.
 
 ## Color, type, icons, and tools
 
