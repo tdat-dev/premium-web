@@ -64,6 +64,23 @@ Enforce it:
 2. If more than two share the same grammatical shape or open with the same word class, the copy is looping: rewrite until the column reads with varied rhythm.
 3. No two adjacent sections may use the same rhetorical device (question, antithesis, rule-of-three, "from X to Y").
 
+## Product microcopy: labels, buttons, errors, and help
+
+Marketing copy persuades; interface copy gets a task done. On product surfaces, forms, checkout, settings, and every error or empty state, clarity beats voice. Sources: GOV.UK writing for user interfaces and error message guidance, Microsoft Writing Style Guide, Atlassian voice and tone, plain-language principles (see [source-library.md](source-library.md)).
+
+- **Plain words, short sentences.** Split sentences over 25 words and paragraphs over five sentences (GOV.UK). Use the word the user would use ("mua", not "thực hiện giao dịch mua"). Avoid nouns made from verbs ("việc xác nhận", "sự thay đổi"): say "xác nhận", "đổi".
+- **Front-load.** Put the information-carrying word first. "Sai mật khẩu", not "Bạn đã nhập mật khẩu không chính xác".
+- **Buttons start with a verb and name the result:** "Lưu và tiếp tục", "Thanh toán 450.000 ₫", "Tạo cửa hàng", "Gửi lời mời". Not "OK", "Submit", "Xác nhận" alone, or "Tiếp" when the next step is irreversible. One primary button per view. A destructive button names the object: "Xoá 3 sản phẩm".
+- **Labels are visible, short nouns; hints are one short sentence.** "Số điện thoại" with the hint "Shipper gọi số này khi giao hàng". Mark optional fields "(không bắt buộc)", following the marking rule and its checkout exception in [patterns/cross/forms-wizards-settings.md](patterns/cross/forms-wizards-settings.md). No placeholder-only labels.
+- **Error messages say what happened and how to fix it**, next to the field and in the error summary with the same words, in plain and positive language: "Nhập email theo dạng ten@vidu.com", "Mật khẩu cần ít nhất 8 ký tự", "Chọn ngày giao hàng". No blame, no "lỗi không xác định", no "không hợp lệ" without saying what is valid, no error codes alone, no humor, and keep what the user typed.
+- **Empty states teach the next step:** what will appear here, and the button that creates the first item. "Chưa có đơn nào. Đơn từ Shopee và Facebook sẽ hiện ở đây sau khi bạn kết nối kênh bán." plus "Kết nối kênh bán".
+- **Confirmations name the consequence:** "Xoá danh mục Cà phê hạt? 24 sản phẩm sẽ chuyển sang Chưa phân loại." Buttons "Xoá danh mục" and "Giữ lại", never "Có" and "Không".
+- **Success and status messages are specific and brief:** "Đã lưu lúc 14:32", "Đã gửi lời mời tới lan@shop.vn". No celebration on routine actions.
+- **Tone follows the situation** (Atlassian): practical always; warmth only at success moments; drop all playfulness when the user is stressed, blocked, or losing money.
+- **Never rely on color or position** in instructions ("bấm nút xanh bên phải"). Name the control.
+- **Links make sense alone** ("Xem chính sách đổi trả"), and acronyms are spelled out on first use on each page.
+- **Sentence case** everywhere, as in the punctuation rules above.
+
 ## The test (run before locking copy)
 
 1. **Read it aloud.** Anything you would never say to a customer's face, cut. This catches most tells faster than any list.
@@ -71,5 +88,6 @@ Enforce it:
 3. **Source-check:** every proof, number, testimonial, and superlative maps to a fact ID. No source → no claim. Never invent reviews, counts, or awards to make a section feel finished.
 4. **CTA-in-isolation:** read each button label with no surrounding design. It must name what happens next.
 5. **Cadence column** (the rule above): headings/subheads/CTAs listed together read varied, not templated.
+6. **Error-in-isolation:** read each error and empty-state message alone. It must say what happened and what to do, in words the audience uses.
 
 Record ban-list hits and their fixes in the critique ledger. A page whose copy passes visual gates but loops or trips the hero-level bans is not `CREATIVE REVIEW READY`.

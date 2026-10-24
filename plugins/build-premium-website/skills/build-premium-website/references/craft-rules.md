@@ -10,7 +10,7 @@ When the host agent has a richer interactive design skill available (for example
 
 ### Contrast and color
 
-- Body text contrast ≥ 4.5:1 against its real rendered background; large text (≥ 18px, or bold ≥ 14px) ≥ 3:1. Placeholder text obeys the same 4.5:1: the muted-gray placeholder default fails.
+- Body text contrast ≥ 4.5:1 against its real rendered background; large text (≥ 24px, or bold ≥ 18.66px: WCAG defines large as 18pt / 14pt bold, not px) ≥ 3:1. Placeholder text obeys the same 4.5:1: the muted-gray placeholder default fails.
 - Gray text on a colored background is a defect. Use a darker shade of the background's own hue, or a transparency of the ink color.
 - Express colors in OKLCH (or another perceptual space) in tokens. Tinted neutrals take 0.005–0.015 chroma toward the brand's own hue, never a generic warm or cool tint "because the brand feels warm."
 - Choose a color strategy before choosing colors, and record it: `RESTRAINED` (neutrals + one accent ≤ 10% of surface), `COMMITTED` (one saturated color carries 30–60%), `FULL_PALETTE` (3–4 named roles used deliberately), or `DRENCHED` (the surface is the color). Product surfaces default to `RESTRAINED`; identity-led landing surfaces should justify staying below `COMMITTED`.

@@ -1,6 +1,6 @@
 ---
 name: build-premium-website
-description: Build, redesign, audit, or polish premium landing and brand sites, product UI, or hybrid marketing-to-product experiences. Use for landing pages, campaigns, portfolios, editorial and docs sites, pricing pages, SaaS dashboards, admin panels, internal tools, back-office and ops consoles, CRM, helpdesk and inbox, project and task tools, analytics, billing and finance, commerce and POS, HR, scheduling, CMS and wiki, canvas editors, AI chat and agent UI, LMS, navigation, tables, forms, charts, onboarding, settings, permissions, animation, GSAP, Three.js/WebGL, responsive UI, accessibility, and anti-template review. Routes every task through LANDING_BRAND, DASHBOARD_PRODUCT, or HYBRID with archetype pattern defaults, route-specific evidence, and production gates.
+description: Build, redesign, audit, or polish premium landing and brand sites, product UI, or hybrid marketing-to-product experiences, grounded in human factors, usability heuristics, and WCAG 2.2 AA. Use for landing pages, campaigns, portfolios, editorial and docs sites, pricing pages, SaaS dashboards, admin panels, internal tools, back-office and ops consoles, CRM, helpdesk and inbox, project and task tools, analytics, billing and finance, commerce and POS, HR, scheduling, CMS and wiki, canvas editors, AI chat and agent UI, LMS, storefronts and checkout, navigation, tables, forms, charts, onboarding, settings, permissions, animation, GSAP, Three.js/WebGL, responsive UI, accessibility, UX psychology and usability review, user research plans, UX writing, and anti-template review. Routes every task through LANDING_BRAND, DASHBOARD_PRODUCT, or HYBRID with archetype pattern defaults, route-specific evidence, and production gates.
 license: Apache-2.0. Copyright (c) 2026 ByteWaker. Redistribution must retain LICENSE, NOTICE, and copyright notices. Canonical source github.com/tdat-dev/premium-web
 ---
 
@@ -12,10 +12,11 @@ Treat `100k-quality` as an aspirational level of care, not a valuation, award, r
 
 A status report is invalid unless it quotes, from the final build:
 
-1. the `RENDER-CHECK` summary line of [scripts/render-check.mjs](scripts/render-check.mjs) with every non-zero count fixed or dispositioned (for craft counts, text over media and intentionally closed menus are the only accepted dispositions; slop signals need a project fact from the decision record), or `render-check: unavailable (reason)` with status capped at `NOT PRODUCTION READY`;
+1. the `RENDER-CHECK` summary line of [scripts/render-check.mjs](scripts/render-check.mjs) with every non-zero count fixed or dispositioned: for craft counts, text over media and intentionally closed menus are the only accepted dispositions; slop signals need a project fact from the decision record; the `a11y:` counts accept only the dispositions listed in [references/accessibility-inclusive.md](references/accessibility-inclusive.md) (a closed menu never excuses `focus_hidden`), or `render-check: unavailable (reason)` with status capped at `NOT PRODUCTION READY`;
 2. the `BLOCKER_CANDIDATE` / `ADVISORY` counts of [scripts/audit-ai-slop.mjs](scripts/audit-ai-slop.mjs) with each blocker candidate dispositioned;
 3. the filled Slop sweep from the critique ledger;
-4. the fresh-eyes reviewer's verdict (or `fresh-eyes: unavailable` and the cap).
+4. the fresh-eyes reviewer's verdict (or `fresh-eyes: unavailable` and the cap);
+5. the filled Human-factors pass and heuristic evaluation, and the manual accessibility script results, each UX claim carrying its evidence level (`MEASURED`, `OBSERVED`, `SIMULATED`, `USER-TESTED`, `ANALYTICS`, `ASSUMED`).
 
 Every control a build renders as interactive (buttons, tabs, toggles, map nodes, accordions) must be pressed at least once in a real browser before reporting; `render-check` lists controls with no listener as `dead_controls`, but a listener that does the wrong thing is only caught by using it. Counting by eye does not replace the scripts: builders' manual counts of em-dashes and contrast have been wrong by a factor of three.
 
@@ -32,9 +33,15 @@ After dispatch, load the mandatory route contract:
 - `DASHBOARD_PRODUCT`: [references/dashboard-product-contract.md](references/dashboard-product-contract.md)
 - `HYBRID`: both contracts above plus [references/hybrid-contract.md](references/hybrid-contract.md)
 
-For every `DASHBOARD_PRODUCT` task and the product side of every `HYBRID` task, load [references/patterns/index.md](references/patterns/index.md), classify the product archetype there, and load the primary archetype file plus the cross-cutting pattern files for the surfaces in scope. For `LANDING_BRAND` work that includes pricing, feature, customers, changelog, contact, blog, legal, status, or docs pages, load the matching `references/patterns/landing/` file. Pattern files are the default anatomy, screen set, signature patterns, and archetype anti-patterns; deviations are recorded decisions, and adopted signature patterns need rendered evidence like any other gate item.
+For every `DASHBOARD_PRODUCT` task and the product side of every `HYBRID` task, load [references/patterns/index.md](references/patterns/index.md), classify the product archetype there, and load the primary archetype file plus the cross-cutting pattern files for the surfaces in scope. For `LANDING_BRAND` work that includes pricing, feature, customers, changelog, contact, blog, legal, status, docs, or shop pages (product list, search, product page, cart, checkout), load the matching `references/patterns/landing/` file. Whenever the `COMMERCE` modifier applies, on any route, load [references/patterns/landing/storefront-checkout.md](references/patterns/landing/storefront-checkout.md). Pattern files are the default anatomy, screen set, signature patterns, and archetype anti-patterns; deviations are recorded decisions, and adopted signature patterns need rendered evidence like any other gate item.
 
 Before designing or critiquing any visual surface, also load [references/craft-rules.md](references/craft-rules.md): the measurable floors and structural bans that make critique concrete. Its violations are severity-graded defects under the enforcement contract, not taste notes.
+
+Before designing or critiquing any surface on any route, also load the human-factors layer. It is the authority for whether people can actually use what was built, and its failures are graded defects like any other. Cadence: the Human-factors pass runs on every render pass of the changed surfaces; the heuristic evaluation, cognitive walkthrough, and manual accessibility script run once at final verification (step 6) and again only for surfaces a later fix touches. On the `LOCAL_CHANGE` fast path, apply only the HF rows and accessibility checks that the changed component can affect, plus the automated `a11y:` counts.
+
+- [references/human-factors.md](references/human-factors.md): perception, attention and scanning, cognitive load, mental models, memory, decision-making and deceptive patterns, trust, motivation, motor limits, response times; the four lines to write before designing a surface, the Human-factors pass (HF-01 to HF-14), and the heuristic evaluation.
+- [references/accessibility-inclusive.md](references/accessibility-inclusive.md): WCAG 2.2 AA as an automated floor, a manual test script, and a complete A/AA checklist, plus inclusive design, cognitive accessibility, and Vietnamese-language specifics. Production gate 4 is judged against it.
+- [references/ux-research-validation.md](references/ux-research-validation.md), for every task except `LOCAL_CHANGE`: the evidence levels every usability claim must carry, the agent-run evaluations (cognitive walkthrough, task scripts, simulated five-second, first-click, and tree tests), and the research plan to hand the owner for what only real users can answer.
 
 Before writing or reviewing any copy (headlines, body, CTAs, labels, empty/error states, alt text) on any route, load [references/copy-voice.md](references/copy-voice.md). It is the authority for human-sounding words (Vietnamese and English): the AI word/structure ban lists, punctuation rules, and the cadence-loop rule that stops every heading and CTA from sharing one template. Hero-level or looping AI-tone copy is a defect, not a style preference.
 
@@ -44,6 +51,7 @@ For greenfield work, creative art direction, or any task with substantial visual
 
 Read the remaining references only when relevant:
 
+- Use [references/source-library.md](references/source-library.md) to verify a rule or number at its source, to pick the design system to study for a component, or to choose reference galleries in step 2.
 - Use [references/awwwards-evidence-rubric.md](references/awwwards-evidence-rubric.md) when researching references or preparing a creative review package.
 - Use [references/media-contract-prompts.md](references/media-contract-prompts.md) before approving a media-led direction or when an asset is missing.
 - Use [references/motion-3d-decision.md](references/motion-3d-decision.md) before adding animation or 3D dependencies.
@@ -66,13 +74,13 @@ Do not use `AUDIT` as a surface route. A repository containing both a marketing 
 
 **`LOCAL_CHANGE` fast path.** When the scope is a single component, section, or small visual fix, skip the full decision record, reference research, structure catalog, and coverage matrix. Still required: the route contract's relevant gates, [references/craft-rules.md](references/craft-rules.md), rendered evidence of the changed surface in its surrounding page at the affected breakpoints, and the severity rules. The fast path changes the paperwork, never the quality bar. A change stops being local (exit the fast path and classify again) when it adds, removes, or reorders sections; changes the page grid, hero form, or navigation; or alters a step in a user journey. Adjusting values inside an existing element (spacing, color, type size, copy, one component's internal layout) stays local.
 
-Build a fact/claim/source map from the user, repository, existing product, supplied assets, and verified URLs. Label assumptions. Never invent proof, customers, metrics, testimonials, capabilities, rights, or research.
+Write the four human-factors lines for each primary surface (who and where, the one job, what they already know, what makes them quit) per [references/human-factors.md](references/human-factors.md). Build a fact/claim/source map from the user, repository, existing product, supplied assets, and verified URLs. Label assumptions. Never invent proof, customers, metrics, testimonials, capabilities, rights, or research.
 
 Use [assets/decision-record.template.md](assets/decision-record.template.md) to record the route, work mode, constraints, alternatives, chosen direction, rejected defaults, risks, and exceptions. Also complete the route evidence template required by [references/route-dispatch.md](references/route-dispatch.md).
 
 ### 2. Research without copying
 
-When web access exists, browse 3-5 recent references selected for the actual industry, content model, interaction, or technical problem. Prefer direct project pages and rendered evidence. Record the URL, access date, relevance, transferable principle, and originality boundary. Never copy a signature composition, interaction, identity, copy line, or asset bundle.
+When web access exists, browse 3-5 recent references (choose galleries and design systems with [references/source-library.md](references/source-library.md)) selected for the actual industry, content model, interaction, or technical problem. Prefer direct project pages and rendered evidence. Record the URL, access date, relevance, transferable principle, and originality boundary. Never copy a signature composition, interaction, identity, copy line, or asset bundle.
 
 When browsing is unavailable, request links or screenshots and mark the evidence gap. Never fabricate references, dates, awards, or scores.
 
@@ -103,7 +111,7 @@ For each implementation slice:
 1. Define its job, content, focal order, assets, states, responsive risks, motion, and failure behavior.
 2. Build the smallest complete slice with semantic structure and progressive enhancement.
 3. Run the real experience and capture the states required by the coverage matrix.
-4. Critique observable outcomes in the order defined by the enforcement contract, run [scripts/render-check.mjs](scripts/render-check.mjs) (screenshots at 1440 and 390, overflow, contrast, word stacking, no-JS visibility, broken images, JS errors) and [scripts/audit-ai-slop.mjs](scripts/audit-ai-slop.mjs) on the build, and fill the **Slop sweep** in the critique ledger from the screenshots.
+4. Critique observable outcomes in the order defined by the enforcement contract, run [scripts/render-check.mjs](scripts/render-check.mjs) (screenshots at 1440 and 390, overflow, contrast, word stacking, no-JS visibility, broken images, JS errors, target size, accessible names, and a real Tab pass for focus visibility and obscuring) and [scripts/audit-ai-slop.mjs](scripts/audit-ai-slop.mjs) on the build, and fill the **Slop sweep** and the **Human-factors pass** in the critique ledger from the screenshots.
 5. Record defects and before/after evidence in [assets/critique-ledger.template.md](assets/critique-ledger.template.md).
 6. Repeat until no unhandled P0 or P1 defect remains.
 
@@ -113,7 +121,7 @@ Do not approve work from source code or a single beauty screenshot.
 
 ### 6. Verify production before creative review
 
-Test the primary journey, keyboard operation, focus, labels, contrast, zoom/reflow, reduced motion, loading/error/empty states, slow network, missing media, animation failure, and responsive behavior where applicable. Measure performance with the environment labeled. Treat Lighthouse and Core Web Vitals as diagnostics, not proof of field performance or visual quality.
+Test the primary journey, run the heuristic evaluation and cognitive walkthrough ([references/ux-research-validation.md](references/ux-research-validation.md)), run the manual accessibility script in [references/accessibility-inclusive.md](references/accessibility-inclusive.md) (keyboard, zoom and reflow, text spacing, screen reader smoke test, color, motion, hover content, forms and authentication, media, forced colors), and check focus, labels, contrast, reduced motion, loading/error/empty states, slow network, missing media, animation failure, and responsive behavior where applicable. Measure performance with the environment labeled. Treat Lighthouse and Core Web Vitals as diagnostics, not proof of field performance or visual quality.
 
 Run [scripts/audit-ai-slop.mjs](scripts/audit-ai-slop.mjs) on every build that contains supported text-based frontend sources, on every render pass. Its findings are candidates, not authority on originality or release, but every `BLOCKER_CANDIDATE` must be dispositioned in the critique ledger (fixed, or false positive with reason); an undispositioned one is an open `P1`.
 
@@ -135,7 +143,7 @@ Report:
 5. technology choices and rejected alternatives;
 6. coverage matrix, rendered evidence, and critique ledger;
 7. P0/P1/P2 defects, accepted exceptions, owners, and next actions;
-8. accessibility, responsive, performance, and runtime-failure evidence;
+8. accessibility (automated counts plus the manual script), human-factors pass, heuristic evaluation, responsive, performance, and runtime-failure evidence, with every usability claim labeled by evidence level and a research plan for what only real users can confirm;
 9. each applicable route-specific gate and the cross-surface gate for `HYBRID`;
 10. the advisory Awwwards-style review, clearly separated from production gates;
 11. ambition-gate results (A-E: satisfied / waived-with-reason / failed) and the resulting creative cap, when the gates applied;

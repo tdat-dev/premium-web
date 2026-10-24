@@ -30,6 +30,7 @@
 | Interaction, motion, and reduced motion |  |  |  |
 | Responsive and input behavior |  |  |  |
 | Accessibility |  |  |  |
+| Human factors (perception, load, memory, decisions, motor, feedback) |  |  |  |
 | Performance and runtime failure |  |  |  |
 | Reflex-registry signals |  |  |  |
 
@@ -56,6 +57,51 @@ Fill every row from the rendered screenshots at each tested width, not from inte
 | SW-16 | Interaction truth: every signature interaction and every visible control exercised in a browser; `dead_controls` and `text_collisions` are 0 |  |  |
 | SW-15 | Default state: the first load shows the state the brief asks for (a selected record in a split pane, real data in every panel), not an empty pane waiting for a click |  |  |
 
+## Human-factors pass (required on every render pass)
+
+From [human-factors.md](../references/human-factors.md) section 11. `PRESENT` rows become defects.
+
+| ID | Check | Result `ABSENT / PRESENT / N/A` | Where checked (screenshot + region) |
+| --- | --- | --- | --- |
+| HF-01 | Five-second read differs from the surface's job line (record the reviewer's words) |  |  |
+| HF-02 | Squint test: primary action or groups unclear when blurred |  |  |
+| HF-03 | Grouping lies: gaps or label placement suggest the wrong groups |  |  |
+| HF-04 | Look-alike elements behave differently (static badge styled as a button, link styled as text) |  |  |
+| HF-05 | Essential content or the primary action in an ad-shaped container or auto-rotating carousel |  |  |
+| HF-06 | Competing primary actions; recommended option without a reason |  |  |
+| HF-07 | Recall required across steps; placeholder used as label |  |  |
+| HF-08 | Broken convention on a basic control without a recorded reason |  |  |
+| HF-09 | Deceptive pattern: hidden cost, preselection, asymmetric cancel, confirmshaming, fake urgency or scarcity |  |  |
+| HF-10 | Irreversible action without a named consequence; reversible action without undo |  |  |
+| HF-11 | Targets under floor, hover-only reveals, drag without alternative |  |  |
+| HF-12 | Waits without status or progress; save and sync state invisible |  |  |
+| HF-13 | Dead-end success or end state |  |  |
+| HF-14 | Vocabulary differs from the audience's words; unlabeled non-universal icons |  |  |
+
+## Heuristic evaluation and walkthrough (once at final verification, per primary journey)
+
+| Heuristic (Nielsen) | Screen | Observed problem | NN/g severity 0-4 | Ledger severity |
+| --- | --- | --- | --- | --- |
+|  |  |  |  |  |
+
+Cognitive walkthrough: for each step, the four answers (right goal? control noticed? label matches intent? progress visible?) and any "no" as a defect.
+
+## Accessibility manual script (once at final verification; `unavailable (reason)` caps status at NOT PRODUCTION READY)
+
+| Step ([accessibility-inclusive.md](../references/accessibility-inclusive.md) section 2) | Result | Evidence |
+| --- | --- | --- |
+| 1 Keyboard only (primary journey, overlays, skip link, no trap) |  |  |
+| 2 Zoom 200% and reflow at 320px |  |  |
+| 3 Text spacing |  |  |
+| 4 Screen reader smoke test (reader and browser used) |  |  |
+| 5 Color-only information, non-text contrast, text over media |  |  |
+| 6 Reduced motion, pause, flashes, time limits |  |  |
+| 7 Hover and focus content |  |  |
+| 8 Forms, errors, redundant entry, authentication, autocomplete |  |  |
+| 9 Media captions and alternatives |  |  |
+| 10 Forced colors |  |  |
+
+- Evidence level of each usability claim in the report (`MEASURED / OBSERVED / SIMULATED / USER-TESTED / ANALYTICS / ASSUMED`):
 - `render-check.mjs` summary line (quoted verbatim):
 - `audit-ai-slop.mjs` run (command, BLOCKER_CANDIDATE and ADVISORY counts):
 - Disposition of every BLOCKER_CANDIDATE (fixed / false positive with reason):

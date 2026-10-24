@@ -235,7 +235,7 @@ Coverage requirements:
 
 ## 11. Section critique and defect ledger
 
-Critique rendered evidence in this order: job and five-second read, content truth, hierarchy, geometry, typography, color/contrast, media, interaction/motion, responsive behavior, accessibility, performance/failure behavior.
+Critique rendered evidence in this order: job and five-second read, content truth, hierarchy, geometry, typography, color/contrast, media, interaction/motion, human factors (the Human-factors pass and heuristic evaluation in [human-factors.md](human-factors.md)), responsive behavior, accessibility, performance/failure behavior.
 
 ```yaml
 section:
@@ -300,11 +300,12 @@ Creative scores never compensate for these gates:
 1. **Truth and rights:** public claims are sourced; asset provenance/rights and required disclosures are known.
 2. **Primary journey:** the main action and essential comprehension work in the rendered product.
 3. **Evidence coverage:** every changed surface and material risk maps to a tested artifact or an explicit open defect.
-4. **Accessibility:** semantics, keyboard, focus, labels, contrast, zoom/reflow, and reduced-motion behavior meet the applicable WCAG 2.2 AA requirements.
+4. **Accessibility:** semantics, keyboard, focus, labels, contrast, zoom/reflow, and reduced-motion behavior meet the applicable WCAG 2.2 AA requirements, evidenced by the automated floor and the manual test script in [accessibility-inclusive.md](accessibility-inclusive.md).
 5. **Responsive integrity:** content order, controls, crop, overflow, orientation, and breakpoint transitions preserve meaning.
 6. **Runtime resilience:** essential content/actions survive missing media and animation/runtime failure; error/loading/empty states remain understandable where applicable.
 7. **Performance fitness:** the approved budget and delivery strategy are measured in a labeled environment; lab data is not presented as field data.
 8. **Defect authority:** no P0 or P1-N remains; every retained P1-P has a valid external exception.
 9. **Route contract:** every applicable `LANDING_BRAND`, `DASHBOARD_PRODUCT`, and `HYBRID` sub-gate has evidence and is met.
+10. **Human factors:** the Human-factors pass and the heuristic evaluation are filled from rendered evidence with no open `P0`/`P1-N` row; no deceptive pattern is present; every usability claim carries an evidence level from [ux-research-validation.md](ux-research-validation.md), and simulated results are never reported as user research.
 
 When all objective and applicable route-specific gates are met, report `PRODUCTION GATE MET`. Prepare rendered artifacts for an independent creative review. Only after that package is complete may the AI report `CREATIVE REVIEW READY`.
