@@ -17,7 +17,7 @@ import { tmpdir, homedir } from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-const VERSION = '1.4.0';
+const VERSION = '1.4.1';
 const args = process.argv.slice(2);
 const asJson = args.includes('--json');
 const positional = args.filter((a) => !a.startsWith('--'));
@@ -246,7 +246,8 @@ const MEASURE = `(() => {
     const lb = el.getAttribute('aria-labelledby'); if (lb) { const t = lb.split(' ').map((id) => document.getElementById(id)?.textContent || '').join(' ').trim(); if (t) return t; }
     const al = (el.getAttribute('aria-label') || '').trim(); if (al) return al;
     if (el.labels && el.labels.length) { const t = [...el.labels].map((l) => l.textContent).join(' ').trim(); if (t) return t; }
-    if (el.tagName === 'INPUT' && /^(submit|button|reset)$/.test(el.type)) return (el.value || '').trim();
+    if (el.tagName === 'INPUT' && /^(submit|reset)$/.test(el.type)) return (el.value || '').trim() || el.type;
+    if (el.tagName === 'INPUT' && el.type === 'button') return (el.value || '').trim();
     if (el.tagName === 'INPUT' && el.type === 'image') return (el.alt || '').trim();
     if (!/^(INPUT|SELECT|TEXTAREA)$/.test(el.tagName)) { const t = (el.innerText || el.textContent || '').trim(); if (t) return t; const alt = [...el.querySelectorAll('img[alt], svg title, [aria-label]')].map((n) => n.getAttribute('alt') || n.getAttribute('aria-label') || n.textContent).join(' ').trim(); if (alt) return alt; }
     return (el.getAttribute('title') || '').trim();
@@ -262,9 +263,12 @@ const MEASURE = `(() => {
   const targets = [];
   for (const el of document.body.querySelectorAll(targetSel)) {
     let box = el;
-    // A visually hidden native input is operated through its label: measure the label.
-    if (el.tagName === 'INPUT' && !shown(el)) { box = el.labels && [...el.labels].find(shown); if (!box) continue; }
+    const choice = el.tagName === 'INPUT' && /^(checkbox|radio)$/.test(el.type);
+    // A checkbox or radio is operated through its label too (and a hidden one only through it): measure the visible label.
+    if (choice || (el.tagName === 'INPUT' && !shown(el))) { const lab = el.labels && [...el.labels].find(shown); if (lab) box = lab; else if (!shown(el)) continue; }
     else if (!shown(el)) continue;
+    // 2.5.8 user-agent exception: an unlabeled native control left at its browser size is not an author target size.
+    if (box === el && getComputedStyle(el).appearance !== 'none' && (choice || el.tagName === 'SELECT' || /^(range|color|date|time|datetime-local|month|week|file)$/.test(el.type || ''))) continue;
     if (targets.some((t) => t.box === box)) continue;
     const r = box.getBoundingClientRect();
     // 2.5.8 inline exception: a link inside a sentence or block of text.
@@ -286,11 +290,14 @@ const MEASURE = `(() => {
   const docBasics = [];
   if (!(document.documentElement.getAttribute('lang') || '').trim()) docBasics.push('html has no lang (3.1.1; Vietnamese pages need lang="vi" for screen readers and hyphenation)');
   if (!(document.title || '').trim()) docBasics.push('page has no <title> (2.4.2)');
-  if (!document.querySelector('h1, [role=heading][aria-level="1"]')) docBasics.push('no h1: the page has no top heading for screen-reader navigation');
-  if (document.querySelector('meta[name=viewport][content*="user-scalable=no"], meta[name=viewport][content*="maximum-scale=1"]')) docBasics.push('viewport blocks zoom (1.4.4)');
+  const docAdvisory = [];
+  if (!document.querySelector('h1, [role=heading][aria-level="1"]')) docAdvisory.push('no h1: the page has no top heading for screen-reader navigation (advisory, not a WCAG failure)');
+  const vp = ((document.querySelector('meta[name=viewport]') || { getAttribute: () => '' }).getAttribute('content') || '').toLowerCase().replace(/ /g, '');
+  const us = (vp.match(/user-scalable=([^,;]+)/) || [])[1]; const ms = parseFloat((vp.match(/maximum-scale=([^,;]+)/) || [])[1]);
+  if (us === 'no' || us === '0' || (!isNaN(ms) && ms < 2)) docBasics.push('viewport blocks zoom (1.4.4): ' + vp);
   const broken = [...document.images].filter((i) => i.complete && i.naturalWidth === 0 && i.getBoundingClientRect().width > 0).map((i) => i.getAttribute('src'));
   const doc = document.documentElement;
-  return { pageHeight: doc.scrollHeight, overflowX: Math.max(0, doc.scrollWidth - (window.__rcWidth || innerWidth)), contrast, stacking, hidden, broken, warmNeutralBody, bodyOklch: bgLch, nested: nested.slice(0, 20), emoji: emoji.slice(0, 20), collisions, clipped, navHidden, progressEmpty, unnamed: unnamed.slice(0, 30), placeholderLabels: placeholderLabels.slice(0, 20), smallTargets, imgNoAlt: imgNoAlt.slice(0, 20), docBasics, textLength: (document.body.innerText || "").trim().length };
+  return { pageHeight: doc.scrollHeight, overflowX: Math.max(0, doc.scrollWidth - (window.__rcWidth || innerWidth)), contrast, stacking, hidden, broken, warmNeutralBody, bodyOklch: bgLch, nested: nested.slice(0, 20), emoji: emoji.slice(0, 20), collisions, clipped, navHidden, progressEmpty, unnamed: unnamed.slice(0, 30), placeholderLabels: placeholderLabels.slice(0, 20), smallTargets, imgNoAlt: imgNoAlt.slice(0, 20), docBasics, docAdvisory, controlCount: targets.length, textLength: (document.body.innerText || "").trim().length };
 })()`;
 
 // Controls that look interactive but have no click/key listener on themselves or any ancestor.
@@ -322,17 +329,28 @@ async function keyboardPass(limit = 60) {
   await evaluate(`(() => {
     if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); scrollTo(0, 0);
     const sig = (el, p) => { if (!el || el.nodeType !== 1) return ''; const cs = getComputedStyle(el, p); return [cs.outlineStyle, cs.outlineWidth, cs.outlineColor, cs.boxShadow, cs.borderColor, cs.backgroundColor, cs.color, cs.textDecorationLine, cs.opacity, cs.transform].join('|'); };
-    window.__rcFull = (el) => [sig(el), sig(el, '::before'), sig(el, '::after'), sig(el.parentElement), sig(el.parentElement && el.parentElement.parentElement)].join('#');
+    // Focus rings are often drawn on a sibling (input:focus-visible + span), the label, or a wrapper: include them.
+    window.__rcFull = (el) => [sig(el), sig(el, '::before'), sig(el, '::after'), sig(el.parentElement), sig(el.parentElement && el.parentElement.parentElement), sig(el.nextElementSibling), sig(el.nextElementSibling, '::before'), sig(el.nextElementSibling, '::after'), ...[...(el.labels || [])].map((l) => sig(l) + sig(l, '::before') + sig(l, '::after'))].join('#');
+    window.__rcDeep = (el) => { while (el && el.shadowRoot && el.shadowRoot.activeElement) el = el.shadowRoot.activeElement; return el; };
     window.__rcBase = new Map(); for (const el of document.querySelectorAll('a[href], button, input, select, textarea, summary, [tabindex]')) window.__rcBase.set(el, window.__rcFull(el));
-    window.__rcSeen = new Set(); return true; })()`);
-  const issues = { invisible: [], obscured: [], hidden: [] }; let stops = 0;
+    window.__rcSeen = new Set(); window.__rcPrev = null; return true; })()`);
+  const issues = { invisible: [], obscured: [], hidden: [] }; let stops = 0; let truncated = ''; let pressTab = true;
   for (let i = 0; i < limit; i++) {
-    for (const type of ['keyDown', 'keyUp']) await send('Input.dispatchKeyEvent', { type, key: 'Tab', code: 'Tab', windowsVirtualKeyCode: 9, nativeVirtualKeyCode: 9 });
+    // After hopping over an iframe, focus already sits on the next element: judge it before pressing Tab again.
+    if (pressTab) for (const type of ['keyDown', 'keyUp']) await send('Input.dispatchKeyEvent', { type, key: 'Tab', code: 'Tab', windowsVirtualKeyCode: 9, nativeVirtualKeyCode: 9 });
+    pressTab = true;
     await sleep(90);
     const s = await evaluate(`(async () => {
-      const el = document.activeElement; if (!el || el === document.body || el === document.documentElement) return { end: true };
-      if (window.__rcSeen.has(el)) return { end: true }; window.__rcSeen.add(el);
-      if (el.tagName === 'IFRAME') return { skip: true };
+      const host = document.activeElement; if (!host || host === document.body || host === document.documentElement) return { end: true };
+      if (host.tagName === 'IFRAME') {
+        // Tab now walks inside the frame; jump focus to the next focusable element after it so the outer pass continues.
+        const all = [...document.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]):not([type=hidden]), select, textarea, summary, iframe, [tabindex]:not([tabindex="-1"])')];
+        const next = all.slice(all.indexOf(host) + 1).find((n) => n.getClientRects().length && !window.__rcSeen.has(n));
+        window.__rcSeen.add(host); if (next) { next.focus(); return { skip: true, iframe: true }; } return { end: true, iframe: true };
+      }
+      const el = window.__rcDeep(host);
+      if (el === window.__rcPrev) return { end: true, stuck: true };
+      if (window.__rcSeen.has(el)) return { end: true }; window.__rcSeen.add(el); window.__rcPrev = el;
       let name = el.tagName.toLowerCase(); if (el.id) name += '#' + el.id; else if (el.classList.length) name += '.' + [...el.classList].slice(0, 2).join('.');
       name += ' "' + ((el.getAttribute('aria-label') || el.innerText || el.value || '') + '').trim().slice(0, 30) + '"';
       // Wait out smooth scrolling and focus transitions (skip links sliding in) before judging.
@@ -340,22 +358,27 @@ async function keyboardPass(limit = 60) {
       for (let k = 0; k < 12; k++) { const q = el.getBoundingClientRect(); const key = [q.left, q.top, q.width, q.height, getComputedStyle(el).opacity].map((v) => Math.round(v * 10)).join(','); if (key === prev) break; prev = key; await wait(80); }
       // A flow element just below the fold is reachable: bring it into view the way a browser would. Fixed/offset drawers stay where they are.
       { const q = el.getBoundingClientRect(); if (q.top >= innerHeight || q.bottom <= 0) { el.scrollIntoView({ block: 'nearest', behavior: 'instant' }); await wait(60); } }
-      const r = el.getBoundingClientRect(); const cs = getComputedStyle(el); let op = 1; for (let n = el; n && n.nodeType === 1; n = n.parentElement) op *= parseFloat(getComputedStyle(n).opacity);
+      // A visually hidden checkbox/radio (sr-only, opacity 0) is seen through its label or the styled sibling after it.
+      let box = el; if (el.tagName === 'INPUT' && /^(checkbox|radio)$/.test(el.type)) { const q0 = el.getBoundingClientRect(); let o0 = 1; for (let n = el; n && n.nodeType === 1; n = n.parentElement) o0 *= parseFloat(getComputedStyle(n).opacity); if (q0.width < 2 || q0.height < 2 || o0 < 0.1) { const alt = [...(el.labels || [])].find((l) => l.getClientRects().length) || el.nextElementSibling; if (alt) box = alt; } }
+      const r = box.getBoundingClientRect(); const cs = getComputedStyle(box); let op = 1; for (let n = box; n && n.nodeType === 1; n = n.parentElement) op *= parseFloat(getComputedStyle(n).opacity);
       const hidden = r.width < 2 || r.height < 2 || cs.visibility === 'hidden' || op < 0.1 || r.bottom <= 0 || r.right <= 0 || r.top >= innerHeight || r.left >= innerWidth;
       let covered = 0, sampled = 0;
       if (!hidden) for (const [fx, fy] of [[0.5, 0.5], [0.15, 0.2], [0.85, 0.2], [0.15, 0.8], [0.85, 0.8]]) {
         const x = r.left + r.width * fx, y = r.top + r.height * fy; if (x < 0 || y < 0 || x >= innerWidth || y >= innerHeight) continue; sampled++;
-        const hit = document.elementFromPoint(x, y); if (!hit || hit === el || el.contains(hit) || hit.contains(el)) continue;
+        const hit = document.elementFromPoint(x, y); if (!hit || hit === el || hit === host || hit === box || el.contains(hit) || box.contains(hit) || hit.contains(el) || host.contains(hit)) continue;
         for (let n = hit; n && n.nodeType === 1; n = n.parentElement) { const pz = getComputedStyle(n).position; if (pz === 'fixed' || pz === 'sticky') { covered++; break; } }
       }
       const base = window.__rcBase.get(el); const invisible = !hidden && base !== undefined && base === window.__rcFull(el);
       return { name, hidden, obscured: sampled > 0 && covered === sampled, invisible };
     })()`);
-    if (s.end) break; if (s.skip) continue; stops++;
+    if (s.iframe) truncated = truncated || 'passed over iframe content (check focus inside embeds by hand)';
+    if (s.stuck) truncated = 'focus stopped moving (possible keyboard trap or focus forced back)';
+    if (s.end) break; if (s.skip) { if (s.iframe) pressTab = false; continue; } stops++;
+    if (i === limit - 1) truncated = 'stopped at the ' + limit + '-stop cap; later controls were not tabbed';
     if (s.hidden) issues.hidden.push(s.name); else if (s.obscured) issues.obscured.push(s.name); else if (s.invisible) issues.invisible.push(s.name);
   }
   await evaluate('(() => { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); scrollTo(0, 0); return true; })()');
-  return { stops, ...issues };
+  return { stops, truncated, ...issues };
 }
 
 async function run(name, width, height, mobile, { js = true, shots = true } = {}) {
@@ -382,7 +405,6 @@ async function run(name, width, height, mobile, { js = true, shots = true } = {}
     await send('Runtime.evaluate', { expression: 'scrollTo(0,0)' });
   }
   m.deadControls = js && !mobile ? await deadControls() : [];
-  m.keyboard = js && !mobile ? await keyboardPass() : { stops: 0, invisible: [], obscured: [], hidden: [] };
   m.scrollAnimated = js ? await evaluate(`(() => { const changed = (window.__rcPre || []).filter(([el, op, tf]) => { const cs = getComputedStyle(el); return Math.abs(parseFloat(cs.opacity) - parseFloat(op)) > 0.2 || cs.transform !== tf; }).map(([el]) => el); return changed.filter((el) => !changed.some((o) => o !== el && o.contains(el))).length; })()`) : 0;
   const files = [];
   if (shots) {
@@ -397,6 +419,8 @@ async function run(name, width, height, mobile, { js = true, shots = true } = {}
       }
     }
   }
+  // Tab pass last, so focus side effects (menus opened by :focus-within, scroll) never leak into the captures above.
+  m.keyboard = js && !mobile ? await keyboardPass() : { stops: 0, truncated: '', invisible: [], obscured: [], hidden: [] };
   return { name, width, ...m, files };
 }
 
@@ -439,6 +463,7 @@ const report = {
     focus_invisible: desktop.keyboard.invisible.length,
     focus_obscured: desktop.keyboard.obscured.length,
     focus_hidden: desktop.keyboard.hidden.length,
+    keyboard_unreachable: desktop.keyboard.stops === 0 && desktop.controlCount > 0 ? 1 : 0,
   },
   details: {
     jsErrors,
@@ -461,6 +486,7 @@ const report = {
     placeholderLabels: [...desktop.placeholderLabels, ...mobile.placeholderLabels].slice(0, 20),
     imgMissingAlt: [...new Set([...desktop.imgNoAlt, ...mobile.imgNoAlt])],
     docBasics: desktop.docBasics,
+    docAdvisory: desktop.docAdvisory,
     keyboard: desktop.keyboard,
   },
   screenshots: [...desktop.files, ...mobile.files, ...nojs.files],
@@ -476,15 +502,15 @@ const report = {
     'Slop signals (scroll_animated, nested_boxes, emoji_icons, warm_neutral_body) are counts to disposition, not verdicts: scroll_animated >= 5 is the reveal-everywhere tell (craft ban 14), nested_boxes > 0 is box-in-box-in-box (ban 11), emoji_icons > 0 is S-33, warm_neutral_body = 1 is ban 8 unless the brand record justifies it.',
     'small_targets lists pointer targets under 24x24 CSS px that also fail the WCAG 2.5.8 spacing exception (inline links in running text are exempt); touch-first surfaces should still aim for 44px (Apple) / 48dp (Material).',
     'unnamed_controls lists links, buttons, and fields with no accessible name (icon-only buttons without aria-label, inputs without a label); placeholder_labels lists fields whose only label is placeholder text, which disappears on input.',
-    'focus_* come from pressing Tab up to 60 times on the desktop render: focus_invisible = focus moved but nothing on the element, its pseudo-elements, or its two nearest ancestors changed (2.4.7); focus_obscured = every sampled point of the focused element sits under a fixed/sticky layer (2.4.11); focus_hidden = focus landed on something invisible or off-screen (closed menu links, hidden drawers). focus_stops = 0 on a page with controls means the keyboard cannot reach them.',
-    'doc_basics flags a missing lang or <title>, no h1, and a viewport that blocks zoom. img_missing_alt counts images with no alt attribute at all (alt="" is a valid decorative mark).',
+    'focus_* come from pressing Tab up to 60 times on the desktop render: focus_invisible = focus moved but nothing on the element, its pseudo-elements, or its two nearest ancestors changed (2.4.7); focus_obscured = every sampled point of the focused element sits under a fixed/sticky layer (2.4.11); focus_hidden = focus landed on something invisible or off-screen (closed menu links, hidden drawers). keyboard_unreachable = 1 means Tab never reached any of the page controls (2.1.1). details.keyboard.truncated says when the pass stopped early (iframe, trap, or the 60-stop cap); focus inside embeds and after the cap is checked by hand. Shadow DOM focus is followed into open shadow roots; rings drawn further away than the element, its pseudo-elements, next sibling, labels, and two ancestors show as focus_invisible and need a screenshot to disposition.',
+    'doc_basics flags a missing lang or <title> and a viewport that blocks zoom (user-scalable=no/0 or maximum-scale below 2); a missing h1 is printed as an advisory and does not fail the run. small_targets skips unlabeled native checkboxes, radios, selects, and pickers left at browser size (2.5.8 user-agent exception) and measures a labeled checkbox or radio by its label. img_missing_alt counts images with no alt attribute at all (alt="" is a valid decorative mark).',
     'A clean report proves only these measurements. It does not judge design quality or slop.',
   ],
 };
 writeFileSync(path.join(outDir, 'render-check.json'), JSON.stringify(report, null, 2));
 
 const s = report.summary;
-const line = `RENDER-CHECK ${VERSION}: overflow_desktop=${s.overflow_desktop} overflow_mobile=${s.overflow_mobile} js_errors=${s.js_errors} contrast_failures=${s.contrast_failures} word_stacking=${s.word_stacking} text_collisions=${s.text_collisions} clipped_content=${s.clipped_content} dead_controls=${s.dead_controls} assert_failures=${s.assert_failures} nav_hidden_desktop=${s.nav_hidden_desktop} progress_empty=${s.progress_empty} blank_page=${s.blank_page} hidden_without_js=${s.hidden_without_js} broken_images=${s.broken_images} | a11y: small_targets=${s.small_targets} unnamed_controls=${s.unnamed_controls} placeholder_labels=${s.placeholder_labels} img_missing_alt=${s.img_missing_alt} doc_basics=${s.doc_basics} focus_stops=${s.focus_stops} focus_invisible=${s.focus_invisible} focus_obscured=${s.focus_obscured} focus_hidden=${s.focus_hidden} | slop: scroll_animated=${s.scroll_animated} nested_boxes=${s.nested_boxes} emoji_icons=${s.emoji_icons} warm_neutral_body=${s.warm_neutral_body}`;
+const line = `RENDER-CHECK ${VERSION}: overflow_desktop=${s.overflow_desktop} overflow_mobile=${s.overflow_mobile} js_errors=${s.js_errors} contrast_failures=${s.contrast_failures} word_stacking=${s.word_stacking} text_collisions=${s.text_collisions} clipped_content=${s.clipped_content} dead_controls=${s.dead_controls} assert_failures=${s.assert_failures} nav_hidden_desktop=${s.nav_hidden_desktop} progress_empty=${s.progress_empty} blank_page=${s.blank_page} hidden_without_js=${s.hidden_without_js} broken_images=${s.broken_images} | a11y: small_targets=${s.small_targets} unnamed_controls=${s.unnamed_controls} placeholder_labels=${s.placeholder_labels} img_missing_alt=${s.img_missing_alt} doc_basics=${s.doc_basics} focus_stops=${s.focus_stops} focus_invisible=${s.focus_invisible} focus_obscured=${s.focus_obscured} focus_hidden=${s.focus_hidden} keyboard_unreachable=${s.keyboard_unreachable} | slop: scroll_animated=${s.scroll_animated} nested_boxes=${s.nested_boxes} emoji_icons=${s.emoji_icons} warm_neutral_body=${s.warm_neutral_body}`;
 if (asJson) console.log(JSON.stringify(report, null, 2));
 else {
   console.log(line);
@@ -508,6 +534,8 @@ else {
   for (const k of report.details.keyboard.invisible.slice(0, 5)) console.log(`  focus-invisible  ${k}`);
   for (const k of report.details.keyboard.obscured.slice(0, 5)) console.log(`  focus-obscured  ${k}`);
   for (const k of report.details.keyboard.hidden.slice(0, 5)) console.log(`  focus-hidden  ${k}`);
+  if (report.details.keyboard.truncated) console.log(`  keyboard-pass  ${report.details.keyboard.truncated}`);
+  for (const d of report.details.docAdvisory) console.log(`  advisory  ${d}`);
   if (s.warm_neutral_body) console.log(`  warm-neutral body OKLCH L=${report.details.bodyOklch.L.toFixed(2)} C=${report.details.bodyOklch.C.toFixed(3)} H=${report.details.bodyOklch.H.toFixed(0)}`);
   console.log(`  screenshots + render-check.json in ${outDir}`);
 }
@@ -515,5 +543,5 @@ clearInterval(keepAlive); ws.close(); proc.kill();
 // Remove the throwaway Chrome profile (hundreds of runs once filled a drive). Chrome releases files shortly after exit.
 await new Promise((r) => { proc.once("exit", r); setTimeout(r, 3000); });
 for (let i = 0; i < 5; i++) { try { rmSync(profile, { recursive: true, force: true }); break; } catch { await sleep(400); } }
-const fail = s.overflow_desktop || s.overflow_mobile || s.js_errors || s.contrast_failures || s.word_stacking || s.text_collisions || s.clipped_content || s.dead_controls || s.assert_failures || s.nav_hidden_desktop || s.progress_empty || s.blank_page || s.hidden_without_js || s.broken_images || s.scroll_animated >= 5 || s.nested_boxes || s.emoji_icons || s.warm_neutral_body || s.small_targets || s.unnamed_controls || s.placeholder_labels || s.img_missing_alt || s.doc_basics || s.focus_invisible || s.focus_obscured || s.focus_hidden;
+const fail = s.overflow_desktop || s.overflow_mobile || s.js_errors || s.contrast_failures || s.word_stacking || s.text_collisions || s.clipped_content || s.dead_controls || s.assert_failures || s.nav_hidden_desktop || s.progress_empty || s.blank_page || s.hidden_without_js || s.broken_images || s.scroll_animated >= 5 || s.nested_boxes || s.emoji_icons || s.warm_neutral_body || s.small_targets || s.unnamed_controls || s.placeholder_labels || s.img_missing_alt || s.doc_basics || s.focus_invisible || s.focus_obscured || s.focus_hidden || s.keyboard_unreachable;
 process.exit(fail ? 1 : 0);
